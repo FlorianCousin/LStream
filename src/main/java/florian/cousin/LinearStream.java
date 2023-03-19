@@ -1,5 +1,6 @@
 package florian.cousin;
 
+import florian.cousin.collector.LinearCollector;
 import florian.cousin.iterator.FilterIterator;
 import florian.cousin.iterator.MappingIterator;
 import florian.cousin.iterator.SimpleIterator;
@@ -28,6 +29,10 @@ public interface LinearStream<T> extends Iterator<T> {
 
   default <R> LinearStream<R> map(Function<T, R> mapping) {
     return new MappingIterator<>(this, mapping);
+  }
+
+  default <R> R collect(LinearCollector<T, ?, R> collector) {
+    return collector.collect(this);
   }
 
   default List<T> toList() {
