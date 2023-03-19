@@ -5,7 +5,7 @@ import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class MappingIterator<T, R> extends LinearStream<R> {
+public class MappingIterator<T, R> implements LinearStream<R> {
 
   private final Iterator<T> previousIterator;
   private final Function<T, R> mapping;

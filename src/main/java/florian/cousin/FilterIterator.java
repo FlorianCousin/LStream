@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
-public class FilterIterator<T> extends LinearStream<T> implements Iterator<T> {
+public class FilterIterator<T> implements LinearStream<T> {
 
   private final Iterator<T> iterator;
   private final Predicate<T> predicate;
