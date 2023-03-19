@@ -1,5 +1,7 @@
 package florian.cousin;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
@@ -21,6 +23,12 @@ public interface LinearStream<T> extends Iterator<T> {
   }
 
   default <R> LinearStream<R> map(Function<T, R> mapping) {
-    return new MappingIterator(this, mapping);
+    return new MappingIterator<>(this, mapping);
+  }
+
+  default List<T> toList() {
+    List<T> collectingList = new ArrayList<>();
+    forEachRemaining(collectingList::add);
+    return Collections.unmodifiableList(collectingList);
   }
 }
