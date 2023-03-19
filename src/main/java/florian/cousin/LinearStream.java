@@ -1,5 +1,8 @@
 package florian.cousin;
 
+import florian.cousin.iterator.FilterIterator;
+import florian.cousin.iterator.MappingIterator;
+import florian.cousin.iterator.SimpleIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;

@@ -1,6 +1,8 @@
-package florian.cousin;
+package florian.cousin.iterator;
 
 import java.util.Iterator;
+
+import florian.cousin.LinearStream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

@@ -1,8 +1,10 @@
-package florian.cousin;
+package florian.cousin.iterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
+
+import florian.cousin.LinearStream;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
