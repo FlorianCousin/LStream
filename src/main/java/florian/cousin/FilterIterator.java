@@ -3,18 +3,15 @@ package florian.cousin;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
+@RequiredArgsConstructor
 public class FilterIterator<T> extends LinearStream<T> implements Iterator<T> {
 
+  private final Iterator<T> iterator;
   private final Predicate<T> predicate;
   private @Nullable T next;
-
-  public FilterIterator(Iterator<T> iterator, Predicate<T> predicate) {
-    super(iterator);
-    this.predicate = predicate;
-    this.next = null;
-  }
 
   @Override
   public boolean hasNext() {
