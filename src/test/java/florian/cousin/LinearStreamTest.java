@@ -14,6 +14,19 @@ class LinearStreamTest {
   }
 
   @Test
+  void filter() {
+
+    List<Float> actualFiltered =
+        LinearStream.of(4.5f, 7.8f, -4f, 0.0003f, -7.1f).filter(number -> number < 0).toList();
+
+    List<Float> expectedFiltered = List.of(-4f, -7.1f);
+
+    Assertions.assertThat(actualFiltered)
+        .withFailMessage("filter function has not been called")
+        .isEqualTo(expectedFiltered);
+  }
+
+  @Test
   void map() {
 
     List<Integer> actualLengths =
@@ -27,16 +40,20 @@ class LinearStreamTest {
   }
 
   @Test
-  void filter() {
+  void flatMap() {
 
-    List<Float> actualFiltered =
-        LinearStream.of(4.5f, 7.8f, -4f, 0.0003f, -7.1f).filter(number -> number < 0).toList();
+    List<Character> actualFlatMap =
+        LinearStream.of("cola", "moli", "dude", "flatMap")
+            .map(word -> word.chars().mapToObj(c -> (char) c).toList())
+            .flatMap(LinearStream::from)
+            .toList();
 
-    List<Float> expectedFiltered = List.of(-4f, -7.1f);
+    List<Character> expectedFlatMap =
+        List.of(
+            'c', 'o', 'l', 'a', 'm', 'o', 'l', 'i', 'd', 'u', 'd', 'e', 'f', 'l', 'a', 't', 'M',
+            'a', 'p');
 
-    Assertions.assertThat(actualFiltered)
-        .withFailMessage("filter function has not been called")
-        .isEqualTo(expectedFiltered);
+    Assertions.assertThat(actualFlatMap).isEqualTo(expectedFlatMap);
   }
 
   @Test
