@@ -1,11 +1,11 @@
 package florian.cousin;
 
 import florian.cousin.collector.LinearCollector;
+import florian.cousin.collector.SimpleCollector;
 import florian.cousin.iterator.FilterIterator;
 import florian.cousin.iterator.MappingIterator;
 import florian.cousin.iterator.SimpleIterator;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -36,9 +36,7 @@ public interface LinearStream<T> extends Iterator<T> {
   }
 
   default List<T> toList() {
-    List<T> collectingList = new ArrayList<>();
-    forEachRemaining(collectingList::add);
-    return Collections.unmodifiableList(collectingList);
+    return collect(new SimpleCollector<>(ArrayList::new, List::add));
   }
 
   default <R> R reduce(R initialValue, BiFunction<R, T, R> aggregate) {
