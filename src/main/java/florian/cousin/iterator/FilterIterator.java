@@ -1,10 +1,9 @@
 package florian.cousin.iterator;
 
+import florian.cousin.LinearStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
-
-import florian.cousin.LinearStream;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 public class FilterIterator<T> implements LinearStream<T> {
 
   private final Iterator<T> iterator;
-  private final Predicate<T> predicate;
+  private final Predicate<? super T> predicate;
   private @Nullable T next;
 
   @Override

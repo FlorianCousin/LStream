@@ -23,11 +23,11 @@ public interface LinearStream<T> extends Iterator<T> {
     return new SimpleIterator<>(List.of(iterationObjects).iterator());
   }
 
-  default LinearStream<T> filter(Predicate<T> predicate) {
+  default LinearStream<T> filter(Predicate<? super T> predicate) {
     return new FilterIterator<>(this, predicate);
   }
 
-  default <R> LinearStream<R> map(Function<T, R> mapping) {
+  default <R> LinearStream<R> map(Function<? super T, ? extends R> mapping) {
     return new MappingIterator<>(this, mapping);
   }
 
