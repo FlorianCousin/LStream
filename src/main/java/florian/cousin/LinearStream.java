@@ -2,10 +2,7 @@ package florian.cousin;
 
 import florian.cousin.collector.LinearCollector;
 import florian.cousin.collector.SimpleCollector;
-import florian.cousin.iterator.FilterIterator;
-import florian.cousin.iterator.FlatMappingIterator;
-import florian.cousin.iterator.MappingIterator;
-import florian.cousin.iterator.SimpleIterator;
+import florian.cousin.iterator.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +32,10 @@ public interface LinearStream<T> extends Iterator<T> {
   default <R> LinearStream<R> flatMap(
       Function<? super T, ? extends LinearStream<? extends R>> mapper) {
     return new FlatMappingIterator<>(this, mapper);
+  }
+
+  default LinearStream<T> distinct() {
+    return new DistinctIterator<>(this);
   }
 
   default <R> R collect(LinearCollector<T, ?, R> collector) {

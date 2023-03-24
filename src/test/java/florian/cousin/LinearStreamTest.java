@@ -57,6 +57,17 @@ class LinearStreamTest {
   }
 
   @Test
+  void distinct() {
+
+    List<String> actualDistinct =
+        LinearStream.of("me", "me", "you", "it", "him", "me", "it").distinct().toList();
+
+    List<String> expectedDistinct = List.of("me", "you", "it", "him");
+
+    Assertions.assertThat(actualDistinct).isEqualTo(expectedDistinct);
+  }
+
+  @Test
   void maxWithReduce() {
 
     int actualMaximum = LinearStream.of(1, 5, 9, 3, -14, 6, 753, 0).reduce(0, Math::max);
