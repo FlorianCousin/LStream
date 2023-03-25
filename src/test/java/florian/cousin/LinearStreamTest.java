@@ -3,6 +3,7 @@ package florian.cousin;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -95,6 +96,16 @@ class LinearStreamTest {
     List<String> expectedSortedWords = List.of("those", "sort", "words");
 
     Assertions.assertThat(actualSortedWords).isEqualTo(expectedSortedWords);
+  }
+
+  @Test
+  void peek() {
+
+    AtomicInteger number = new AtomicInteger(0);
+
+    LinearStream.of(1, 6, 1).peek(i -> number.incrementAndGet()).toList();
+
+    Assertions.assertThat(number).hasValue(3);
   }
 
   @Test

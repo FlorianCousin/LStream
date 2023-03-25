@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
@@ -46,6 +47,10 @@ public interface LinearStream<T> extends Iterator<T> {
 
   default LinearStream<T> sorted(@Nullable Comparator<? super T> comparator) {
     return new SortedIterator<>(this, comparator);
+  }
+
+  default LinearStream<T> peek(Consumer<? super T> action) {
+    return new PeekIterator<>(this, action);
   }
 
   default <R> R collect(LinearCollector<T, ?, R> collector) {
