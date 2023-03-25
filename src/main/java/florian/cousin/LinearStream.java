@@ -4,11 +4,13 @@ import florian.cousin.collector.LinearCollector;
 import florian.cousin.collector.SimpleCollector;
 import florian.cousin.iterator.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jetbrains.annotations.Nullable;
 
 public interface LinearStream<T> extends Iterator<T> {
 
@@ -36,6 +38,14 @@ public interface LinearStream<T> extends Iterator<T> {
 
   default LinearStream<T> distinct() {
     return new DistinctIterator<>(this);
+  }
+
+  default LinearStream<T> sorted() {
+    return sorted(null);
+  }
+
+  default LinearStream<T> sorted(@Nullable Comparator<? super T> comparator) {
+    return new SortedIterator<>(this, comparator);
   }
 
   default <R> R collect(LinearCollector<T, ?, R> collector) {

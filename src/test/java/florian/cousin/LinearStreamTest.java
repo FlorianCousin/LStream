@@ -2,7 +2,8 @@ package florian.cousin;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.IntStream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -65,6 +66,35 @@ class LinearStreamTest {
     List<String> expectedDistinct = List.of("me", "you", "it", "him");
 
     Assertions.assertThat(actualDistinct).isEqualTo(expectedDistinct);
+  }
+
+  @Test
+  void sortedNatural() {
+
+    List<Integer> descendingSortedIntegers =
+        IntStream.range(0, 9).map(i -> 12 - i).boxed().toList();
+
+    List<Integer> actualSortedIntegers =
+        LinearStream.from(descendingSortedIntegers).sorted().toList();
+
+    List<Integer> expectedSortedIntegers = List.of(4, 5, 6, 7, 8, 9, 10, 11, 12);
+
+    Assertions.assertThat(actualSortedIntegers).isEqualTo(expectedSortedIntegers);
+  }
+
+  @Test
+  void sortedComparator() {
+
+    List<String> actualSortedWords =
+        LinearStream.of("sort", "those", "words")
+            .sorted(
+                Comparator.<String, Character>comparing(word -> word.charAt(1))
+                    .thenComparing(word -> word.charAt(0)))
+            .toList();
+
+    List<String> expectedSortedWords = List.of("those", "sort", "words");
+
+    Assertions.assertThat(actualSortedWords).isEqualTo(expectedSortedWords);
   }
 
   @Test
