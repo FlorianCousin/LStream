@@ -53,6 +53,10 @@ public interface LinearStream<T> extends Iterator<T> {
     return new PeekIterator<>(this, action);
   }
 
+  default LinearStream<T> limit(long maxSize) {
+    return new LimitIterator<>(this, maxSize);
+  }
+
   default <R> R collect(LinearCollector<T, ?, R> collector) {
     return collector.collect(this);
   }

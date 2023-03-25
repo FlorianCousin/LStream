@@ -109,6 +109,34 @@ class LinearStreamTest {
   }
 
   @Test
+  void limitToNothing() {
+
+    List<String> actualValues = LinearStream.of("yes", "si", "oui", "da").limit(0).toList();
+
+    Assertions.assertThat(actualValues).isEmpty();
+  }
+
+  @Test
+  void limit() {
+
+    List<String> actualValues = LinearStream.of("yes", "si", "oui", "da").limit(2).toList();
+
+    List<String> expectedValues = List.of("yes", "si");
+
+    Assertions.assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void limitToAll() {
+
+    List<String> baseValues = List.of("yes", "si", "oui", "da");
+
+    List<String> actualValues = LinearStream.from(baseValues).limit(20).toList();
+
+    Assertions.assertThat(actualValues).isEqualTo(baseValues);
+  }
+
+  @Test
   void maxWithReduce() {
 
     int actualMaximum = LinearStream.of(1, 5, 9, 3, -14, 6, 753, 0).reduce(0, Math::max);
