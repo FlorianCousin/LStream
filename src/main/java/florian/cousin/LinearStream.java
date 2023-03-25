@@ -69,6 +69,12 @@ public interface LinearStream<T> extends Iterator<T> {
     return new DropWhileIterator<>(this, predicate);
   }
 
+  default void forEach(Consumer<? super T> action) {
+    while (hasNext()) {
+      action.accept(next());
+    }
+  }
+
   default <R> R collect(LinearCollector<T, ?, R> collector) {
     return collector.collect(this);
   }

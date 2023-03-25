@@ -221,6 +221,16 @@ class LinearStreamTest {
   }
 
   @Test
+  void forEach() {
+
+    AtomicInteger nb = new AtomicInteger(0);
+
+    LinearStream.of(1, -2, 4).forEach(nb::addAndGet);
+
+    assertThat(nb).hasValue(3);
+  }
+
+  @Test
   void maxWithReduce() {
 
     int actualMaximum = LinearStream.of(1, 5, 9, 3, -14, 6, 753, 0).reduce(0, Math::max);
