@@ -80,12 +80,12 @@ public interface LinearStream<T> extends Iterator<T> {
     return toList().toArray(generator);
   }
 
-  default <R> R collect(LinearCollector<T, ?, R> collector) {
-    return collector.collect(this);
-  }
-
-  default List<T> toList() {
-    return collect(new SimpleCollector<>(ArrayList::new, List::add));
+  default T reduce(T identity, BinaryOperator<T> accumulator) {
+    T currentValue = identity;
+    while (hasNext()) {
+      currentValue = accumulator.apply(currentValue, next());
+    }
+    return currentValue;
   }
 
   default <R> R reduce(R initialValue, BiFunction<R, T, R> aggregate) {
@@ -94,5 +94,13 @@ public interface LinearStream<T> extends Iterator<T> {
       currentValue = aggregate.apply(currentValue, next());
     }
     return currentValue;
+  }
+
+  default <R> R collect(LinearCollector<T, ?, R> collector) {
+    return collector.collect(this);
+  }
+
+  default List<T> toList() {
+    return collect(new SimpleCollector<>(ArrayList::new, List::add));
   }
 }

@@ -259,4 +259,21 @@ class LinearStreamTest {
 
     assertThat(actualMaximum).isEqualTo(expectedMaximum);
   }
+
+  @Test
+  void reduceWithDifferentType() {
+
+    String actualMaximum =
+        LinearStream.of(1, 5, 9, 3, -14, 6, 753, 0)
+            .reduce(
+                "",
+                (String previousMax, Integer newNumber) -> {
+                  String stringNewNumber = String.valueOf(newNumber);
+                  return previousMax.compareTo(stringNewNumber) < 0 ? stringNewNumber : previousMax;
+                });
+
+    String expectedMaximum = "9";
+
+    assertThat(actualMaximum).isEqualTo(expectedMaximum);
+  }
 }
