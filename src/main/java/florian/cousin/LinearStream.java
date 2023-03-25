@@ -57,6 +57,10 @@ public interface LinearStream<T> extends Iterator<T> {
     return new LimitIterator<>(this, maxSize);
   }
 
+  default LinearStream<T> skip(long nbToSkip) {
+    return new SkipIterator<>(this, nbToSkip);
+  }
+
   default <R> R collect(LinearCollector<T, ?, R> collector) {
     return collector.collect(this);
   }

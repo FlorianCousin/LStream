@@ -137,6 +137,32 @@ class LinearStreamTest {
   }
 
   @Test
+  void skipNothing() {
+
+    List<Long> baseValues = List.of(4L, -5L, 789L);
+
+    List<Long> actuelValues = LinearStream.from(baseValues).skip(-1).toList();
+
+    Assertions.assertThat(actuelValues).isEqualTo(baseValues);
+  }
+
+  @Test
+  void skip() {
+
+    List<Long> actuelValues = LinearStream.of(4L, -5L, 789L).skip(2).toList();
+
+    Assertions.assertThat(actuelValues).hasSize(1).containsExactly(789L);
+  }
+
+  @Test
+  void skipAll() {
+
+    List<Long> actuelValues = LinearStream.of(4L, -5L, 789L).skip(4).toList();
+
+    Assertions.assertThat(actuelValues).isEmpty();
+  }
+
+  @Test
   void maxWithReduce() {
 
     int actualMaximum = LinearStream.of(1, 5, 9, 3, -14, 6, 753, 0).reduce(0, Math::max);
