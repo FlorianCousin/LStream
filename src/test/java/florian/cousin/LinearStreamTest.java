@@ -163,6 +163,35 @@ class LinearStreamTest {
   }
 
   @Test
+  void takeWhileTakesNothing() {
+
+    List<Integer> actualValues = LinearStream.of(1, 4, 8, 3).takeWhile(i -> false).toList();
+
+    assertThat(actualValues).isEmpty();
+  }
+
+  @Test
+  void takeWhile() {
+
+    List<Integer> actualValues =
+        LinearStream.of(-1, -5, 25, 7, -4, 1, 3).takeWhile(nb -> nb < 0).toList();
+
+    List<Integer> expectedValues = List.of(-1, -5);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void takeWhileTakesEverything() {
+
+    List<Integer> baseValues = List.of(4, 5, -9);
+
+    List<Integer> actualValues = LinearStream.from(baseValues).takeWhile(nb -> true).toList();
+
+    assertThat(actualValues).isEqualTo(baseValues);
+  }
+
+  @Test
   void maxWithReduce() {
 
     int actualMaximum = LinearStream.of(1, 5, 9, 3, -14, 6, 753, 0).reduce(0, Math::max);
