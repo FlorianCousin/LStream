@@ -89,6 +89,14 @@ public interface LinearStream<T> extends Iterator<T> {
     return currentValue;
   }
 
+  default <R> R reduce(R initialValue, BiFunction<R, T, R> aggregate) {
+    R currentValue = initialValue;
+    while (hasNext()) {
+      currentValue = aggregate.apply(currentValue, next());
+    }
+    return currentValue;
+  }
+
   default Optional<T> reduce(BinaryOperator<T> accumulator) {
     Optional<T> reducedOptional = Optional.empty();
     while (hasNext()) {
@@ -97,14 +105,6 @@ public interface LinearStream<T> extends Iterator<T> {
       reducedOptional = Optional.ofNullable(reducedValue);
     }
     return reducedOptional;
-  }
-
-  default <R> R reduce(R initialValue, BiFunction<R, T, R> aggregate) {
-    R currentValue = initialValue;
-    while (hasNext()) {
-      currentValue = aggregate.apply(currentValue, next());
-    }
-    return currentValue;
   }
 
   default <R> R collect(LinearCollector<T, ?, R> collector) {
