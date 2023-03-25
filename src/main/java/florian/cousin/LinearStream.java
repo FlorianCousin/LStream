@@ -3,10 +3,7 @@ package florian.cousin;
 import florian.cousin.collector.LinearCollector;
 import florian.cousin.collector.SimpleCollector;
 import florian.cousin.iterator.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +16,10 @@ public interface LinearStream<T> extends Iterator<T> {
   @SafeVarargs
   static <T> LinearStream<T> of(T... iterationObjects) {
     return new SimpleIterator<>(List.of(iterationObjects).iterator());
+  }
+
+  static <T> LinearStream<T> empty() {
+    return new SimpleIterator<>(Collections.emptyIterator());
   }
 
   default LinearStream<T> filter(Predicate<? super T> predicate) {
@@ -86,6 +87,16 @@ public interface LinearStream<T> extends Iterator<T> {
       currentValue = accumulator.apply(currentValue, next());
     }
     return currentValue;
+  }
+
+  default Optional<T> reduce(BinaryOperator<T> accumulator) {
+    Optional<T> reducedOptional = Optional.empty();
+    while (hasNext()) {
+      T next = next();
+      T reducedValue = reducedOptional.map(value -> accumulator.apply(value, next)).orElse(next);
+      reducedOptional = Optional.ofNullable(reducedValue);
+    }
+    return reducedOptional;
   }
 
   default <R> R reduce(R initialValue, BiFunction<R, T, R> aggregate) {

@@ -261,6 +261,30 @@ class LinearStreamTest {
   }
 
   @Test
+  void reduceWithoutValue() {
+
+    Optional<Object> optional = LinearStream.empty().reduce((a, b) -> a);
+
+    assertThat(optional).isEmpty();
+  }
+
+  @Test
+  void reduceOneValue() {
+
+    Optional<Integer> actualMin = LinearStream.of(5).reduce(Math::min);
+
+    assertThat(actualMin).hasValue(5);
+  }
+
+  @Test
+  void reduceSeveralValues() {
+
+    Optional<Integer> actualMax = LinearStream.of(4, 8, 9, -1, 3).reduce(Math::max);
+
+    assertThat(actualMax).hasValue(9);
+  }
+
+  @Test
   void reduceWithDifferentType() {
 
     String actualMaximum =
