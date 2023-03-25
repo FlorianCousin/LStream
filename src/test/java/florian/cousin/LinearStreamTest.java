@@ -1,11 +1,11 @@
 package florian.cousin;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class LinearStreamTest {
@@ -23,7 +23,7 @@ class LinearStreamTest {
 
     List<Float> expectedFiltered = List.of(-4f, -7.1f);
 
-    Assertions.assertThat(actualFiltered)
+    assertThat(actualFiltered)
         .withFailMessage("filter function has not been called")
         .isEqualTo(expectedFiltered);
   }
@@ -36,7 +36,7 @@ class LinearStreamTest {
 
     List<Integer> expectedLengths = List.of(7, 2, 5, 4);
 
-    Assertions.assertThat(actualLengths)
+    assertThat(actualLengths)
         .withFailMessage("mapping function has not been called")
         .isEqualTo(expectedLengths);
   }
@@ -55,7 +55,7 @@ class LinearStreamTest {
             'c', 'o', 'l', 'a', 'm', 'o', 'l', 'i', 'd', 'u', 'd', 'e', 'f', 'l', 'a', 't', 'M',
             'a', 'p');
 
-    Assertions.assertThat(actualFlatMap).isEqualTo(expectedFlatMap);
+    assertThat(actualFlatMap).isEqualTo(expectedFlatMap);
   }
 
   @Test
@@ -66,7 +66,7 @@ class LinearStreamTest {
 
     List<String> expectedDistinct = List.of("me", "you", "it", "him");
 
-    Assertions.assertThat(actualDistinct).isEqualTo(expectedDistinct);
+    assertThat(actualDistinct).isEqualTo(expectedDistinct);
   }
 
   @Test
@@ -80,7 +80,7 @@ class LinearStreamTest {
 
     List<Integer> expectedSortedIntegers = List.of(4, 5, 6, 7, 8, 9, 10, 11, 12);
 
-    Assertions.assertThat(actualSortedIntegers).isEqualTo(expectedSortedIntegers);
+    assertThat(actualSortedIntegers).isEqualTo(expectedSortedIntegers);
   }
 
   @Test
@@ -95,7 +95,7 @@ class LinearStreamTest {
 
     List<String> expectedSortedWords = List.of("those", "sort", "words");
 
-    Assertions.assertThat(actualSortedWords).isEqualTo(expectedSortedWords);
+    assertThat(actualSortedWords).isEqualTo(expectedSortedWords);
   }
 
   @Test
@@ -105,7 +105,7 @@ class LinearStreamTest {
 
     LinearStream.of(1, 6, 1).peek(i -> number.incrementAndGet()).toList();
 
-    Assertions.assertThat(number).hasValue(3);
+    assertThat(number).hasValue(3);
   }
 
   @Test
@@ -113,7 +113,7 @@ class LinearStreamTest {
 
     List<String> actualValues = LinearStream.of("yes", "si", "oui", "da").limit(0).toList();
 
-    Assertions.assertThat(actualValues).isEmpty();
+    assertThat(actualValues).isEmpty();
   }
 
   @Test
@@ -123,7 +123,7 @@ class LinearStreamTest {
 
     List<String> expectedValues = List.of("yes", "si");
 
-    Assertions.assertThat(actualValues).isEqualTo(expectedValues);
+    assertThat(actualValues).isEqualTo(expectedValues);
   }
 
   @Test
@@ -133,7 +133,7 @@ class LinearStreamTest {
 
     List<String> actualValues = LinearStream.from(baseValues).limit(20).toList();
 
-    Assertions.assertThat(actualValues).isEqualTo(baseValues);
+    assertThat(actualValues).isEqualTo(baseValues);
   }
 
   @Test
@@ -143,7 +143,7 @@ class LinearStreamTest {
 
     List<Long> actuelValues = LinearStream.from(baseValues).skip(-1).toList();
 
-    Assertions.assertThat(actuelValues).isEqualTo(baseValues);
+    assertThat(actuelValues).isEqualTo(baseValues);
   }
 
   @Test
@@ -151,7 +151,7 @@ class LinearStreamTest {
 
     List<Long> actuelValues = LinearStream.of(4L, -5L, 789L).skip(2).toList();
 
-    Assertions.assertThat(actuelValues).hasSize(1).containsExactly(789L);
+    assertThat(actuelValues).hasSize(1).containsExactly(789L);
   }
 
   @Test
@@ -159,7 +159,7 @@ class LinearStreamTest {
 
     List<Long> actuelValues = LinearStream.of(4L, -5L, 789L).skip(4).toList();
 
-    Assertions.assertThat(actuelValues).isEmpty();
+    assertThat(actuelValues).isEmpty();
   }
 
   @Test
@@ -169,6 +169,6 @@ class LinearStreamTest {
 
     int expectedMaximum = 753;
 
-    Assertions.assertThat(actualMaximum).isEqualTo(expectedMaximum);
+    assertThat(actualMaximum).isEqualTo(expectedMaximum);
   }
 }
