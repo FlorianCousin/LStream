@@ -65,6 +65,10 @@ public interface LinearStream<T> extends Iterator<T> {
     return new takeWhileIterator<>(this, predicate);
   }
 
+  default LinearStream<T> dropWhile(Predicate<? super T> predicate) {
+    return new DropWhileIterator<>(this, predicate);
+  }
+
   default <R> R collect(LinearCollector<T, ?, R> collector) {
     return collector.collect(this);
   }
