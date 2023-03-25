@@ -231,6 +231,26 @@ class LinearStreamTest {
   }
 
   @Test
+  void toArray() {
+
+    Object[] actualValues = LinearStream.of("a", "b", "c", "d").toArray();
+
+    Object[] expectedValues = new Object[] {"a", "b", "c", "d"};
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void toArrayGenerator() {
+
+    String[] actualValues = LinearStream.of("a", "b", "c", "d").toArray(String[]::new);
+
+    String[] expectedValues = new String[] {"a", "b", "c", "d"};
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
   void maxWithReduce() {
 
     int actualMaximum = LinearStream.of(1, 5, 9, 3, -14, 6, 753, 0).reduce(0, Math::max);
