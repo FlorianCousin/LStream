@@ -170,4 +170,8 @@ public interface LinearStream<T> extends Iterator<T> {
   default boolean noneMatch(Predicate<? super T> predicate) {
     return !anyMatch(predicate);
   }
+
+  default Optional<T> findFirst() {
+    return hasNext() ? Optional.ofNullable(next()) : Optional.empty();
+  }
 }

@@ -474,4 +474,31 @@ class LinearStreamTest {
 
     assertThat(actualContainsBruno).isTrue();
   }
+
+  @Test
+  void findFirstNoElements() {
+
+    Optional<Object> actualFirst = LinearStream.empty().findFirst();
+
+    assertThat(actualFirst).isEmpty();
+  }
+
+  @Test
+  void findFirst() {
+
+    Optional<String> actualFirst =
+        LinearStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
+            .filter(s -> s.startsWith("S"))
+            .findFirst();
+
+    assertThat(actualFirst).hasValue("Sweet");
+  }
+
+  @Test
+  void findFirstIsNull() {
+
+    Optional<String> actualFirst = LinearStream.of(null, "5", "d").findFirst();
+
+    assertThat(actualFirst).isEmpty();
+  }
 }
