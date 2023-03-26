@@ -1,13 +1,15 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LinearStream;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class IterateInfiniteIterator<T> implements LinearStream<T> {
+public class IterateIterator<T> implements LinearStream<T> {
 
   private final T initialValue;
+  private final Predicate<? super T> hasNext;
   private final UnaryOperator<T> computeNextValue;
 
   private T previousValue;
@@ -15,7 +17,7 @@ public class IterateInfiniteIterator<T> implements LinearStream<T> {
 
   @Override
   public boolean hasNext() {
-    return true;
+    return !initialValueConsumed || hasNext.test(previousValue);
   }
 
   @Override

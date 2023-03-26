@@ -180,6 +180,11 @@ public interface LinearStream<T> extends Iterator<T> {
 
   static <T> LinearStream<T> iterate(
       final T initialValue, final UnaryOperator<T> computeNextValue) {
-    return new IterateInfiniteIterator<>(initialValue, computeNextValue);
+    return iterate(initialValue, value -> true, computeNextValue);
+  }
+
+  static <T> LinearStream<T> iterate(
+      T initialValue, Predicate<? super T> hasNext, UnaryOperator<T> next) {
+    return new IterateIterator<>(initialValue, hasNext, next);
   }
 }
