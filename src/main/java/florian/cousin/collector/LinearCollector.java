@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public abstract class LinearCollector<T, A, R> {
 
   private final Supplier<A> supplier;
-  private final BiConsumer<A, T> accumulator;
+  private final BiConsumer<A, ? super T> accumulator;
 
   public abstract R collect(LinearStream<T> linearStream);
 

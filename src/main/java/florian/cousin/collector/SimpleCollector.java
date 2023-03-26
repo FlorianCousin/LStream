@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 public class SimpleCollector<T, A> extends LinearCollector<T, A, A> {
 
-  public SimpleCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator) {
+  public SimpleCollector(Supplier<A> supplier, BiConsumer<A, ? super T> accumulator) {
     super(supplier, accumulator);
   }
 

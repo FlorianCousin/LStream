@@ -3,6 +3,7 @@ package florian.cousin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import florian.cousin.collector.CollectorFinisher;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -299,5 +300,28 @@ class LinearStreamTest {
     String expectedMaximum = "9";
 
     assertThat(actualMaximum).isEqualTo(expectedMaximum);
+  }
+
+  @Test
+  void collectWithAccumulator() {
+
+    Set<Integer> actualCollection = LinearStream.of(4, 5, 4, 3).collect(HashSet::new, Set::add);
+
+    Set<Integer> expectedCollection = Set.of(3, 4, 5);
+
+    assertThat(actualCollection).isEqualTo(expectedCollection);
+  }
+
+  @Test
+  void collectWithCollector() {
+
+    CollectorFinisher<Integer, List<Integer>, List<Integer>> integerListCollector =
+        new CollectorFinisher<>(ArrayList::new, List::add, Collections::unmodifiableList);
+
+    List<Integer> actualCollection = LinearStream.of(4, 5, 4, 3).collect(integerListCollector);
+
+    List<Integer> expectedCollection = List.of(4, 5, 4, 3);
+
+    assertThat(actualCollection).isEqualTo(expectedCollection);
   }
 }

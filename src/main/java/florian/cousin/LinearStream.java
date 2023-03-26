@@ -5,6 +5,8 @@ import florian.cousin.collector.SimpleCollector;
 import florian.cousin.iterator.*;
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.Collector;
+
 import org.jetbrains.annotations.Nullable;
 
 public interface LinearStream<T> extends Iterator<T> {
@@ -105,6 +107,10 @@ public interface LinearStream<T> extends Iterator<T> {
       reducedOptional = Optional.ofNullable(reducedValue);
     }
     return reducedOptional;
+  }
+
+  default <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator) {
+    return collect(new SimpleCollector<>(supplier, accumulator));
   }
 
   default <R> R collect(LinearCollector<T, ?, R> collector) {
