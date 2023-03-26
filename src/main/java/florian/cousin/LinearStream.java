@@ -166,4 +166,8 @@ public interface LinearStream<T> extends Iterator<T> {
     }
     return true;
   }
+
+  default boolean noneMatch(Predicate<? super T> predicate) {
+    return !anyMatch(predicate);
+  }
 }
