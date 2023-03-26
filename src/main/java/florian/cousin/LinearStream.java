@@ -121,4 +121,13 @@ public interface LinearStream<T> extends Iterator<T> {
         new CollectorFinisher<T, List<T>, List<T>>(
             ArrayList::new, List::add, Collections::unmodifiableList));
   }
+
+  default Optional<T> min(Comparator<? super T> comparator) {
+
+    BinaryOperator<T> keepMinimum =
+        (previousMin, nextValue) ->
+            comparator.compare(previousMin, nextValue) > 0 ? nextValue : previousMin;
+
+    return reduce(keepMinimum);
+  }
 }

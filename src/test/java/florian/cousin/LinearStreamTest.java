@@ -324,4 +324,32 @@ class LinearStreamTest {
 
     assertThat(actualCollection).isEqualTo(expectedCollection);
   }
+
+  @Test
+  void minWithoutValue() {
+
+    Optional<Integer> actualMinimum = LinearStream.<Integer>empty().min(Comparator.naturalOrder());
+
+    assertThat(actualMinimum).isEmpty();
+  }
+
+  @Test
+  void minWithOneValue() {
+
+    Optional<String> actualMinimum = LinearStream.of("g").min(Comparator.naturalOrder());
+
+    assertThat(actualMinimum).hasValue("g");
+  }
+
+  @Test
+  void minWithSeveralValues() {
+
+    Optional<Integer> actualMinPositive =
+        LinearStream.of(4, 9, -7, -2, 3)
+            .min(
+                Comparator.<Integer, Boolean>comparing(number -> number < 0)
+                    .thenComparing(Comparator.naturalOrder()));
+
+    assertThat(actualMinPositive).hasValue(3);
+  }
 }
