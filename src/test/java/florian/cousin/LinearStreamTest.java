@@ -547,4 +547,37 @@ class LinearStreamTest {
 
     assertThat(actualNumbers).isEqualTo(expectedNumbers);
   }
+
+  @Test
+  void concatFirstEmpty() {
+
+    List<Integer> actualConcatenation =
+        LinearStream.concat(LinearStream.empty(), LinearStream.of(4, 5)).toList();
+
+    List<Integer> expectedConcatenation = List.of(4, 5);
+
+    assertThat(actualConcatenation).isEqualTo(expectedConcatenation);
+  }
+
+  @Test
+  void concatSecondEmpty() {
+
+    List<String> actualConcatenation =
+        LinearStream.concat(
+                LinearStream.of("Come", "and", "get", "your", "love"), LinearStream.empty())
+            .toList();
+
+    List<String> expectedConcatenation = List.of("Come", "and", "get", "your", "love");
+
+    assertThat(actualConcatenation).isEqualTo(expectedConcatenation);
+  }
+
+  @Test
+  void concatBothEmpty() {
+
+    List<Object> actualConcatenation =
+        LinearStream.concat(LinearStream.empty(), LinearStream.empty()).toList();
+
+    assertThat(actualConcatenation).isEmpty();
+  }
 }

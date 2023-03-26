@@ -196,4 +196,9 @@ public interface LinearStream<T> extends Iterator<T> {
       Supplier<? extends T> nextValueGenerator, Predicate<? super T> hasNext) {
     return new GenerateIterator<>(nextValueGenerator, hasNext);
   }
+
+  static <T> LinearStream<T> concat(
+      LinearStream<? extends T> first, LinearStream<? extends T> second) {
+    return new ConcatIterator<>(first, second);
+  }
 }
