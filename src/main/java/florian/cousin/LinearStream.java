@@ -148,4 +148,13 @@ public interface LinearStream<T> extends Iterator<T> {
     }
     return nbElementsIterated;
   }
+
+  default boolean anyMatch(Predicate<? super T> predicate) {
+    while (hasNext()) {
+      if (predicate.test(next())) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

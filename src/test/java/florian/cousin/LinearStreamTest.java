@@ -399,4 +399,29 @@ class LinearStreamTest {
 
     assertThat(actualNbStartsWithF).isEqualTo(3);
   }
+
+  @Test
+  void anyMatchNoElements() {
+
+    boolean actualHasNull = LinearStream.empty().anyMatch(Objects::isNull);
+
+    assertThat(actualHasNull).isFalse();
+  }
+
+  @Test
+  void anyMatchSeveralElements() {
+
+    boolean actualHasNegative = LinearStream.of(4, -12, -753, 56).anyMatch(i -> i < 0);
+
+    assertThat(actualHasNegative).isTrue();
+  }
+
+  @Test
+  void anyMatchNoMatch() {
+
+    boolean actualContainsBruno =
+        LinearStream.of("cold", "heart", "Elton", "John", "Remix").anyMatch("Bruno"::equals);
+
+    assertThat(actualContainsBruno).isFalse();
+  }
 }
