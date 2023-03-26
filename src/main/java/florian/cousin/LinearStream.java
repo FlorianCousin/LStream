@@ -16,7 +16,7 @@ public interface LinearStream<T> extends Iterator<T> {
 
   @SafeVarargs
   static <T> LinearStream<T> of(T... iterationObjects) {
-    return new SimpleIterator<>(List.of(iterationObjects).iterator());
+    return new SimpleIterator<>(Arrays.asList(iterationObjects).iterator());
   }
 
   static <T> LinearStream<T> empty() {
