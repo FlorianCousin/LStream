@@ -521,4 +521,17 @@ class LinearStreamTest {
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
+
+  @Test
+  void generate() {
+
+    LinearStream<Integer> allPositiveNumbers = LinearStream.iterate(0, i -> i + 1);
+
+    List<Integer> actualGeneratedNumbers =
+        LinearStream.generate(allPositiveNumbers::next).limit(5).toList();
+
+    List<Integer> expectedGeneratedNumbers = List.of(0, 1, 2, 3, 4);
+
+    assertThat(actualGeneratedNumbers).isEqualTo(expectedGeneratedNumbers);
+  }
 }
