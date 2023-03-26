@@ -139,4 +139,13 @@ public interface LinearStream<T> extends Iterator<T> {
 
     return reduce(keepMaximum);
   }
+
+  default long count() {
+    long nbElementsIterated = 0;
+    while (hasNext()) {
+      next();
+      nbElementsIterated++;
+    }
+    return nbElementsIterated;
+  }
 }

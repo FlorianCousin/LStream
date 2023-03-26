@@ -380,4 +380,23 @@ class LinearStreamTest {
 
     assertThat(actualMaxNegative).hasValue(-2);
   }
+
+  @Test
+  void countNothing() {
+
+    long actualNbElements = LinearStream.empty().count();
+
+    assertThat(actualNbElements).isZero();
+  }
+
+  @Test
+  void count() {
+
+    long actualNbStartsWithF =
+        LinearStream.of("756f", "f", "fduil", "54df", "fdo")
+            .filter(characters -> characters.startsWith("f"))
+            .count();
+
+    assertThat(actualNbStartsWithF).isEqualTo(3);
+  }
 }
