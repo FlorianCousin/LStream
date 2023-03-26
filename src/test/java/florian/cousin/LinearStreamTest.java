@@ -409,7 +409,7 @@ class LinearStreamTest {
   }
 
   @Test
-  void anyMatchSeveralElements() {
+  void anyMatchEarlyReturn() {
 
     boolean actualHasNegative = LinearStream.of(4, -12, -753, 56).anyMatch(i -> i < 0);
 
@@ -417,7 +417,7 @@ class LinearStreamTest {
   }
 
   @Test
-  void anyMatchNoMatch() {
+  void anyMatchUntilTheEnd() {
 
     boolean actualContainsBruno =
         LinearStream.of("cold", "heart", "Elton", "John", "Remix").anyMatch("Bruno"::equals);
