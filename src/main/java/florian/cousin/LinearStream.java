@@ -177,4 +177,9 @@ public interface LinearStream<T> extends Iterator<T> {
   static <T> LinearStream<T> of(T... iterationObjects) {
     return new SimpleIterator<>(Arrays.asList(iterationObjects).iterator());
   }
+
+  static <T> LinearStream<T> iterate(
+      final T initialValue, final UnaryOperator<T> computeNextValue) {
+    return new IterateInfiniteIterator<>(initialValue, computeNextValue);
+  }
 }

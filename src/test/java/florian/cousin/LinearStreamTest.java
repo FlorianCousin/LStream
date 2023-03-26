@@ -501,4 +501,14 @@ class LinearStreamTest {
 
     assertThat(actualFirst).isEmpty();
   }
+
+  @Test
+  void iterate() {
+
+    List<Integer> actualNumbers = LinearStream.iterate(2, i -> (i * 5) % 47).limit(5).toList();
+
+    List<Integer> expectedNumbers = List.of(2, 10, 3, 15, 28);
+
+    assertThat(actualNumbers).isEqualTo(expectedNumbers);
+  }
 }
