@@ -1,12 +1,11 @@
 package florian.cousin;
 
+import florian.cousin.collector.CollectorFinisher;
 import florian.cousin.collector.LinearCollector;
 import florian.cousin.collector.SimpleCollector;
 import florian.cousin.iterator.*;
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.Collector;
-
 import org.jetbrains.annotations.Nullable;
 
 public interface LinearStream<T> extends Iterator<T> {
@@ -118,6 +117,8 @@ public interface LinearStream<T> extends Iterator<T> {
   }
 
   default List<T> toList() {
-    return collect(new SimpleCollector<>(ArrayList::new, List::add));
+    return collect(
+        new CollectorFinisher<T, List<T>, List<T>>(
+            ArrayList::new, List::add, Collections::unmodifiableList));
   }
 }
