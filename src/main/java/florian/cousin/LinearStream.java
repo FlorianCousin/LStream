@@ -174,4 +174,7 @@ public interface LinearStream<T> extends Iterator<T> {
   default Optional<T> findFirst() {
     return hasNext() ? Optional.ofNullable(next()) : Optional.empty();
   }
+
+  // TODO Implement a builder
+  //  static <T> LinearStream.Builder<T> builder();
 }
