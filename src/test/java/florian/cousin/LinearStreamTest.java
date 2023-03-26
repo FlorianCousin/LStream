@@ -523,7 +523,7 @@ class LinearStreamTest {
   }
 
   @Test
-  void generate() {
+  void generateInfinite() {
 
     LinearStream<Integer> allPositiveNumbers = LinearStream.iterate(0, i -> i + 1);
 
@@ -533,5 +533,18 @@ class LinearStreamTest {
     List<Integer> expectedGeneratedNumbers = List.of(0, 1, 2, 3, 4);
 
     assertThat(actualGeneratedNumbers).isEqualTo(expectedGeneratedNumbers);
+  }
+
+  @Test
+  void generateWithCondition() {
+
+    LinearStream<Integer> numberSequence = LinearStream.iterate(3, i -> (i * 5) % 47);
+
+    List<Integer> actualNumbers =
+        LinearStream.generate(numberSequence::next, number -> number < 30).toList();
+
+    List<Integer> expectedNumbers = List.of(3, 15, 28, 46);
+
+    assertThat(actualNumbers).isEqualTo(expectedNumbers);
   }
 }

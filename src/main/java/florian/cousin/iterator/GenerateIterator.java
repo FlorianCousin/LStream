@@ -1,6 +1,7 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LinearStream;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 
@@ -8,14 +9,23 @@ import lombok.RequiredArgsConstructor;
 public class GenerateIterator<T> implements LinearStream<T> {
 
   private final Supplier<? extends T> nextValueGenerator;
+  private final Predicate<? super T> hasNext;
+
+  private T previousValue;
+  private boolean started;
 
   @Override
   public boolean hasNext() {
-    return true;
+    return !started || hasNext.test(previousValue);
   }
 
   @Override
   public T next() {
-    return nextValueGenerator.get();
+
+    if (!started) {
+      started = true;
+    }
+
+    return previousValue = nextValueGenerator.get();
   }
 }

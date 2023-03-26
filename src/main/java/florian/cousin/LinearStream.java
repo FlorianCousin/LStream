@@ -189,6 +189,11 @@ public interface LinearStream<T> extends Iterator<T> {
   }
 
   static <T> LinearStream<T> generate(Supplier<? extends T> nextValueGenerator) {
-    return new GenerateIterator<>(nextValueGenerator);
+    return generate(nextValueGenerator, value -> true);
+  }
+
+  static <T> LinearStream<T> generate(
+      Supplier<? extends T> nextValueGenerator, Predicate<? super T> hasNext) {
+    return new GenerateIterator<>(nextValueGenerator, hasNext);
   }
 }
