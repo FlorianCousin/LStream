@@ -10,19 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LinearStream<T> extends Iterator<T> {
 
-  static <T> LinearStream<T> from(Iterable<T> iterable) {
-    return new SimpleIterator<>(iterable.iterator());
-  }
-
-  @SafeVarargs
-  static <T> LinearStream<T> of(T... iterationObjects) {
-    return new SimpleIterator<>(Arrays.asList(iterationObjects).iterator());
-  }
-
-  static <T> LinearStream<T> empty() {
-    return new SimpleIterator<>(Collections.emptyIterator());
-  }
-
   default LinearStream<T> filter(Predicate<? super T> predicate) {
     return new FilterIterator<>(this, predicate);
   }
@@ -177,4 +164,17 @@ public interface LinearStream<T> extends Iterator<T> {
 
   // TODO Implement a builder
   //  static <T> LinearStream.Builder<T> builder();
+
+  static <T> LinearStream<T> empty() {
+    return new SimpleIterator<>(Collections.emptyIterator());
+  }
+
+  static <T> LinearStream<T> from(Iterable<T> iterable) {
+    return new SimpleIterator<>(iterable.iterator());
+  }
+
+  @SafeVarargs
+  static <T> LinearStream<T> of(T... iterationObjects) {
+    return new SimpleIterator<>(Arrays.asList(iterationObjects).iterator());
+  }
 }
