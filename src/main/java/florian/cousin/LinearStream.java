@@ -157,4 +157,13 @@ public interface LinearStream<T> extends Iterator<T> {
     }
     return false;
   }
+
+  default boolean allMatch(Predicate<? super T> predicate) {
+    while (hasNext()) {
+      if (!predicate.test(next())) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

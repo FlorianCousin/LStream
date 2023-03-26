@@ -424,4 +424,29 @@ class LinearStreamTest {
 
     assertThat(actualContainsBruno).isFalse();
   }
+
+  @Test
+  void allMatchNoElements() {
+
+    boolean actualHasNull = LinearStream.empty().allMatch(Objects::isNull);
+
+    assertThat(actualHasNull).isTrue();
+  }
+
+  @Test
+  void allMatchUntilTheEnd() {
+
+    boolean actualHasNegative = LinearStream.of(-4, -12, -753, -56).allMatch(i -> i < 0);
+
+    assertThat(actualHasNegative).isTrue();
+  }
+
+  @Test
+  void allMatchEarlyReturn() {
+
+    boolean actualContainsBruno =
+        LinearStream.of("Bruno", "heart", "Elton", "John", "Remix").allMatch("Bruno"::equals);
+
+    assertThat(actualContainsBruno).isFalse();
+  }
 }
