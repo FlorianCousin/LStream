@@ -130,4 +130,13 @@ public interface LinearStream<T> extends Iterator<T> {
 
     return reduce(keepMinimum);
   }
+
+  default Optional<T> max(Comparator<? super T> comparator) {
+
+    BinaryOperator<T> keepMaximum =
+        (previousMax, nextValue) ->
+            comparator.compare(previousMax, nextValue) < 0 ? nextValue : previousMax;
+
+    return reduce(keepMaximum);
+  }
 }

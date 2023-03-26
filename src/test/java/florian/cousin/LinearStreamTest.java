@@ -352,4 +352,32 @@ class LinearStreamTest {
 
     assertThat(actualMinPositive).hasValue(3);
   }
+
+  @Test
+  void maxWithoutValue() {
+
+    Optional<Integer> actualMaximum = LinearStream.<Integer>empty().max(Comparator.naturalOrder());
+
+    assertThat(actualMaximum).isEmpty();
+  }
+
+  @Test
+  void maxWithOneValue() {
+
+    Optional<String> actualMaximum = LinearStream.of("g").max(Comparator.naturalOrder());
+
+    assertThat(actualMaximum).hasValue("g");
+  }
+
+  @Test
+  void maxWithSeveralValues() {
+
+    Optional<Integer> actualMaxNegative =
+        LinearStream.of(4, 9, -7, -2, 3)
+            .max(
+                Comparator.<Integer, Boolean>comparing(number -> number < 0)
+                    .thenComparing(Comparator.naturalOrder()));
+
+    assertThat(actualMaxNegative).hasValue(-2);
+  }
 }
