@@ -295,4 +295,31 @@ class LinearStreamEndTest {
 
     assertThat(actualFirst).isEmpty();
   }
+
+  @Test
+  void findLastNoElements() {
+
+    Optional<Object> actualLast = LinearStream.empty().findLast();
+
+    assertThat(actualLast).isEmpty();
+  }
+
+  @Test
+  void findLast() {
+
+    Optional<String> actualLast =
+        LinearStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
+            .filter(s -> s.startsWith("S"))
+            .findLast();
+
+    assertThat(actualLast).hasValue("Symphony");
+  }
+
+  @Test
+  void findLastIsNull() {
+
+    Optional<String> actualLast = LinearStream.of("null", "5", "d", null).findLast();
+
+    assertThat(actualLast).isEmpty();
+  }
 }

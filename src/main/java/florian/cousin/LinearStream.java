@@ -162,6 +162,10 @@ public interface LinearStream<T> extends Iterator<T> {
     return hasNext() ? Optional.ofNullable(next()) : Optional.empty();
   }
 
+  default Optional<T> findLast() {
+    return reduce((first, second) -> second);
+  }
+
   // TODO Implement a builder
   //  static <T> LinearStream.Builder<T> builder();
 
