@@ -187,6 +187,38 @@ class LinearStreamModificationTest {
   }
 
   @Test
+  void takeWhileEmpty() {
+
+    List<Integer> actualValues =
+        LinearStream.<Integer>empty().takeWhilePrevious(i -> i > 0).toList();
+
+    assertThat(actualValues).isEmpty();
+  }
+
+  @Test
+  void takeWhilePrevious() {
+
+    List<String> actualValues =
+        LinearStream.of("linear", "lap", "crowd", "log")
+            .takeWhilePrevious(s -> s.startsWith("l"))
+            .toList();
+
+    List<String> expectedValues = List.of("linear", "lap", "crowd");
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void takeWhilePreviousUseless() {
+
+    List<Integer> actualValues = LinearStream.of(4, 8, 6, 3).takeWhilePrevious(i -> i > 0).toList();
+
+    List<Integer> expectedValues = List.of(4, 8, 6, 3);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
   void dropWhileTakesNothing() {
 
     List<Integer> actualValues = LinearStream.of(1, 6, 7).dropWhile(i -> true).toList();

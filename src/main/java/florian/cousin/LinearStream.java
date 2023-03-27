@@ -51,6 +51,10 @@ public interface LinearStream<T> extends Iterator<T> {
     return new takeWhileIterator<>(this, predicate);
   }
 
+  default LinearStream<T> takeWhilePrevious(Predicate<? super T> previousPredicate) {
+    return new TakeWhilePreviousIterator<>(this, previousPredicate);
+  }
+
   default LinearStream<T> dropWhile(Predicate<? super T> predicate) {
     return new DropWhileIterator<>(this, predicate);
   }
