@@ -68,4 +68,14 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualSortedValues).isEqualTo(expectedSortedValues);
   }
+
+  @Test
+  void peek() {
+
+    List<Integer> actualValues = LinearStream.of(8, null).peek(System.out::println).toList();
+
+    List<Integer> expectedValues = Arrays.asList(8, null);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
 }
