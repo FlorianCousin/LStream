@@ -205,8 +205,8 @@ public interface LinearStream<T> extends Iterator<T> {
     return new GenerateIterator<>(nextValueGenerator, hasNext);
   }
 
-  static <T> LinearStream<T> concat(
-      LinearStream<? extends T> first, LinearStream<? extends T> second) {
-    return new ConcatIterator<>(first, second);
+  @SafeVarargs
+  static <T> LinearStream<T> concat(LinearStream<? extends T>... linearStreams) {
+    return LinearStream.of(linearStreams).flatMap(Function.identity());
   }
 }
