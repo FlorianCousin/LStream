@@ -78,4 +78,14 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
+
+  @Test
+  void limit() {
+
+    List<Integer> actualValues = LinearStream.of(4, null, null, 6).limit(2).toList();
+
+    List<Integer> expectedValues = Arrays.asList(4, null);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
 }
