@@ -51,6 +51,14 @@ class LinearStreamNullValuesTest {
     assertThatThrownBy(mappedToNull::toList).isExactlyInstanceOf(NullPointerException.class);
   }
 
+  @Test
+  void distinct() {
+
+    List<Integer> actualDistinctValues = LinearStream.of(4, 8, null, 8, null).distinct().toList();
+
+    assertThat(actualDistinctValues).containsExactlyInAnyOrder(4, 8, null);
+  }
+
   @SafeVarargs
   private <T> List<T> buildArrayList(T... values) {
     ArrayList<T> list = new ArrayList<>();

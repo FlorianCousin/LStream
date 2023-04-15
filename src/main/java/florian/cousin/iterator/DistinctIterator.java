@@ -6,41 +6,42 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 public class DistinctIterator<T> implements LinearStream<T> {
 
   private final Iterator<T> iterator;
   private final Set<T> iteratedElements = new HashSet<>();
-  private @Nullable T next;
+
+  private T next;
+  private boolean nextIsConsumed = true;
 
   @Override
   public boolean hasNext() {
 
-    filterToNext();
+    dropUntilNext();
 
-    return iterator.hasNext();
+    return !nextIsConsumed;
   }
 
   @Override
   public T next() {
 
     if (hasNext()) {
-      T filteredNext = this.next;
-      this.next = null;
-      return filteredNext;
+      nextIsConsumed = true;
+      return next;
     } else {
-      throw new NoSuchElementException("No more elements in filter iterator.");
+      throw new NoSuchElementException("No more elements in distinct iterator.");
     }
   }
 
-  private void filterToNext() {
-    while (iterator.hasNext() && next == null) {
+  private void dropUntilNext() {
+    while (nextIsConsumed && iterator.hasNext()) {
       T currentNext = iterator.next();
       if (!iteratedElements.contains(currentNext)) {
+        iteratedElements.add(currentNext);
+        nextIsConsumed = false;
         next = currentNext;
-        iteratedElements.add(next);
       }
     }
   }
