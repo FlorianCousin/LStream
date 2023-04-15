@@ -142,4 +142,26 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
+
+  @Test
+  void dropWhileNull() {
+
+    List<Integer> actualValues =
+        LinearStream.of(null, null, 8, null, 7).dropWhile(Objects::isNull).toList();
+
+    List<Integer> expectedValues = Arrays.asList(8, null, 7);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void dropWhileNotNull() {
+
+    List<Integer> actualValues =
+        LinearStream.of(1, 3, null, 8, null, 6).dropWhile(Objects::nonNull).toList();
+
+    List<Integer> expectedValues = Arrays.asList(null, 8, null, 6);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
 }
