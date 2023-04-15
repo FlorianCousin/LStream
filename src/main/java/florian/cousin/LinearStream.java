@@ -170,8 +170,9 @@ public interface LinearStream<T> extends Iterator<T> {
     return reduce((first, second) -> second);
   }
 
-  // TODO Implement a builder
-  //  static <T> LinearStream.Builder<T> builder();
+  static <T> LinearStream.Builder<T> builder() {
+    return new Builder<>();
+  }
 
   static <T> LinearStream<T> empty() {
     return new SimpleIterator<>(Collections.emptyIterator());
@@ -208,5 +209,24 @@ public interface LinearStream<T> extends Iterator<T> {
   @SafeVarargs
   static <T> LinearStream<T> concat(LinearStream<? extends T>... linearStreams) {
     return LinearStream.of(linearStreams).flatMap(Function.identity());
+  }
+
+  class Builder<T> implements Consumer<T> {
+
+    private final List<T> values = new LinkedList<>();
+
+    @Override
+    public void accept(T t) {
+      values.add(t);
+    }
+
+    public LinearStream.Builder<T> add(T t) {
+      accept(t);
+      return this;
+    }
+
+    public LinearStream<T> build() {
+      return LinearStream.from(values);
+    }
   }
 }

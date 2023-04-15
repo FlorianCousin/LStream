@@ -8,6 +8,46 @@ import org.junit.jupiter.api.Test;
 class LinearStreamInitialisationTest {
 
   @Test
+  void builderEmpty() {
+
+    List<Object> actualValues = LinearStream.builder().build().toList();
+
+    assertThat(actualValues).isEmpty();
+  }
+
+  @Test
+  void builderWithAdd() {
+
+    List<String> actualValues =
+        LinearStream.<String>builder()
+            .add("first")
+            .add("second")
+            .add("third")
+            .add("fourth")
+            .build()
+            .toList();
+
+    List<String> expectedValues = List.of("first", "second", "third", "fourth");
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void builderWithAccept() {
+
+    LinearStream.Builder<Long> builder = LinearStream.builder();
+    builder.accept(5L);
+    builder.accept(7L);
+    builder.accept(3L);
+    builder.accept(-5L);
+    List<Long> actualValues = builder.build().toList();
+
+    List<Long> expectedValues = List.of(5L, 7L, 3L, -5L);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
   void iterateInfinite() {
 
     List<Integer> actualNumbers = LinearStream.iterate(2, i -> (i * 5) % 47).limit(5).toList();
