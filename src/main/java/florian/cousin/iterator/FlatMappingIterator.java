@@ -8,15 +8,15 @@ import java.util.function.Function;
 public class FlatMappingIterator<T, R> implements LinearStream<R> {
 
   private final Iterator<T> baseIterator;
-  private final Function<? super T, ? extends Iterator<? extends R>> mapping;
+  private final Function<? super T, ? extends Iterator<? extends R>> mapper;
   private Iterator<? extends R> currentMappingIterator;
 
   public FlatMappingIterator(
-      Iterator<T> baseIterator, Function<? super T, ? extends Iterator<? extends R>> mapping) {
+      Iterator<T> baseIterator, Function<? super T, ? extends Iterator<? extends R>> mapper) {
     this.baseIterator = baseIterator;
-    this.mapping = mapping;
+    this.mapper = mapper;
     this.currentMappingIterator =
-        baseIterator.hasNext() ? mapping.apply(baseIterator.next()) : Collections.emptyIterator();
+        baseIterator.hasNext() ? mapper.apply(baseIterator.next()) : Collections.emptyIterator();
   }
 
   @Override
@@ -37,7 +37,7 @@ public class FlatMappingIterator<T, R> implements LinearStream<R> {
 
   private void dropBaseIteratorUntilValue() {
     while (!currentMappingIterator.hasNext() && baseIterator.hasNext()) {
-      currentMappingIterator = mapping.apply(baseIterator.next());
+      currentMappingIterator = mapper.apply(baseIterator.next());
     }
   }
 }
