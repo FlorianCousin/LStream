@@ -2,6 +2,7 @@ package florian.cousin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,6 +52,19 @@ class LinearStreamModificationTest {
             'a', 'p');
 
     assertThat(actualFlatMap).isEqualTo(expectedFlatMap);
+  }
+
+  @Test
+  void flatMapLastOneEmpty() {
+
+    List<Integer> actualNumbers =
+        LinearStream.of(List.of(1, -7, 6), Collections.<Integer>emptyList())
+            .flatMap(LinearStream::from)
+            .toList();
+
+    List<Integer> expectedNumbers = List.of(1, -7, 6);
+
+    assertThat(actualNumbers).isEqualTo(expectedNumbers);
   }
 
   @Test

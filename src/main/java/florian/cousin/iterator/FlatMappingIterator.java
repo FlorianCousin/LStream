@@ -21,16 +21,23 @@ public class FlatMappingIterator<T, R> implements LinearStream<R> {
 
   @Override
   public boolean hasNext() {
-    return currentMappingIterator.hasNext() || baseIterator.hasNext();
+
+    dropBaseIteratorUntilValue();
+
+    return currentMappingIterator.hasNext();
   }
 
   @Override
   public R next() {
 
-    while (!currentMappingIterator.hasNext()) {
-      currentMappingIterator = mapping.apply(baseIterator.next());
-    }
+    dropBaseIteratorUntilValue();
 
     return currentMappingIterator.next();
+  }
+
+  private void dropBaseIteratorUntilValue() {
+    while (!currentMappingIterator.hasNext() && baseIterator.hasNext()) {
+      currentMappingIterator = mapping.apply(baseIterator.next());
+    }
   }
 }
