@@ -32,6 +32,7 @@ public class SortedIterator<T> implements LinearStream<T> {
 
   private Iterator<T> createSortedIterator() {
 
+    // TODO Permit null values
     SimpleCollector<T, PriorityQueue<T>> priorityQueueCollector =
         new SimpleCollector<>(() -> new PriorityQueue<>(comparator), PriorityQueue::add);
 

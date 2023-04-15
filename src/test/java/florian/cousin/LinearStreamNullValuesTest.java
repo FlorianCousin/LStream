@@ -3,10 +3,7 @@ package florian.cousin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import org.junit.jupiter.api.Test;
 
 class LinearStreamNullValuesTest {
@@ -57,6 +54,19 @@ class LinearStreamNullValuesTest {
     List<Integer> actualDistinctValues = LinearStream.of(4, 8, null, 8, null).distinct().toList();
 
     assertThat(actualDistinctValues).containsExactlyInAnyOrder(4, 8, null);
+  }
+
+  @Test
+  void sorted() {
+
+    List<Integer> actualSortedValues =
+        LinearStream.of(7, null, 6)
+            .sorted(Comparator.nullsFirst(Comparator.naturalOrder()))
+            .toList();
+
+    List<Integer> expectedSortedValues = buildArrayList(null, 6, 7);
+
+    assertThat(actualSortedValues).isEqualTo(expectedSortedValues);
   }
 
   @SafeVarargs
