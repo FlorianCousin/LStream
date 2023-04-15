@@ -98,4 +98,26 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
+
+  @Test
+  void takeWhileNotNull() {
+
+    List<Integer> actualValues =
+        LinearStream.of(1, 7, null, 9).takeWhile(Objects::nonNull).toList();
+
+    List<Integer> expectedValues = List.of(1, 7);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void takeWhileNull() {
+
+    List<Integer> actualValues =
+        LinearStream.of(null, null, 8, null).takeWhile(Objects::isNull).toList();
+
+    List<Integer> expectedValues = Arrays.asList(null, null);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
 }
