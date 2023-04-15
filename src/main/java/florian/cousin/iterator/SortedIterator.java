@@ -1,9 +1,7 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LinearStream;
-import florian.cousin.collector.SimpleCollector;
 import java.util.*;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,13 +30,9 @@ public class SortedIterator<T> implements LinearStream<T> {
 
   private Iterator<T> createSortedIterator() {
 
-    // TODO Permit null values
-    SimpleCollector<T, PriorityQueue<T>> priorityQueueCollector =
-        new SimpleCollector<>(() -> new PriorityQueue<>(comparator), PriorityQueue::add);
-
-    PriorityQueue<T> baseIteratorValues = baseIterator.collect(priorityQueueCollector);
-
-    // TODO Use LinearStream instead of Stream here when null values are allowed in takeWhile
-    return Stream.generate(baseIteratorValues::poll).takeWhile(Objects::nonNull).iterator();
+    // noinspection unchecked
+    T[] values = (T[]) baseIterator.toArray();
+    Arrays.sort(values, comparator);
+    return Arrays.asList(values).iterator();
   }
 }
