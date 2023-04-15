@@ -1,6 +1,7 @@
 package florian.cousin;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +28,27 @@ class LinearStreamNullValuesTest {
     List<Integer> expectedValues = buildArrayList(3, null);
 
     assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void flatMap() {
+
+    List<Integer> actualValues =
+        LinearStream.of(null, List.of(4, 6))
+            .flatMap(value -> value == null ? LinearStream.of(7, 9) : LinearStream.from(value))
+            .toList();
+
+    List<Integer> expectedValues = List.of(7, 9, 4, 6);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void flatMapperShouldNotReturnNull() {
+
+    LinearStream<Object> mappedToNull = LinearStream.of(7).flatMap(value -> null);
+
+    assertThatThrownBy(mappedToNull::toList).isExactlyInstanceOf(NullPointerException.class);
   }
 
   @SafeVarargs
