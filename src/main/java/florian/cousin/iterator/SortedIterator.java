@@ -37,6 +37,7 @@ public class SortedIterator<T> implements LinearStream<T> {
 
     PriorityQueue<T> baseIteratorValues = baseIterator.collect(priorityQueueCollector);
 
+    // TODO Use LinearStream instead of Stream here when null values are allowed in takeWhile
     return Stream.generate(baseIteratorValues::poll).takeWhile(Objects::nonNull).iterator();
   }
 }
