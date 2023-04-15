@@ -5,40 +5,41 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 public class FilterIterator<T> implements LinearStream<T> {
 
   private final Iterator<T> iterator;
   private final Predicate<? super T> predicate;
-  private @Nullable T next;
+
+  private T next;
+  private boolean nextIsConsumed = true;
 
   @Override
   public boolean hasNext() {
 
-    filterToNext();
+    dropUntilValue();
 
-    return next != null;
+    return !nextIsConsumed;
   }
 
   @Override
   public T next() {
 
     if (hasNext()) {
-      T filteredNext = this.next;
-      this.next = null;
-      return filteredNext;
+      nextIsConsumed = true;
+      return next;
     } else {
       throw new NoSuchElementException("No more elements in filter iterator.");
     }
   }
 
-  private void filterToNext() {
-    while (iterator.hasNext() && next == null) {
+  private void dropUntilValue() {
+    while (nextIsConsumed && iterator.hasNext()) {
       T currentNext = iterator.next();
       if (predicate.test(currentNext)) {
         next = currentNext;
+        nextIsConsumed = false;
       }
     }
   }
