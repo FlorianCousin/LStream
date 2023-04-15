@@ -22,7 +22,7 @@ class LinearStreamNullValuesTest {
     List<Integer> actualValues =
         LinearStream.of(null, 2).map(number -> number == null ? 3 : null).toList();
 
-    List<Integer> expectedValues = buildArrayList(3, null);
+    List<Integer> expectedValues = Arrays.asList(3, null);
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
@@ -64,15 +64,8 @@ class LinearStreamNullValuesTest {
             .sorted(Comparator.nullsFirst(Comparator.naturalOrder()))
             .toList();
 
-    List<Integer> expectedSortedValues = buildArrayList(null, 6, 7);
+    List<Integer> expectedSortedValues = Arrays.asList(null, 6, 7);
 
     assertThat(actualSortedValues).isEqualTo(expectedSortedValues);
-  }
-
-  @SafeVarargs
-  private <T> List<T> buildArrayList(T... values) {
-    ArrayList<T> list = new ArrayList<>();
-    Collections.addAll(list, values);
-    return list;
   }
 }
