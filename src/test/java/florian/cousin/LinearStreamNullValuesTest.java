@@ -206,4 +206,14 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualMaxString).isEmpty();
   }
+
+  @Test
+  void toList() {
+
+    List<Integer> actualValues = LinearStream.of(null, 5, null).toList();
+
+    List<Integer> expectedValues = Arrays.asList(null, 5, null);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
 }
