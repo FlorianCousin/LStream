@@ -244,4 +244,17 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
+
+  @Test
+  void iterate() {
+
+    List<String> actualValues =
+        LinearStream.iterate("soap", previousValue -> previousValue == null ? "soap" : null)
+            .limit(5)
+            .toList();
+
+    List<String> expectedValues = Arrays.asList("soap", null, "soap", null, "soap");
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
 }
