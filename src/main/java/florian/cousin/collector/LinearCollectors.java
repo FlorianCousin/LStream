@@ -2,6 +2,7 @@ package florian.cousin.collector;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -18,5 +19,9 @@ public final class LinearCollectors {
 
   public static <T> LinearCollector<T, List<T>, List<T>> toList() {
     return LinearCollector.of(ArrayList::new, List::add);
+  }
+
+  public static <T> LinearCollector<T, List<T>, List<T>> toUnmodifiableList() {
+    return LinearCollector.of(ArrayList::new, List::add, Collections::unmodifiableList);
   }
 }
