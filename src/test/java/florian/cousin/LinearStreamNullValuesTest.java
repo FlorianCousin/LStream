@@ -216,4 +216,12 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
+
+  @Test
+  void count() {
+
+    long actualValues = LinearStream.of(null, 5, null).count();
+
+    assertThat(actualValues).isEqualTo(3);
+  }
 }
