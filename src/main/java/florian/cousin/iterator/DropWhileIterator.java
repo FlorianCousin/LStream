@@ -2,46 +2,49 @@ package florian.cousin.iterator;
 
 import florian.cousin.LinearStream;
 import java.util.function.Predicate;
-import org.jetbrains.annotations.Nullable;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class DropWhileIterator<T> implements LinearStream<T> {
 
   private final LinearStream<T> baseIterator;
+  private final Predicate<? super T> predicate;
 
-  private @Nullable T firstTakenValue;
-  private boolean firstValueIsConsumed;
-
-  public DropWhileIterator(LinearStream<T> baseIterator, Predicate<? super T> predicate) {
-    this.baseIterator = baseIterator;
-
-    if (!baseIterator.hasNext()) {
-      this.firstValueIsConsumed = true;
-      this.firstTakenValue = null;
-    }
-
-    T currentNext = baseIterator.next();
-
-    while (baseIterator.hasNext() && predicate.test(currentNext)) {
-      currentNext = baseIterator.next();
-    }
-
-    this.firstTakenValue = currentNext;
-    this.firstValueIsConsumed = predicate.test(currentNext);
-  }
+  private T firstNotDroppedValue;
+  private boolean firstIsConsumed = true;
+  private boolean started = false;
 
   @Override
   public boolean hasNext() {
-    return !firstValueIsConsumed || baseIterator.hasNext();
+
+    dropUntilNext();
+
+    return !firstIsConsumed || baseIterator.hasNext();
   }
 
   @Override
   public T next() {
 
-    if (!firstValueIsConsumed) {
-      firstValueIsConsumed = true;
-      return firstTakenValue;
+    dropUntilNext();
+
+    started = true;
+
+    if (firstIsConsumed) {
+      return baseIterator.next();
     }
 
-    return baseIterator.next();
+    firstIsConsumed = true;
+    return firstNotDroppedValue;
+  }
+
+  private void dropUntilNext() {
+
+    while (!started && firstIsConsumed && baseIterator.hasNext()) {
+      T currentNext = baseIterator.next();
+      if (predicate.negate().test(currentNext)) {
+        firstIsConsumed = false;
+        firstNotDroppedValue = currentNext;
+      }
+    }
   }
 }
