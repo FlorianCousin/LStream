@@ -29,10 +29,8 @@ public class SortedIterator<T> implements LinearStream<T> {
   }
 
   private Iterator<T> createSortedIterator() {
-
-    // noinspection unchecked
-    T[] values = (T[]) baseIterator.toArray();
-    Arrays.sort(values, comparator);
-    return Arrays.asList(values).iterator();
+    List<T> values = baseIterator.collect(ArrayList::new, List::add);
+    values.sort(comparator);
+    return values.iterator();
   }
 }
