@@ -1,8 +1,6 @@
 package florian.cousin;
 
-import florian.cousin.collector.CollectorFinisher;
 import florian.cousin.collector.LinearCollector;
-import florian.cousin.collector.SimpleCollector;
 import florian.cousin.iterator.*;
 import java.util.*;
 import java.util.function.*;
@@ -100,7 +98,7 @@ public interface LinearStream<T> extends Iterator<T> {
   }
 
   default <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator) {
-    return collect(new SimpleCollector<>(supplier, accumulator));
+    return collect(LinearCollector.of(supplier, accumulator));
   }
 
   default <R> R collect(LinearCollector<T, ?, R> collector) {
@@ -109,7 +107,7 @@ public interface LinearStream<T> extends Iterator<T> {
 
   default List<T> toList() {
     return collect(
-        new CollectorFinisher<T, List<T>, List<T>>(
+        LinearCollector.<T, List<T>, List<T>>of(
             ArrayList::new, List::add, Collections::unmodifiableList));
   }
 

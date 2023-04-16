@@ -10,7 +10,7 @@ public class CollectorFinisher<T, A, R> extends LinearCollector<T, A, R> {
   private final Function<A, R> finisher;
 
   public CollectorFinisher(
-      Supplier<A> supplier, BiConsumer<A, T> accumulator, Function<A, R> finisher) {
+      Supplier<A> supplier, BiConsumer<A, ? super T> accumulator, Function<A, R> finisher) {
     super(supplier, accumulator);
     this.finisher = finisher;
   }
