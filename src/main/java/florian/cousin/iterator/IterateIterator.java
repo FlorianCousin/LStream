@@ -13,20 +13,20 @@ public class IterateIterator<T> implements LinearStream<T> {
   private final UnaryOperator<T> computeNextValue;
 
   private T previousValue;
-  private boolean initialValueConsumed = false;
+  private boolean started = false;
 
   @Override
   public boolean hasNext() {
-    return !initialValueConsumed || hasNext.test(previousValue);
+    return !started || hasNext.test(previousValue);
   }
 
   @Override
   public T next() {
 
-    if (initialValueConsumed) {
+    if (started) {
       return previousValue = computeNextValue.apply(previousValue);
     } else {
-      initialValueConsumed = true;
+      started = true;
       return previousValue = initialValue;
     }
   }
