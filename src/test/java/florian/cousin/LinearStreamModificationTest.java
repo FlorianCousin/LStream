@@ -108,6 +108,16 @@ class LinearStreamModificationTest {
   }
 
   @Test
+  void sortedMustKeepDuplicate() {
+
+    List<Integer> actualValues = LinearStream.of(4, 9, 3, 4, 6, 3, 4, 4).sorted().toList();
+
+    List<Integer> expectedValues = List.of(3, 3, 4, 4, 4, 4, 6, 9);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
   void peek() {
 
     AtomicInteger number = new AtomicInteger(0);
