@@ -234,4 +234,14 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
+
+  @Test
+  void from() {
+
+    List<Integer> actualValues = LinearStream.from(Arrays.asList(null, 4, null)).toList();
+
+    List<Integer> expectedValues = Arrays.asList(null, 4, null);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
 }
