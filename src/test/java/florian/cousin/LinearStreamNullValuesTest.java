@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
 
 class LinearStreamNullValuesTest {
@@ -254,6 +255,21 @@ class LinearStreamNullValuesTest {
             .toList();
 
     List<String> expectedValues = Arrays.asList("soap", null, "soap", null, "soap");
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void generate() {
+
+    AtomicBoolean previousIsNull = new AtomicBoolean(false);
+
+    List<String> actualValues =
+        LinearStream.generate(() -> previousIsNull.getAndSet(!previousIsNull.get()) ? null : "word")
+            .limit(5)
+            .toList();
+
+    List<String> expectedValues = Arrays.asList("word", null, "word", null, "word");
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
