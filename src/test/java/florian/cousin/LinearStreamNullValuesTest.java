@@ -208,7 +208,7 @@ class LinearStreamNullValuesTest {
   }
 
   @Test
-  void toList() {
+  void ofAndToList() {
 
     List<Integer> actualValues = LinearStream.of(null, 5, null).toList();
 
