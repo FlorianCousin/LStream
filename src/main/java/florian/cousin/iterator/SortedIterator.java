@@ -1,6 +1,7 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LinearStream;
+import florian.cousin.collector.LinearCollectors;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +30,7 @@ public class SortedIterator<T> implements LinearStream<T> {
   }
 
   private Iterator<T> createSortedIterator() {
-    List<T> values = baseIterator.collect(ArrayList::new, List::add);
+    List<T> values = baseIterator.collect(LinearCollectors.toList());
     values.sort(comparator);
     return values.iterator();
   }
