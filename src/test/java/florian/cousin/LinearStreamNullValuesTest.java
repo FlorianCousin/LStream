@@ -224,4 +224,14 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualValues).isEqualTo(3);
   }
+
+  @Test
+  void builder() {
+
+    List<Integer> actualValues = LinearStream.<Integer>builder().add(5).add(null).build().toList();
+
+    List<Integer> expectedValues = Arrays.asList(5, null);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
+  }
 }
