@@ -57,4 +57,15 @@ class LinearCollectorsTest {
 
     assertThat(actualCollection).isEqualTo(expectedCollection);
   }
+
+  @Test
+  void toUnmodifiableSet() {
+
+    Set<Integer> actualCollection =
+        LinearStream.of(4, 8, 6, 4, 6).collect(LinearCollectors.toUnmodifiableSet());
+
+    Set<Integer> expectedCollection = Set.of(4, 8, 6);
+
+    assertThat(actualCollection).isUnmodifiable().isEqualTo(expectedCollection);
+  }
 }

@@ -25,4 +25,8 @@ public final class LinearCollectors {
   public static <T> LinearCollector<T, Set<T>, Set<T>> toSet() {
     return LinearCollector.of(HashSet::new, Set::add);
   }
+
+  public static <T> LinearCollector<T, Set<T>, Set<T>> toUnmodifiableSet() {
+    return LinearCollector.of(HashSet::new, Set::add, Collections::unmodifiableSet);
+  }
 }
