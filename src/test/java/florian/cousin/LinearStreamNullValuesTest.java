@@ -164,4 +164,46 @@ class LinearStreamNullValuesTest {
 
     assertThat(actualValues).isEqualTo(expectedValues);
   }
+
+  @Test
+  void reduceSameType() {
+
+    Integer actualMaxString =
+        LinearStream.of(1, null, 3, null)
+            .reduce(
+                0,
+                (previousValue, nextValue) ->
+                    String.valueOf(previousValue).compareTo(String.valueOf(nextValue)) < 0
+                        ? nextValue
+                        : previousValue);
+
+    assertThat(actualMaxString).isNull();
+  }
+
+  @Test
+  void reduceDifferentType() {
+
+    String actualMaxString =
+        LinearStream.of(1, null, 3, null)
+            .reduce(
+                "0",
+                (previousValue, nextValue) ->
+                    Collections.max(List.of(previousValue, String.valueOf(nextValue))));
+
+    assertThat(actualMaxString).isEqualTo("null");
+  }
+
+  @Test
+  void reduceWithoutIdentity() {
+
+    Optional<Integer> actualMaxString =
+        LinearStream.of(1, null, 3, null)
+            .reduce(
+                (previousValue, nextValue) ->
+                    String.valueOf(previousValue).compareTo(String.valueOf(nextValue)) < 0
+                        ? nextValue
+                        : previousValue);
+
+    assertThat(actualMaxString).isEmpty();
+  }
 }
