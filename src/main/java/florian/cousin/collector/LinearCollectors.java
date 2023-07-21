@@ -33,4 +33,17 @@ public final class LinearCollectors {
   public static LinearCollector<CharSequence, StringBuilder, String> joining() {
     return LinearCollector.of(StringBuilder::new, StringBuilder::append, StringBuilder::toString);
   }
+
+  public static LinearCollector<CharSequence, StringJoiner, String> joining(
+      CharSequence delimiter) {
+    return joining(delimiter, "", "");
+  }
+
+  public static LinearCollector<CharSequence, StringJoiner, String> joining(
+      CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
+    return new CollectorFinisher<>(
+        () -> new StringJoiner(delimiter, prefix, suffix),
+        StringJoiner::add,
+        StringJoiner::toString);
+  }
 }
