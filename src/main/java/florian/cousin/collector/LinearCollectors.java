@@ -4,6 +4,7 @@ import florian.cousin.LinearStream;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public final class LinearCollectors {
@@ -65,6 +66,18 @@ public final class LinearCollectors {
         (accumulation, newValue) -> {
           LinearStream<? extends U> flatValues = mapper.apply(newValue);
           flatValues.forEach(flatValue -> downstreamAccumulator.accept(accumulation, flatValue));
+        };
+    return downstream.withAccumulator(newAccumulator);
+  }
+
+  public static <T, A, R> LinearCollector<T, A, R> filtering(
+      Predicate<? super T> predicate, LinearCollector<? super T, A, R> downstream) {
+    BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+    BiConsumer<A, ? super T> newAccumulator =
+        (accumulation, newValue) -> {
+          if (predicate.test(newValue)) {
+            downstreamAccumulator.accept(accumulation, newValue);
+          }
         };
     return downstream.withAccumulator(newAccumulator);
   }
