@@ -68,4 +68,34 @@ class LinearCollectorsTest {
 
     assertThat(actualCollection).isUnmodifiable().isEqualTo(expectedCollection);
   }
+
+  @Test
+  void joiningSimple() {
+
+    String actualJoin = LinearStream.of("j", "o", "i", "n").collect(LinearCollectors.joining());
+
+    String expectedJoin = "join";
+
+    assertThat(actualJoin).isEqualTo(expectedJoin);
+  }
+
+  @Test
+  void joiningEmpty() {
+
+    String actualJoin = LinearStream.<String>empty().collect(LinearCollectors.joining());
+
+    String expectedJoin = "";
+
+    assertThat(actualJoin).isEqualTo(expectedJoin);
+  }
+
+  @Test
+  void joiningOneValue() {
+
+    String actualJoin = LinearStream.of("j").collect(LinearCollectors.joining());
+
+    String expectedJoin = "j";
+
+    assertThat(actualJoin).isEqualTo(expectedJoin);
+  }
 }

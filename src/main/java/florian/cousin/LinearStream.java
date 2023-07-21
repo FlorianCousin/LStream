@@ -101,7 +101,7 @@ public interface LinearStream<T> extends Iterator<T> {
     return collect(LinearCollector.of(supplier, accumulator));
   }
 
-  default <R> R collect(LinearCollector<T, ?, R> collector) {
+  default <R> R collect(LinearCollector<? super T, ?, R> collector) {
     return collector.collect(this);
   }
 

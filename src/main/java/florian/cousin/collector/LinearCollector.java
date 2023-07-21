@@ -12,9 +12,9 @@ public abstract class LinearCollector<T, A, R> {
   private final Supplier<A> supplier;
   private final BiConsumer<A, ? super T> accumulator;
 
-  public abstract R collect(LinearStream<T> linearStream);
+  public abstract R collect(LinearStream<? extends T> linearStream);
 
-  protected A collectWithoutFinisher(LinearStream<T> linearStream) {
+  protected A collectWithoutFinisher(LinearStream<? extends T> linearStream) {
     A currentValue = supplier.get();
     linearStream.forEachRemaining(iteratedValue -> accumulator.accept(currentValue, iteratedValue));
     return currentValue;

@@ -29,4 +29,8 @@ public final class LinearCollectors {
   public static <T> LinearCollector<T, Set<T>, Set<T>> toUnmodifiableSet() {
     return LinearCollector.of(HashSet::new, Set::add, Collections::unmodifiableSet);
   }
+
+  public static LinearCollector<CharSequence, StringBuilder, String> joining() {
+    return LinearCollector.of(StringBuilder::new, StringBuilder::append, StringBuilder::toString);
+  }
 }

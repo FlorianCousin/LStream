@@ -11,7 +11,7 @@ public class SimpleCollector<T, A> extends LinearCollector<T, A, A> {
   }
 
   @Override
-  public A collect(LinearStream<T> linearStream) {
+  public A collect(LinearStream<? extends T> linearStream) {
     return collectWithoutFinisher(linearStream);
   }
 }

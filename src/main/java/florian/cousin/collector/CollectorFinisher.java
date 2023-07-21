@@ -16,7 +16,7 @@ public class CollectorFinisher<T, A, R> extends LinearCollector<T, A, R> {
   }
 
   @Override
-  public R collect(LinearStream<T> linearStream) {
+  public R collect(LinearStream<? extends T> linearStream) {
     return finisher.apply(collectWithoutFinisher(linearStream));
   }
 }
