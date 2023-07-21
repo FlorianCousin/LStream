@@ -1,6 +1,8 @@
 package florian.cousin.collector;
 
+import florian.cousin.LinearStream;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -51,5 +53,17 @@ public final class LinearCollectors {
   public static <T, U, A, R> LinearCollector<T, A, R> mapping(
       Function<? super T, ? extends U> mapper, LinearCollector<? super U, A, R> downstream) {
     return downstream.withMapping(mapper);
+  }
+
+  public static <T, U, A, R> LinearCollector<T, A, R> flatMapping(
+      Function<? super T, ? extends LinearStream<? extends U>> mapper,
+      LinearCollector<? super U, A, R> downstream) {
+    BiConsumer<A, ? super U> downstreamAccumulator = downstream.getAccumulator();
+    BiConsumer<A, ? super T> newAccumulator =
+        (accumulation, newValue) -> {
+          LinearStream<? extends U> flatValues = mapper.apply(newValue);
+          flatValues.forEach(flatValue -> downstreamAccumulator.accept(accumulation, flatValue));
+        };
+    return downstream.withAccumulator(newAccumulator);
   }
 }
