@@ -23,6 +23,6 @@ public class CollectorFinisher<T, A, R> extends LinearCollector<T, A, R> {
   @Override
   protected <U> LinearCollector<U, A, R> withAccumulator(
       BiConsumer<A, ? super U> overridingAccumulator) {
-    return new CollectorFinisher<>(getSupplier(), overridingAccumulator, finisher);
+    return new CollectorFinisher<>(supplier(), overridingAccumulator, finisher);
   }
 }

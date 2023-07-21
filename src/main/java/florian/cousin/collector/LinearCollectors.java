@@ -52,7 +52,7 @@ public final class LinearCollectors {
 
   public static <T, U, A, R> LinearCollector<T, A, R> mapping(
       Function<? super T, ? extends U> mapper, LinearCollector<? super U, A, R> downstream) {
-    BiConsumer<A, ? super U> downstreamAccumulator = downstream.getAccumulator();
+    BiConsumer<A, ? super U> downstreamAccumulator = downstream.accumulator();
     BiConsumer<A, T> newAccumulator = (a, u) -> downstreamAccumulator.accept(a, mapper.apply(u));
     return downstream.withAccumulator(newAccumulator);
   }
@@ -60,7 +60,7 @@ public final class LinearCollectors {
   public static <T, U, A, R> LinearCollector<T, A, R> flatMapping(
       Function<? super T, ? extends LinearStream<? extends U>> mapper,
       LinearCollector<? super U, A, R> downstream) {
-    BiConsumer<A, ? super U> downstreamAccumulator = downstream.getAccumulator();
+    BiConsumer<A, ? super U> downstreamAccumulator = downstream.accumulator();
     BiConsumer<A, ? super T> newAccumulator =
         (accumulation, newValue) -> {
           LinearStream<? extends U> flatValues = mapper.apply(newValue);
