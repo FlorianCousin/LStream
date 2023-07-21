@@ -1,6 +1,7 @@
 package florian.cousin.collector;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class LinearCollectors {
@@ -45,5 +46,10 @@ public final class LinearCollectors {
         () -> new StringJoiner(delimiter, prefix, suffix),
         StringJoiner::add,
         StringJoiner::toString);
+  }
+
+  public static <T, U, A, R> LinearCollector<T, A, R> mapping(
+      Function<? super T, ? extends U> mapper, LinearCollector<? super U, A, R> downstream) {
+    return downstream.withMapping(mapper);
   }
 }

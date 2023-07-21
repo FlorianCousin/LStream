@@ -14,4 +14,10 @@ public class SimpleCollector<T, A> extends LinearCollector<T, A, A> {
   public A collect(LinearStream<? extends T> linearStream) {
     return collectWithoutFinisher(linearStream);
   }
+
+  @Override
+  protected <U> SimpleCollector<U, A> withAccumulator(
+      BiConsumer<A, ? super U> overridingAccumulator) {
+    return new SimpleCollector<>(getSupplier(), overridingAccumulator);
+  }
 }

@@ -19,4 +19,10 @@ public class CollectorFinisher<T, A, R> extends LinearCollector<T, A, R> {
   public R collect(LinearStream<? extends T> linearStream) {
     return finisher.apply(collectWithoutFinisher(linearStream));
   }
+
+  @Override
+  protected <U> LinearCollector<U, A, R> withAccumulator(
+      BiConsumer<A, ? super U> overridingAccumulator) {
+    return new CollectorFinisher<>(getSupplier(), overridingAccumulator, finisher);
+  }
 }

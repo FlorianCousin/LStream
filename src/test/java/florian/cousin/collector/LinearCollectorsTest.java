@@ -162,4 +162,28 @@ class LinearCollectorsTest {
 
     assertThat(actualJoin).isEqualTo(expectedJoin);
   }
+
+  @Test
+  void mappingEmpty() {
+
+    String actualMapping =
+        LinearStream.empty()
+            .collect(LinearCollectors.mapping(s -> s + "a", LinearCollectors.joining()));
+
+    String expectedMapping = "";
+
+    assertThat(actualMapping).isEqualTo(expectedMapping);
+  }
+
+  @Test
+  void mappingNumbers() {
+
+    List<Integer> actualMapping =
+        LinearStream.of(0, 1, 2, 3, 4, 5)
+            .collect(LinearCollectors.mapping(i -> i * i, LinearCollectors.toList()));
+
+    List<Integer> expectedMapping = List.of(0, 1, 4, 9, 16, 25);
+
+    assertThat(actualMapping).isEqualTo(expectedMapping);
+  }
 }

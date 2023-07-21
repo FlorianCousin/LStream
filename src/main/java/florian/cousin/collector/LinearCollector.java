@@ -4,8 +4,11 @@ import florian.cousin.LinearStream;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter(AccessLevel.PACKAGE)
 @RequiredArgsConstructor
 public abstract class LinearCollector<T, A, R> {
 
@@ -29,4 +32,12 @@ public abstract class LinearCollector<T, A, R> {
       Supplier<A> supplier, BiConsumer<A, ? super T> accumulator, Function<A, R> finisher) {
     return new CollectorFinisher<>(supplier, accumulator, finisher);
   }
+
+  public <U> LinearCollector<U, A, R> withMapping(Function<? super U, ? extends T> mapper) {
+    BiConsumer<A, U> newAccumulator = (a, u) -> getAccumulator().accept(a, mapper.apply(u));
+    return this.withAccumulator(newAccumulator);
+  }
+
+  protected abstract <U> LinearCollector<U, A, R> withAccumulator(
+      BiConsumer<A, ? super U> overridingAccumulator);
 }
