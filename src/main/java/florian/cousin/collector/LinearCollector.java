@@ -33,11 +33,6 @@ public abstract class LinearCollector<T, A, R> {
     return new CollectorFinisher<>(supplier, accumulator, finisher);
   }
 
-  public <U> LinearCollector<U, A, R> withMapping(Function<? super U, ? extends T> mapper) {
-    BiConsumer<A, U> newAccumulator = (a, u) -> getAccumulator().accept(a, mapper.apply(u));
-    return this.withAccumulator(newAccumulator);
-  }
-
   protected abstract <U> LinearCollector<U, A, R> withAccumulator(
       BiConsumer<A, ? super U> overridingAccumulator);
 }
