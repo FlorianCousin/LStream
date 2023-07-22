@@ -1,15 +1,16 @@
 package florian.cousin.collector;
 
+import static lombok.AccessLevel.PACKAGE;
+
 import florian.cousin.LinearStream;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter(AccessLevel.PACKAGE)
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@Getter(PACKAGE)
+@RequiredArgsConstructor(access = PACKAGE)
 public class LinearCollector<T, A, R> {
 
   private final Supplier<A> supplier;
