@@ -45,7 +45,7 @@ public final class LinearCollectors {
 
   public static LinearCollector<CharSequence, StringJoiner, String> joining(
       CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
-    return new CollectorFinisher<>(
+    return LinearCollector.of(
         () -> new StringJoiner(delimiter, prefix, suffix),
         StringJoiner::add,
         StringJoiner::toString);

@@ -3,7 +3,7 @@ package florian.cousin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import florian.cousin.collector.CollectorFinisher;
+import florian.cousin.collector.LinearCollector;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
@@ -109,8 +109,8 @@ class LinearStreamEndTest {
   @Test
   void collectWithCollector() {
 
-    CollectorFinisher<Integer, List<Integer>, List<Integer>> integerListCollector =
-        new CollectorFinisher<>(ArrayList::new, List::add, Collections::unmodifiableList);
+    LinearCollector<Integer, List<Integer>, List<Integer>> integerListCollector =
+        LinearCollector.of(ArrayList::new, List::add, Collections::unmodifiableList);
 
     List<Integer> actualCollection = LinearStream.of(4, 5, 4, 3).collect(integerListCollector);
 

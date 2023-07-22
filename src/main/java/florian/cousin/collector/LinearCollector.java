@@ -10,17 +10,16 @@ import lombok.RequiredArgsConstructor;
 
 @Getter(AccessLevel.PACKAGE)
 @RequiredArgsConstructor
-public abstract class LinearCollector<T, A, R> {
+public class LinearCollector<T, A, R> {
 
   private final Supplier<A> supplier;
   private final BiConsumer<A, ? super T> accumulator;
+  private final Function<A, R> finisher;
 
-  public abstract R collect(LinearStream<? extends T> linearStream);
-
-  protected A collectWithoutFinisher(LinearStream<? extends T> linearStream) {
+  public R collect(LinearStream<? extends T> linearStream) {
     A currentValue = supplier.get();
     linearStream.forEachRemaining(iteratedValue -> accumulator.accept(currentValue, iteratedValue));
-    return currentValue;
+    return finisher.apply(currentValue);
   }
 
   public static <T, R> LinearCollector<T, R, R> of(
@@ -30,9 +29,11 @@ public abstract class LinearCollector<T, A, R> {
 
   public static <T, A, R> LinearCollector<T, A, R> of(
       Supplier<A> supplier, BiConsumer<A, ? super T> accumulator, Function<A, R> finisher) {
-    return new CollectorFinisher<>(supplier, accumulator, finisher);
+    return new LinearCollector<>(supplier, accumulator, finisher);
   }
 
-  protected abstract <U> LinearCollector<U, A, R> withAccumulator(
-      BiConsumer<A, ? super U> overridingAccumulator);
+  protected <U> LinearCollector<U, A, R> withAccumulator(
+      BiConsumer<A, ? super U> overridingAccumulator) {
+    return new LinearCollector<>(supplier, overridingAccumulator, finisher);
+  }
 }
