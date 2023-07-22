@@ -22,7 +22,7 @@ public class LinearCollector<T, A, R> {
     return finisher.apply(currentValue);
   }
 
-  public static <T, R> LinearCollector<T, R, R> of(
+  public static <T, R> SimpleCollector<T, R> of(
       Supplier<R> supplier, BiConsumer<R, ? super T> accumulator) {
     return new SimpleCollector<>(supplier, accumulator);
   }
