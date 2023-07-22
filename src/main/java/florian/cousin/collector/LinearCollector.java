@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter(AccessLevel.PACKAGE)
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class LinearCollector<T, A, R> {
 
   private final Supplier<A> supplier;
