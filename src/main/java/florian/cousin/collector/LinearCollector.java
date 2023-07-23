@@ -37,4 +37,8 @@ public class LinearCollector<T, A, R> {
       BiConsumer<A, ? super U> overridingAccumulator) {
     return new LinearCollector<>(supplier, overridingAccumulator, finisher);
   }
+
+  protected <S> LinearCollector<T, A, S> collectingAndThen(Function<R, S> afterFinisher) {
+    return new LinearCollector<>(supplier, accumulator, finisher.andThen(afterFinisher));
+  }
 }

@@ -81,4 +81,9 @@ public final class LinearCollectors {
         };
     return downstream.withAccumulator(newAccumulator);
   }
+
+  public static <T, A, R, S> LinearCollector<T, A, S> collectingAndThen(
+      LinearCollector<T, A, R> downstream, Function<R, S> finisher) {
+    return downstream.collectingAndThen(finisher);
+  }
 }
