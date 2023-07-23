@@ -2,6 +2,7 @@ package florian.cousin.collector;
 
 import florian.cousin.LinearStream;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -85,5 +86,11 @@ public final class LinearCollectors {
   public static <T, A, R, S> LinearCollector<T, A, S> collectingAndThen(
       LinearCollector<T, A, R> downstream, Function<R, S> finisher) {
     return downstream.collectingAndThen(finisher);
+  }
+
+  public static <T> LinearCollector<T, AtomicLong, Long> counting() {
+    BiConsumer<AtomicLong, ? super T> accumulator =
+        (accumulation, newValue) -> accumulation.incrementAndGet();
+    return LinearCollector.of(AtomicLong::new, accumulator, AtomicLong::get);
   }
 }

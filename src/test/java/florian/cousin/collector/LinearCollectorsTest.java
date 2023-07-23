@@ -244,4 +244,24 @@ class LinearCollectorsTest {
 
     assertThat(actualCollectionAndThen).isUnmodifiable().isEqualTo(expectedCollectingAndThen);
   }
+
+  @Test
+  void countingNothing() {
+
+    long actualNbElements = LinearStream.empty().collect(LinearCollectors.counting());
+
+    long expectedNbElements = 0;
+
+    assertThat(actualNbElements).isEqualTo(expectedNbElements);
+  }
+
+  @Test
+  void countingElements() {
+
+    long actualNbElements = LinearStream.of(1, 8, 0).collect(LinearCollectors.counting());
+
+    long expectedNbElements = 3;
+
+    assertThat(actualNbElements).isEqualTo(expectedNbElements);
+  }
 }
