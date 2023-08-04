@@ -3,10 +3,8 @@ package florian.cousin.collector;
 import florian.cousin.LinearStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.*;
 
 public final class LinearCollectors {
 
@@ -92,5 +90,20 @@ public final class LinearCollectors {
     BiConsumer<AtomicLong, ? super T> accumulator =
         (accumulation, newValue) -> accumulation.incrementAndGet();
     return LinearCollector.of(AtomicLong::new, accumulator, AtomicLong::get);
+  }
+
+  public static <T> LinearCollector<T, AtomicReference<T>, Optional<T>> minBy(
+      // TODO Autoriser Comparator<? super T>
+      Comparator<T> comparator) {
+    return LinearCollector.of(
+        AtomicReference::new,
+        (previousMin, newValue) -> {
+          T newMin =
+              previousMin.get() == null
+                  ? newValue
+                  : BinaryOperator.minBy(comparator).apply(previousMin.get(), newValue);
+          previousMin.set(newMin);
+        },
+        atomicMin -> Optional.ofNullable(atomicMin.get()));
   }
 }

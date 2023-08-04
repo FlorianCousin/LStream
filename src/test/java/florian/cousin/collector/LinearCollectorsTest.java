@@ -4,10 +4,7 @@ import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import florian.cousin.LinearStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import org.junit.jupiter.api.Test;
 
 class LinearCollectorsTest {
@@ -263,5 +260,34 @@ class LinearCollectorsTest {
     long expectedNbElements = 3;
 
     assertThat(actualNbElements).isEqualTo(expectedNbElements);
+  }
+
+  @Test
+  void minByEmpty() {
+
+    Optional<Integer> actualMin =
+        LinearStream.<Integer>empty()
+            .collect(LinearCollectors.minBy(Comparator.<Integer>naturalOrder()));
+
+    assertThat(actualMin).isEmpty();
+  }
+
+  @Test
+  void minByOneElement() {
+
+    Optional<String> actualMin =
+        LinearStream.of("b").collect(LinearCollectors.minBy(Comparator.<String>naturalOrder()));
+
+    assertThat(actualMin).hasValue("b");
+  }
+
+  @Test
+  void minByElements() {
+
+    Optional<String> actualMin =
+        LinearStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
+            .collect(LinearCollectors.minBy(Comparator.comparing(s -> s.substring(3))));
+
+    assertThat(actualMin).hasValue("Thomas");
   }
 }
