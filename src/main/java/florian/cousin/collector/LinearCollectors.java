@@ -106,4 +106,19 @@ public final class LinearCollectors {
         },
         atomicMin -> Optional.ofNullable(atomicMin.get()));
   }
+
+  public static <T> LinearCollector<T, AtomicReference<T>, Optional<T>> maxBy(
+      // TODO Autoriser Comparator<? super T>
+      Comparator<T> comparator) {
+    return LinearCollector.of(
+        AtomicReference::new,
+        (atomicMax, newValue) -> {
+          T newMax =
+              atomicMax.get() == null
+                  ? newValue
+                  : BinaryOperator.maxBy(comparator).apply(atomicMax.get(), newValue);
+          atomicMax.set(newMax);
+        },
+        atomicMax -> Optional.ofNullable(atomicMax.get()));
+  }
 }

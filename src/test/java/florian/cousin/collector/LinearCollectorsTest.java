@@ -290,4 +290,33 @@ class LinearCollectorsTest {
 
     assertThat(actualMin).hasValue("Thomas");
   }
+
+  @Test
+  void maxByEmpty() {
+
+    Optional<Integer> actualMin =
+        LinearStream.<Integer>empty()
+            .collect(LinearCollectors.maxBy(Comparator.<Integer>naturalOrder()));
+
+    assertThat(actualMin).isEmpty();
+  }
+
+  @Test
+  void maxByOneElement() {
+
+    Optional<String> actualMin =
+        LinearStream.of("b").collect(LinearCollectors.maxBy(Comparator.<String>naturalOrder()));
+
+    assertThat(actualMin).hasValue("b");
+  }
+
+  @Test
+  void maxByElements() {
+
+    Optional<String> actualMin =
+        LinearStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
+            .collect(LinearCollectors.maxBy(Comparator.comparing(s -> s.substring(3))));
+
+    assertThat(actualMin).hasValue("Florian");
+  }
 }
