@@ -319,4 +319,30 @@ class LinearCollectorsTest {
 
     assertThat(actualMin).hasValue("Florian");
   }
+
+  @Test
+  void summingIntEmpty() {
+
+    int actualSum = LinearStream.<Integer>empty().collect(LinearCollectors.summingInt(t -> t));
+
+    assertThat(actualSum).isZero();
+  }
+
+  @Test
+  void summingIntOneElement() {
+
+    int actualSum = LinearStream.of("hello !").collect(LinearCollectors.summingInt(String::length));
+
+    assertThat(actualSum).isEqualTo(7);
+  }
+
+  @Test
+  void summingIntElements() {
+
+    int actualSum =
+        LinearStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
+            .collect(LinearCollectors.summingInt(String::length));
+
+    assertThat(actualSum).isEqualTo(37);
+  }
 }

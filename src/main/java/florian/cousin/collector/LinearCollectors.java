@@ -2,6 +2,7 @@ package florian.cousin.collector;
 
 import florian.cousin.LinearStream;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.*;
@@ -120,5 +121,13 @@ public final class LinearCollectors {
           atomicMax.set(newMax);
         },
         atomicMax -> Optional.ofNullable(atomicMax.get()));
+  }
+
+  public static <T> LinearCollector<T, AtomicInteger, Integer> summingInt(
+      ToIntFunction<? super T> mapper) {
+    return LinearCollector.of(
+        AtomicInteger::new,
+        (atomicSum, newValue) -> atomicSum.addAndGet(mapper.applyAsInt(newValue)),
+        AtomicInteger::get);
   }
 }
