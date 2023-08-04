@@ -9,6 +9,8 @@ import java.util.function.*;
 
 public final class LinearCollectors {
 
+  // TODO Replace all Atomic usage to int[] or some custom record
+
   private LinearCollectors() {
     throw new IllegalStateException("This is a utility class.");
   }
