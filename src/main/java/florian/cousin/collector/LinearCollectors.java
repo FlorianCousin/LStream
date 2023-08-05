@@ -143,7 +143,7 @@ public final class LinearCollectors {
   }
 
   /**
-   * Creates a collector that sums all values of a {@link LinearStream} from one by one.
+   * Creates a collector that sums all values of a {@link LinearStream} one by one.
    *
    * <p>The order of the {@link LinearStream} is important : summing double of 1e300, 3.5, -1e300 is
    * 0 but summing double of 1e300, -1e300, 3.5 is 3.5.
