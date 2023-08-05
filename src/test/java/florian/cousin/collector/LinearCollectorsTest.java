@@ -345,4 +345,34 @@ class LinearCollectorsTest {
 
     assertThat(actualSum).isEqualTo(37);
   }
+
+  @Test
+  void summingLongEmpty() {
+
+    long actualSum = LinearStream.<Integer>empty().collect(LinearCollectors.summingLong(t -> t));
+
+    assertThat(actualSum).isZero();
+  }
+
+  @Test
+  void summingLongOneElement() {
+
+    long actualSum =
+        LinearStream.of("hello !")
+            .collect(
+                LinearCollectors.summingLong(
+                    string -> ((long) Integer.MAX_VALUE) + string.length()));
+
+    assertThat(actualSum).isEqualTo(2_147_483_654L);
+  }
+
+  @Test
+  void summingLongElements() {
+
+    long actualSum =
+        LinearStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
+            .collect(LinearCollectors.summingLong(String::length));
+
+    assertThat(actualSum).isEqualTo(37);
+  }
 }

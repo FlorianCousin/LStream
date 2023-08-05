@@ -132,4 +132,11 @@ public final class LinearCollectors {
         (atomicSum, newValue) -> atomicSum.addAndGet(mapper.applyAsInt(newValue)),
         AtomicInteger::get);
   }
+
+  public static <T> LinearCollector<T, long[], Long> summingLong(ToLongFunction<? super T> mapper) {
+    return LinearCollector.of(
+        () -> new long[1],
+        (currentSum, newValue) -> currentSum[0] += mapper.applyAsLong(newValue),
+        sum -> sum[0]);
+  }
 }
