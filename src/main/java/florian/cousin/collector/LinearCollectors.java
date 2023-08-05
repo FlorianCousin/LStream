@@ -1,6 +1,7 @@
 package florian.cousin.collector;
 
 import florian.cousin.LinearStream;
+import florian.cousin.utils.HeapLong;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -133,11 +134,12 @@ public final class LinearCollectors {
         AtomicInteger::get);
   }
 
-  public static <T> LinearCollector<T, long[], Long> summingLong(ToLongFunction<? super T> mapper) {
+  public static <T> LinearCollector<T, HeapLong, Long> summingLong(
+      ToLongFunction<? super T> mapper) {
     return LinearCollector.of(
-        () -> new long[1],
-        (currentSum, newValue) -> currentSum[0] += mapper.applyAsLong(newValue),
-        sum -> sum[0]);
+        HeapLong::new,
+        (currentSum, newValue) -> currentSum.add(mapper.applyAsLong(newValue)),
+        HeapLong::value);
   }
 
   /**
