@@ -1,7 +1,6 @@
 package florian.cousin.collector;
 
 import florian.cousin.LinearStream;
-import florian.cousin.utils.KahanSummationLong;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -141,11 +140,17 @@ public final class LinearCollectors {
         sum -> sum[0]);
   }
 
-  public static <T> LinearCollector<T, KahanSummationLong, Double> summingDouble(
+  /**
+   * Creates a collector that sums all values of a {@link LinearStream} from one by one.
+   *
+   * <p>The order of the {@link LinearStream} is important : summing double of 1e300, 3.5, -1e300 is
+   * 0 but summing double of 1e300, -1e300, 3.5 is 3.5.
+   */
+  public static <T> LinearCollector<T, double[], Double> summingDouble(
       ToDoubleFunction<? super T> mapper) {
     return LinearCollector.of(
-        KahanSummationLong::new,
-        (kahan, newValue) -> kahan.add(mapper.applyAsDouble(newValue)),
-        KahanSummationLong::sum);
+        () -> new double[1],
+        (currentSum, newValue) -> currentSum[0] += mapper.applyAsDouble(newValue),
+        sum -> sum[0]);
   }
 }

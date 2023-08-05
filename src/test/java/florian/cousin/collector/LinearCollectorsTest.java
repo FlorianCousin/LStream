@@ -405,4 +405,22 @@ class LinearCollectorsTest {
 
     assertThat(actualSum).isCloseTo(5.382332347441762, offset(1e-14));
   }
+
+  @Test
+  void summingDoubleWrongOrder() {
+
+    double actualSum =
+        LinearStream.of(1e300, 3.5, -1e300).collect(LinearCollectors.summingDouble(t -> t));
+
+    assertThat(actualSum).isZero();
+  }
+
+  @Test
+  void summingDoubleRightOrder() {
+
+    double actualSum =
+        LinearStream.of(1e300, -1e300, 3.5).collect(LinearCollectors.summingDouble(t -> t));
+
+    assertThat(actualSum).isEqualTo(3.5);
+  }
 }
