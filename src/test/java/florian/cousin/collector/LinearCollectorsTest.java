@@ -2,6 +2,7 @@ package florian.cousin.collector;
 
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
 
 import florian.cousin.LinearStream;
 import java.util.*;
@@ -374,5 +375,34 @@ class LinearCollectorsTest {
             .collect(LinearCollectors.summingLong(String::length));
 
     assertThat(actualSum).isEqualTo(37);
+  }
+
+  @Test
+  void summingDoubleEmpty() {
+
+    double actualSum =
+        LinearStream.<Integer>empty().collect(LinearCollectors.summingDouble(t -> t));
+
+    assertThat(actualSum).isZero();
+  }
+
+  @Test
+  void summingDoubleOneElement() {
+
+    double actualSum =
+        LinearStream.of("hello !")
+            .collect(LinearCollectors.summingDouble(string -> (double) string.length() / 2));
+
+    assertThat(actualSum).isEqualTo(3.5);
+  }
+
+  @Test
+  void summingDoubleElements() {
+
+    double actualSum =
+        LinearStream.of(Math.sqrt(2), Math.sqrt(3), Math.sqrt(5))
+            .collect(LinearCollectors.summingDouble(t -> t));
+
+    assertThat(actualSum).isCloseTo(5.382332347441762, offset(1e-14));
   }
 }

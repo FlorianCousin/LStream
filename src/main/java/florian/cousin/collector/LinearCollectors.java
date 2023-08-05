@@ -1,6 +1,7 @@
 package florian.cousin.collector;
 
 import florian.cousin.LinearStream;
+import florian.cousin.utils.KahanSummationLong;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -138,5 +139,13 @@ public final class LinearCollectors {
         () -> new long[1],
         (currentSum, newValue) -> currentSum[0] += mapper.applyAsLong(newValue),
         sum -> sum[0]);
+  }
+
+  public static <T> LinearCollector<T, KahanSummationLong, Double> summingDouble(
+      ToDoubleFunction<? super T> mapper) {
+    return LinearCollector.of(
+        KahanSummationLong::new,
+        (kahan, newValue) -> kahan.add(mapper.applyAsDouble(newValue)),
+        KahanSummationLong::sum);
   }
 }
