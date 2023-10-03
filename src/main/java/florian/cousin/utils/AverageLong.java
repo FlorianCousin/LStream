@@ -1,11 +1,11 @@
 package florian.cousin.utils;
 
-public class AverageInt {
+public class AverageLong {
 
   private long currentSum = 0;
   private long currentNumberOfValues = 0;
 
-  public void addValue(int value) {
+  public void addValue(long value) {
     currentSum += value;
     currentNumberOfValues++;
   }

@@ -1,10 +1,7 @@
 package florian.cousin.collector;
 
 import florian.cousin.LinearStream;
-import florian.cousin.utils.AverageInt;
-import florian.cousin.utils.HeapInteger;
-import florian.cousin.utils.HeapLong;
-import florian.cousin.utils.HeapReference;
+import florian.cousin.utils.*;
 import java.util.*;
 import java.util.function.*;
 
@@ -158,14 +155,23 @@ public final class LinearCollectors {
   }
 
   /**
-   * Returns a {@code Collector} that produces the arithmetic mean of an integer-valued function
+   * Returns a {@link LinearCollector} that produces the arithmetic mean of an integer-valued
+   * function applied to the input elements. If no elements are present, the result is 0.
+   */
+  public static <T> LinearCollector<T, AverageLong, Double> averagingInt(
+      ToIntFunction<? super T> mapper) {
+    return averagingLong(mapper::applyAsInt);
+  }
+
+  /**
+   * Returns a {@link LinearCollector} that produces the arithmetic mean of a long-valued function
    * applied to the input elements. If no elements are present, the result is 0.
    */
-  public static <T> LinearCollector<T, AverageInt, Double> averagingInt(
-      ToIntFunction<? super T> mapper) {
+  public static <T> LinearCollector<T, AverageLong, Double> averagingLong(
+      ToLongFunction<? super T> mapper) {
     return LinearCollector.of(
-        AverageInt::new,
-        (averageInt, newValue) -> averageInt.addValue(mapper.applyAsInt(newValue)),
-        AverageInt::getAverage);
+        AverageLong::new,
+        (averageLong, newValue) -> averageLong.addValue(mapper.applyAsLong(newValue)),
+        AverageLong::getAverage);
   }
 }

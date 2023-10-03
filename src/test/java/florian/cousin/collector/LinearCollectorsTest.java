@@ -446,4 +446,32 @@ class LinearCollectorsTest {
 
     assertThat(actualSum).isCloseTo(3.333333333333333, offset(1e-14));
   }
+
+  @Test
+  void averagingLongEmpty() {
+
+    double actualSum =
+        LinearStream.<Integer>empty().collect(LinearCollectors.averagingLong(t -> t));
+
+    assertThat(actualSum).isZero();
+  }
+
+  @Test
+  void averagingLongOneElement() {
+
+    double actualSum =
+        LinearStream.of(Long.MAX_VALUE).collect(LinearCollectors.averagingLong(t -> t));
+
+    assertThat(actualSum).isEqualTo(Long.MAX_VALUE);
+  }
+
+  @Test
+  void averagingLongElements() {
+
+    double actualSum =
+        LinearStream.of(Long.MAX_VALUE, Long.MIN_VALUE, 2L)
+            .collect(LinearCollectors.averagingLong(t -> t));
+
+    assertThat(actualSum).isCloseTo(0.333333333333333, offset(1e-14));
+  }
 }
