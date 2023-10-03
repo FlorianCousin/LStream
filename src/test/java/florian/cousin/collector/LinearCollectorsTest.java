@@ -421,4 +421,29 @@ class LinearCollectorsTest {
 
     assertThat(actualSum).isEqualTo(3.5);
   }
+
+  @Test
+  void averagingIntEmpty() {
+
+    double actualSum = LinearStream.<Integer>empty().collect(LinearCollectors.averagingInt(t -> t));
+
+    assertThat(actualSum).isZero();
+  }
+
+  @Test
+  void averagingIntOneElement() {
+
+    double actualSum =
+        LinearStream.of("hello !").collect(LinearCollectors.averagingInt(String::length));
+
+    assertThat(actualSum).isEqualTo(7);
+  }
+
+  @Test
+  void averagingIntElements() {
+
+    double actualSum = LinearStream.of(2, 3, 5).collect(LinearCollectors.averagingInt(t -> t));
+
+    assertThat(actualSum).isCloseTo(3.333333333333333, offset(1e-14));
+  }
 }

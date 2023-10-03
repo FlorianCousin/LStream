@@ -1,6 +1,7 @@
 package florian.cousin.collector;
 
 import florian.cousin.LinearStream;
+import florian.cousin.utils.AverageInt;
 import florian.cousin.utils.HeapInteger;
 import florian.cousin.utils.HeapLong;
 import florian.cousin.utils.HeapReference;
@@ -154,5 +155,17 @@ public final class LinearCollectors {
         () -> new double[1],
         (currentSum, newValue) -> currentSum[0] += mapper.applyAsDouble(newValue),
         sum -> sum[0]);
+  }
+
+  /**
+   * Returns a {@code Collector} that produces the arithmetic mean of an integer-valued function
+   * applied to the input elements. If no elements are present, the result is 0.
+   */
+  public static <T> LinearCollector<T, AverageInt, Double> averagingInt(
+      ToIntFunction<? super T> mapper) {
+    return LinearCollector.of(
+        AverageInt::new,
+        (averageInt, newValue) -> averageInt.addValue(mapper.applyAsInt(newValue)),
+        AverageInt::getAverage);
   }
 }
