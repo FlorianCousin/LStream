@@ -99,6 +99,7 @@ public final class LinearCollectors {
   public static <T> LinearCollector<T, AtomicReference<T>, Optional<T>> minBy(
       // TODO Autoriser Comparator<? super T>
       Comparator<T> comparator) {
+    // TODO Faire des sous-fonctions
     return LinearCollector.of(
         AtomicReference::new,
         (previousMin, newValue) -> {
@@ -114,6 +115,7 @@ public final class LinearCollectors {
   public static <T> LinearCollector<T, AtomicReference<T>, Optional<T>> maxBy(
       // TODO Autoriser Comparator<? super T>
       Comparator<T> comparator) {
+    // TODO Faire des sous-fonctions
     return LinearCollector.of(
         AtomicReference::new,
         (atomicMax, newValue) -> {
