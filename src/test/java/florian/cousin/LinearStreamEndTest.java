@@ -4,8 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import florian.cousin.collector.LinearCollector;
+import florian.cousin.exception.SeveralElementsException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 
 class LinearStreamEndTest {
@@ -294,6 +297,48 @@ class LinearStreamEndTest {
     Optional<String> actualFirst = LinearStream.of(null, "5", "d").findFirst();
 
     assertThat(actualFirst).isEmpty();
+  }
+
+  @Test
+  void findOneNoElements() {
+
+    Optional<Object> actualOne = LinearStream.empty().findOne();
+
+    assertThat(actualOne).isEmpty();
+  }
+
+  @Test
+  void findOneElement() {
+
+    Optional<String> actualOne =
+        LinearStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
+            .filter(s -> s.startsWith("T"))
+            .findOne();
+
+    assertThat(actualOne).hasValue("The");
+  }
+
+  @Test
+  void findOneSeveralElements() {
+
+    ThrowableAssert.ThrowingCallable findOneSeveralElements =
+        () ->
+            LinearStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
+                .filter(s -> s.startsWith("S"))
+                .findOne();
+
+    Assertions.assertThatThrownBy(findOneSeveralElements)
+        .isInstanceOf(SeveralElementsException.class)
+        .hasMessage("Call to \"findOne\" but there were several elements left in the stream");
+  }
+
+  @Test
+  void findOneIsNull() {
+
+    Optional<String> actualOne =
+        LinearStream.of(null, "5", "d").filter(s -> s == null || s.endsWith("a")).findOne();
+
+    assertThat(actualOne).isEmpty();
   }
 
   @Test

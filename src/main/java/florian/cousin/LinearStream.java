@@ -1,6 +1,7 @@
 package florian.cousin;
 
 import florian.cousin.collector.LinearCollector;
+import florian.cousin.exception.SeveralElementsException;
 import florian.cousin.iterator.*;
 import java.util.*;
 import java.util.function.*;
@@ -162,6 +163,18 @@ public interface LinearStream<T> extends Iterator<T> {
 
   default Optional<T> findFirst() {
     return hasNext() ? Optional.ofNullable(next()) : Optional.empty();
+  }
+
+  /**
+   * @throws SeveralElementsException if there are several elements left in the stream
+   */
+  default Optional<T> findOne() throws SeveralElementsException {
+    Optional<T> first = findFirst();
+    if (hasNext()) {
+      throw new SeveralElementsException(
+          "Call to \"findOne\" but there were several elements left in the stream");
+    }
+    return first;
   }
 
   default Optional<T> findLast() {
