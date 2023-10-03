@@ -1,16 +1,13 @@
 package florian.cousin.collector;
 
 import florian.cousin.LinearStream;
+import florian.cousin.utils.HeapInteger;
 import florian.cousin.utils.HeapLong;
+import florian.cousin.utils.HeapReference;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.*;
 
 public final class LinearCollectors {
-
-  // TODO Replace all Atomic usage to int[] or some custom record
 
   private LinearCollectors() {
     throw new IllegalStateException("This is a utility class.");
@@ -90,50 +87,49 @@ public final class LinearCollectors {
     return downstream.collectingAndThen(finisher);
   }
 
-  public static <T> LinearCollector<T, AtomicLong, Long> counting() {
-    BiConsumer<AtomicLong, ? super T> accumulator =
-        (accumulation, newValue) -> accumulation.incrementAndGet();
-    return LinearCollector.of(AtomicLong::new, accumulator, AtomicLong::get);
+  public static <T> LinearCollector<T, HeapLong, Long> counting() {
+    BiConsumer<HeapLong, ? super T> accumulator = (accumulation, newValue) -> accumulation.add(1);
+    return LinearCollector.of(HeapLong::new, accumulator, HeapLong::value);
   }
 
-  public static <T> LinearCollector<T, AtomicReference<T>, Optional<T>> minBy(
+  public static <T> LinearCollector<T, HeapReference<T>, Optional<T>> minBy(
       // TODO Autoriser Comparator<? super T>
       Comparator<T> comparator) {
     // TODO Faire des sous-fonctions
     return LinearCollector.of(
-        AtomicReference::new,
+        HeapReference::new,
         (previousMin, newValue) -> {
           T newMin =
-              previousMin.get() == null
+              previousMin.value() == null
                   ? newValue
-                  : BinaryOperator.minBy(comparator).apply(previousMin.get(), newValue);
-          previousMin.set(newMin);
+                  : BinaryOperator.minBy(comparator).apply(previousMin.value(), newValue);
+          previousMin.value(newMin);
         },
-        atomicMin -> Optional.ofNullable(atomicMin.get()));
+        atomicMin -> Optional.ofNullable(atomicMin.value()));
   }
 
-  public static <T> LinearCollector<T, AtomicReference<T>, Optional<T>> maxBy(
+  public static <T> LinearCollector<T, HeapReference<T>, Optional<T>> maxBy(
       // TODO Autoriser Comparator<? super T>
       Comparator<T> comparator) {
     // TODO Faire des sous-fonctions
     return LinearCollector.of(
-        AtomicReference::new,
-        (atomicMax, newValue) -> {
+        HeapReference::new,
+        (currentMax, newValue) -> {
           T newMax =
-              atomicMax.get() == null
+              currentMax.value() == null
                   ? newValue
-                  : BinaryOperator.maxBy(comparator).apply(atomicMax.get(), newValue);
-          atomicMax.set(newMax);
+                  : BinaryOperator.maxBy(comparator).apply(currentMax.value(), newValue);
+          currentMax.value(newMax);
         },
-        atomicMax -> Optional.ofNullable(atomicMax.get()));
+        atomicMax -> Optional.ofNullable(atomicMax.value()));
   }
 
-  public static <T> LinearCollector<T, AtomicInteger, Integer> summingInt(
+  public static <T> LinearCollector<T, HeapInteger, Integer> summingInt(
       ToIntFunction<? super T> mapper) {
     return LinearCollector.of(
-        AtomicInteger::new,
-        (atomicSum, newValue) -> atomicSum.addAndGet(mapper.applyAsInt(newValue)),
-        AtomicInteger::get);
+        HeapInteger::new,
+        (currentSum, newValue) -> currentSum.add(mapper.applyAsInt(newValue)),
+        HeapInteger::value);
   }
 
   public static <T> LinearCollector<T, HeapLong, Long> summingLong(
