@@ -93,8 +93,7 @@ public final class LinearCollectors {
   }
 
   public static <T> LinearCollector<T, HeapReference<T>, Optional<T>> minBy(
-      // TODO Autoriser Comparator<? super T>
-      Comparator<T> comparator) {
+      Comparator<? super T> comparator) {
     return LinearCollector.of(
         HeapReference::new,
         (previousMin, newValue) -> accumulateMin(comparator, previousMin, newValue),
@@ -102,7 +101,7 @@ public final class LinearCollectors {
   }
 
   private static <T> void accumulateMin(
-      Comparator<T> comparator, HeapReference<T> previousMin, T newValue) {
+      Comparator<? super T> comparator, HeapReference<T> previousMin, T newValue) {
     T previousMinValue = previousMin.value();
     BinaryOperator<T> compareOperator = BinaryOperator.minBy(comparator);
     T newMin =
@@ -111,8 +110,7 @@ public final class LinearCollectors {
   }
 
   public static <T> LinearCollector<T, HeapReference<T>, Optional<T>> maxBy(
-      // TODO Autoriser Comparator<? super T>
-      Comparator<T> comparator) {
+      Comparator<? super T> comparator) {
     return LinearCollector.of(
         HeapReference::new,
         (currentMax, newValue) -> accumulateMax(comparator, currentMax, newValue),
@@ -120,7 +118,7 @@ public final class LinearCollectors {
   }
 
   private static <T> void accumulateMax(
-      Comparator<T> comparator, HeapReference<T> currentMax, T newValue) {
+      Comparator<? super T> comparator, HeapReference<T> currentMax, T newValue) {
     T previousMaxValue = currentMax.value();
     BinaryOperator<T> compareOperator = BinaryOperator.maxBy(comparator);
     T newMax =

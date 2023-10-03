@@ -267,8 +267,7 @@ class LinearCollectorsTest {
   void minByEmpty() {
 
     Optional<Integer> actualMin =
-        LinearStream.<Integer>empty()
-            .collect(LinearCollectors.minBy(Comparator.<Integer>naturalOrder()));
+        LinearStream.<Integer>empty().collect(LinearCollectors.minBy(Comparator.naturalOrder()));
 
     assertThat(actualMin).isEmpty();
   }
@@ -277,7 +276,7 @@ class LinearCollectorsTest {
   void minByOneElement() {
 
     Optional<String> actualMin =
-        LinearStream.of("b").collect(LinearCollectors.minBy(Comparator.<String>naturalOrder()));
+        LinearStream.of("b").collect(LinearCollectors.minBy(Comparator.naturalOrder()));
 
     assertThat(actualMin).hasValue("b");
   }
@@ -296,8 +295,7 @@ class LinearCollectorsTest {
   void maxByEmpty() {
 
     Optional<Integer> actualMin =
-        LinearStream.<Integer>empty()
-            .collect(LinearCollectors.maxBy(Comparator.<Integer>naturalOrder()));
+        LinearStream.<Integer>empty().collect(LinearCollectors.maxBy(Comparator.naturalOrder()));
 
     assertThat(actualMin).isEmpty();
   }
@@ -306,7 +304,7 @@ class LinearCollectorsTest {
   void maxByOneElement() {
 
     Optional<String> actualMin =
-        LinearStream.of("b").collect(LinearCollectors.maxBy(Comparator.<String>naturalOrder()));
+        LinearStream.of("b").collect(LinearCollectors.maxBy(Comparator.naturalOrder()));
 
     assertThat(actualMin).hasValue("b");
   }
