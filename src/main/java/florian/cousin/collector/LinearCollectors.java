@@ -174,4 +174,21 @@ public final class LinearCollectors {
         (averageLong, newValue) -> averageLong.addValue(mapper.applyAsLong(newValue)),
         AverageLong::getAverage);
   }
+
+  /**
+   * Returns a collector that produces the arithmetic mean of a double-valued function applied to
+   * {@link LinearStream} values.
+   *
+   * <p>The sum is first calculated one by one.
+   *
+   * <p>Consequently the order of the {@link LinearStream} is important : averaging double of 1e300,
+   * 3.5, -1e300 is 0 but averaging double of 1e300, -1e300, 3 is 1.
+   */
+  public static <T> LinearCollector<T, AverageDouble, Double> averagingDouble(
+      ToDoubleFunction<? super T> mapper) {
+    return LinearCollector.of(
+        AverageDouble::new,
+        (averageDouble, newValue) -> averageDouble.addValue(mapper.applyAsDouble(newValue)),
+        AverageDouble::getAverage);
+  }
 }
