@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.function.*;
 import org.jetbrains.annotations.Nullable;
 
+// TODO Call it LStream ? Have a LS logo ?
 public interface LinearStream<T> extends Iterator<T> {
 
   default LinearStream<T> filter(Predicate<? super T> predicate) {
