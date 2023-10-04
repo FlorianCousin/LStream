@@ -563,7 +563,15 @@ class LinearCollectorsTest {
 
   @Test
   void toMapDuplicateKey() {
-    // TODO
+
+    ThrowableAssert.ThrowingCallable buildActualMap =
+        () ->
+            LinearStream.of("hi", "word", "mine")
+                .collect(LinearCollectors.toMap(String::length, Function.identity()));
+
+    assertThatThrownBy(buildActualMap)
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessage("Duplicate key 4 (attempted to add value mine but word already existed)");
   }
 
   @Test
