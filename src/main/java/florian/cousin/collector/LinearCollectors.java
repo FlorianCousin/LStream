@@ -282,4 +282,16 @@ public final class LinearCollectors {
                 entry -> entry.getValue().build().collect(downstream),
                 mapFactory));
   }
+
+  public static <T>
+      LinearCollector<T, Map<Boolean, LinearStream.Builder<T>>, Map<Boolean, List<T>>>
+          partitioningBy(Predicate<? super T> predicate) {
+    return groupingBy(predicate::test);
+  }
+
+  public static <T, D, A>
+      LinearCollector<T, Map<Boolean, LinearStream.Builder<T>>, Map<Boolean, D>> partitioningBy(
+          Predicate<? super T> predicate, LinearCollector<? super T, A, D> downstream) {
+    return groupingBy(predicate::test, downstream);
+  }
 }
