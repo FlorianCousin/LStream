@@ -577,6 +577,41 @@ class LinearCollectorsTest {
   }
 
   @Test
+  void toUnmodifiableMapEmpty() {
+
+    Map<Integer, Integer> actualMap =
+        LinearStream.<Integer>empty()
+            .collect(LinearCollectors.toUnmodifiableMap(Function.identity(), Function.identity()));
+
+    assertThat(actualMap).isUnmodifiable().isEmpty();
+  }
+
+  @Test
+  void toUnmodifiableMapOneElement() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE")
+            .collect(LinearCollectors.toUnmodifiableMap(String::length, Function.identity()));
+
+    Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
+
+    assertThat(actualMap).isUnmodifiable().isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toUnmodifiableMapElements() {
+
+    Map<Integer, Object> actualMap =
+        LinearStream.of("Long.MAX_VALUE", "Long", "2L")
+            .collect(LinearCollectors.toUnmodifiableMap(String::length, s -> s.substring(1)));
+
+    Map<Integer, String> expectedMap =
+        Map.ofEntries(Map.entry(14, "ong.MAX_VALUE"), Map.entry(4, "ong"), Map.entry(2, "L"));
+
+    assertThat(actualMap).isUnmodifiable().isEqualTo(expectedMap);
+  }
+
+  @Test
   void toMapFactoryEmpty() {
 
     Map<Integer, Integer> actualMap =

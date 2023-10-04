@@ -206,6 +206,11 @@ public final class LinearCollectors {
         });
   }
 
+  public static <T, K, U> LinearCollector<T, Map<K, U>, Map<K, U>> toUnmodifiableMap(
+      Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
+    return collectingAndThen(toMap(keyMapper, valueMapper), Collections::unmodifiableMap);
+  }
+
   public static <T, K, U, M extends Map<K, U>> LinearCollector<T, M, M> toMap(
       Function<? super T, ? extends K> keyMapper,
       Function<? super T, ? extends U> valueMapper,
