@@ -231,40 +231,38 @@ public final class LinearCollectors {
             .formatted(key, valueToAdd, currentValue));
   }
 
-  // TODO tester
   public static <T, K>
-  LinearCollector<T, Map<K, LinearStream.Builder<T>>, Map<K, List<T>>> groupingBy(
+      LinearCollector<T, Map<K, LinearStream.Builder<T>>, Map<K, List<T>>> groupingBy(
           Function<? super T, ? extends K> classifier) {
     return groupingBy(classifier, toList());
   }
 
-  // TODO tester
   public static <T, K, A, D>
-  LinearCollector<T, Map<K, LinearStream.Builder<T>>, Map<K, D>> groupingBy(
+      LinearCollector<T, Map<K, LinearStream.Builder<T>>, Map<K, D>> groupingBy(
           Function<? super T, ? extends K> classifier,
           LinearCollector<? super T, A, D> downstream) {
     return groupingBy(classifier, HashMap::new, downstream);
   }
 
-  // TODO tester
-  public static <T, K, D> LinearCollector<T, Map<K, LinearStream.Builder<T>>, Map<K, D>> groupingBy(
+  public static <T, K, D, M extends Map<K, D>>
+      LinearCollector<T, Map<K, LinearStream.Builder<T>>, M> groupingBy(
           Function<? super T, ? extends K> classifier,
-          Supplier<Map<K, D>> mapFactory,
+          Supplier<M> mapFactory,
           LinearCollector<? super T, ?, D> downstream) {
 
     Map<K, LinearStream.Builder<T>> accumulator = new HashMap<>();
 
     return LinearCollector.of(
-            () -> accumulator,
-            (accumulation, newValue) -> {
-              K newValueKey = classifier.apply(newValue);
-              mergeNewValue(accumulation, newValueKey, newValue);
-            },
-            acc -> finish(downstream, acc));
+        () -> accumulator,
+        (accumulation, newValue) -> {
+          K newValueKey = classifier.apply(newValue);
+          mergeNewValue(accumulation, newValueKey, newValue);
+        },
+        accumulation -> finish(mapFactory, downstream, accumulation));
   }
 
   private static <T, K> void mergeNewValue(
-          Map<K, LinearStream.Builder<T>> accumulation, K newValueKey, T newValue) {
+      Map<K, LinearStream.Builder<T>> accumulation, K newValueKey, T newValue) {
     if (accumulation.containsKey(newValueKey)) {
       accumulation.get(newValueKey).accept(newValue);
     } else {
@@ -272,12 +270,16 @@ public final class LinearCollectors {
     }
   }
 
-  private static <T, K, D> Map<K, D> finish(
-          LinearCollector<? super T, ?, D> downstream, Map<K, LinearStream.Builder<T>> accumulation) {
+  private static <T, K, D, M extends Map<K, D>> M finish(
+      Supplier<M> mapFactory,
+      LinearCollector<? super T, ?, D> downstream,
+      Map<K, LinearStream.Builder<T>> accumulation) {
 
     return LinearStream.from(accumulation.entrySet())
-            .collect(
-                    LinearCollectors.toMap(
-                            Map.Entry::getKey, entry -> entry.getValue().build().collect(downstream)));
+        .collect(
+            LinearCollectors.toMap(
+                Map.Entry::getKey,
+                entry -> entry.getValue().build().collect(downstream),
+                mapFactory));
   }
 }
