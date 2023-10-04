@@ -6,6 +6,7 @@ import static org.assertj.core.data.Offset.offset;
 
 import florian.cousin.LinearStream;
 import java.util.*;
+import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 
 class LinearCollectorsTest {
@@ -520,5 +521,40 @@ class LinearCollectorsTest {
         LinearStream.of(1e300, -1e300, 3d).collect(LinearCollectors.averagingDouble(t -> t));
 
     assertThat(actualSum).isCloseTo(1, offset(1e-14));
+  }
+
+  @Test
+  void toMapEmpty() {
+
+    Map<Integer, Integer> actualMap =
+        LinearStream.<Integer>empty()
+            .collect(LinearCollectors.toMap(Function.identity(), Function.identity()));
+
+    assertThat(actualMap).isEmpty();
+  }
+
+  @Test
+  void toMapOneElement() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE")
+            .collect(LinearCollectors.toMap(String::length, Function.identity()));
+
+    Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
+
+    assertThat(actualMap).isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toMapElements() {
+
+    Map<Integer, Object> actualMap =
+        LinearStream.of("Long.MAX_VALUE", "Long", "2L")
+            .collect(LinearCollectors.toMap(String::length, s -> s.substring(1)));
+
+    Map<Integer, String> expectedMap =
+        Map.ofEntries(Map.entry(14, "ong.MAX_VALUE"), Map.entry(4, "ong"), Map.entry(2, "L"));
+
+    assertThat(actualMap).isEqualTo(expectedMap);
   }
 }

@@ -191,4 +191,25 @@ public final class LinearCollectors {
         (averageDouble, newValue) -> averageDouble.addValue(mapper.applyAsDouble(newValue)),
         AverageDouble::getAverage);
   }
+
+  public static <T, K, U> LinearCollector<T, Map<K, U>, Map<K, U>> toMap(
+      Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
+    return LinearCollector.of(
+        HashMap::new,
+        (currentMap, newValue) -> {
+          K key = keyMapper.apply(newValue);
+          U value = valueMapper.apply(newValue);
+          if (currentMap.containsKey(key)) {
+            throw duplicateKeyException(key, currentMap.get(key), value);
+          }
+          currentMap.put(key, value);
+        });
+  }
+
+  private static <K, U> IllegalStateException duplicateKeyException(
+      K key, U currentValue, U valueToAdd) {
+    return new IllegalStateException(
+        "Duplicate key %s (attempted to add value %s but %s already existed)"
+            .formatted(key, valueToAdd, currentValue));
+  }
 }
