@@ -2,11 +2,14 @@ package florian.cousin.collector;
 
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.Offset.offset;
 
 import florian.cousin.LinearStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 
 class LinearCollectorsTest {
@@ -556,5 +559,51 @@ class LinearCollectorsTest {
         Map.ofEntries(Map.entry(14, "ong.MAX_VALUE"), Map.entry(4, "ong"), Map.entry(2, "L"));
 
     assertThat(actualMap).isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toMapDuplicateKey() {
+    // TODO
+  }
+
+  @Test
+  void toMapFactoryEmpty() {
+
+    Map<Integer, Integer> actualMap =
+        LinearStream.<Integer>empty()
+            .collect(
+                LinearCollectors.toMap(
+                    Function.identity(), Function.identity(), Collections::emptyMap));
+
+    assertThat(actualMap).isEmpty();
+  }
+
+  @Test
+  void toMapFactoryOneElement() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE")
+            .collect(
+                LinearCollectors.toMap(
+                    String::length, Function.identity(), ConcurrentSkipListMap::new));
+
+    Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
+
+    assertThat(actualMap).isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toMapFactoryElements() {
+
+    ThrowableAssert.ThrowingCallable buildActualMap =
+        () ->
+            LinearStream.of("Long.MAX_VALUE", "Long", "2L")
+                .collect(
+                    LinearCollectors.toMap(
+                        String::length, Function.identity(), Collections::emptyMap));
+
+    assertThatThrownBy(buildActualMap)
+        .isInstanceOf(UnsupportedOperationException.class)
+        .hasMessage(null);
   }
 }

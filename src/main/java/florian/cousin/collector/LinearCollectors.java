@@ -206,6 +206,24 @@ public final class LinearCollectors {
         });
   }
 
+  public static <T, K, U, M extends Map<K, U>> LinearCollector<T, M, M> toMap(
+      Function<? super T, ? extends K> keyMapper,
+      Function<? super T, ? extends U> valueMapper,
+      Supplier<M> mapFactory) {
+
+    BiConsumer<M, T> accumulator =
+        (currentMap, newValue) -> {
+          K key = keyMapper.apply(newValue);
+          U value = valueMapper.apply(newValue);
+          if (currentMap.containsKey(key)) {
+            throw duplicateKeyException(key, currentMap.get(key), value);
+          }
+          currentMap.put(key, value);
+        };
+
+    return LinearCollector.of(mapFactory, accumulator);
+  }
+
   private static <K, U> IllegalStateException duplicateKeyException(
       K key, U currentValue, U valueToAdd) {
     return new IllegalStateException(
