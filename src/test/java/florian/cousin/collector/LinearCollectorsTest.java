@@ -429,92 +429,93 @@ class LinearCollectorsTest {
   @Test
   void averagingIntEmpty() {
 
-    double actualSum = LinearStream.<Integer>empty().collect(LinearCollectors.averagingInt(t -> t));
+    double actualAverage =
+        LinearStream.<Integer>empty().collect(LinearCollectors.averagingInt(t -> t));
 
-    assertThat(actualSum).isZero();
+    assertThat(actualAverage).isZero();
   }
 
   @Test
   void averagingIntOneElement() {
 
-    double actualSum =
+    double actualAverage =
         LinearStream.of("hello !").collect(LinearCollectors.averagingInt(String::length));
 
-    assertThat(actualSum).isEqualTo(7);
+    assertThat(actualAverage).isEqualTo(7);
   }
 
   @Test
   void averagingIntElements() {
 
-    double actualSum = LinearStream.of(2, 3, 5).collect(LinearCollectors.averagingInt(t -> t));
+    double actualAverage = LinearStream.of(2, 3, 5).collect(LinearCollectors.averagingInt(t -> t));
 
-    assertThat(actualSum).isCloseTo(3.333333333333333, offset(1e-14));
+    assertThat(actualAverage).isCloseTo(3.333333333333333, offset(1e-14));
   }
 
   @Test
   void averagingLongEmpty() {
 
-    double actualSum =
+    double actualAverage =
         LinearStream.<Integer>empty().collect(LinearCollectors.averagingLong(t -> t));
 
-    assertThat(actualSum).isZero();
+    assertThat(actualAverage).isZero();
   }
 
   @Test
   void averagingLongOneElement() {
 
-    double actualSum =
+    double actualAverage =
         LinearStream.of(Long.MAX_VALUE).collect(LinearCollectors.averagingLong(t -> t));
 
-    assertThat(actualSum).isEqualTo(Long.MAX_VALUE);
+    assertThat(actualAverage).isEqualTo(Long.MAX_VALUE);
   }
 
   @Test
   void averagingLongElements() {
 
-    double actualSum =
+    double actualAverage =
         LinearStream.of(Long.MAX_VALUE, Long.MIN_VALUE, 2L)
             .collect(LinearCollectors.averagingLong(t -> t));
 
-    assertThat(actualSum).isCloseTo(0.333333333333333, offset(1e-14));
+    assertThat(actualAverage).isCloseTo(0.333333333333333, offset(1e-14));
   }
 
   @Test
   void averagingDoubleEmpty() {
 
-    double actualSum =
+    double actualAverage =
         LinearStream.<Integer>empty().collect(LinearCollectors.averagingDouble(t -> t));
 
-    assertThat(actualSum).isZero();
+    assertThat(actualAverage).isZero();
   }
 
   @Test
   void averagingDoubleOneElement() {
 
-    double actualSum =
+    double actualAverage =
         LinearStream.of("hello !")
             .collect(LinearCollectors.averagingDouble(string -> (double) string.length() / 2));
 
-    assertThat(actualSum).isEqualTo(3.5);
+    assertThat(actualAverage).isEqualTo(3.5);
   }
 
   @Test
   void averagingDoubleElements() {
 
-    double actualSum =
+    double actualAverage =
         LinearStream.of(Math.sqrt(2), Math.sqrt(3), Math.sqrt(5))
             .collect(LinearCollectors.averagingDouble(t -> t));
 
-    assertThat(actualSum).isCloseTo(1.7941107824805875, offset(1e-14));
+    assertThat(actualAverage).isCloseTo(1.7941107824805875, offset(1e-14));
   }
 
   @Test
   void averagingDoubleWrongOrder() {
 
-    double actualSum =
+    double actualAverage =
         LinearStream.of(1e300, 3.5, -1e300).collect(LinearCollectors.averagingDouble(t -> t));
 
-    assertThat(actualSum).isZero();
+    assertThat(actualAverage).isZero();
   }
 
   @Test
