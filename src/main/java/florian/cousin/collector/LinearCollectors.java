@@ -212,4 +212,54 @@ public final class LinearCollectors {
         "Duplicate key %s (attempted to add value %s but %s already existed)"
             .formatted(key, valueToAdd, currentValue));
   }
+
+  // TODO tester
+  public static <T, K>
+  LinearCollector<T, Map<K, LinearStream.Builder<T>>, Map<K, List<T>>> groupingBy(
+          Function<? super T, ? extends K> classifier) {
+    return groupingBy(classifier, toList());
+  }
+
+  // TODO tester
+  public static <T, K, A, D>
+  LinearCollector<T, Map<K, LinearStream.Builder<T>>, Map<K, D>> groupingBy(
+          Function<? super T, ? extends K> classifier,
+          LinearCollector<? super T, A, D> downstream) {
+    return groupingBy(classifier, HashMap::new, downstream);
+  }
+
+  // TODO tester
+  public static <T, K, D> LinearCollector<T, Map<K, LinearStream.Builder<T>>, Map<K, D>> groupingBy(
+          Function<? super T, ? extends K> classifier,
+          Supplier<Map<K, D>> mapFactory,
+          LinearCollector<? super T, ?, D> downstream) {
+
+    Map<K, LinearStream.Builder<T>> accumulator = new HashMap<>();
+
+    return LinearCollector.of(
+            () -> accumulator,
+            (accumulation, newValue) -> {
+              K newValueKey = classifier.apply(newValue);
+              mergeNewValue(accumulation, newValueKey, newValue);
+            },
+            acc -> finish(downstream, acc));
+  }
+
+  private static <T, K> void mergeNewValue(
+          Map<K, LinearStream.Builder<T>> accumulation, K newValueKey, T newValue) {
+    if (accumulation.containsKey(newValueKey)) {
+      accumulation.get(newValueKey).accept(newValue);
+    } else {
+      accumulation.put(newValueKey, LinearStream.<T>builder().add(newValue));
+    }
+  }
+
+  private static <T, K, D> Map<K, D> finish(
+          LinearCollector<? super T, ?, D> downstream, Map<K, LinearStream.Builder<T>> accumulation) {
+
+    return LinearStream.from(accumulation.entrySet())
+            .collect(
+                    LinearCollectors.toMap(
+                            Map.Entry::getKey, entry -> entry.getValue().build().collect(downstream)));
+  }
 }
