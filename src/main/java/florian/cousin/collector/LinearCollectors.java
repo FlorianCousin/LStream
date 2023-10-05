@@ -348,4 +348,12 @@ public final class LinearCollectors {
         LongSummaryStatistics::new,
         (statistics, newValue) -> statistics.accept(mapper.applyAsLong(newValue)));
   }
+
+  public static <T>
+      LinearCollector<T, DoubleSummaryStatistics, DoubleSummaryStatistics> summarizingDouble(
+          ToDoubleFunction<? super T> mapper) {
+    return LinearCollector.of(
+        DoubleSummaryStatistics::new,
+        (statistics, newValue) -> statistics.accept(mapper.applyAsDouble(newValue)));
+  }
 }
