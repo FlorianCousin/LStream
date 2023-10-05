@@ -8,7 +8,7 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DistinctIterator<T> implements LStream<T> {
+public class DistinctIterator<T> extends LStream<T> {
 
   private final Iterator<T> iterator;
   private final Set<T> iteratedElements = new HashSet<>();

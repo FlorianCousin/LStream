@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class takeWhileIterator<T> implements LStream<T> {
+public class takeWhileIterator<T> extends LStream<T> {
 
   private final LStream<T> baseIterator;
   private final Predicate<? super T> predicate;

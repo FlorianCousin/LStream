@@ -6,7 +6,7 @@ import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class IterateIterator<T> implements LStream<T> {
+public class IterateIterator<T> extends LStream<T> {
 
   private final T initialValue;
   private final Predicate<? super T> hasNext;

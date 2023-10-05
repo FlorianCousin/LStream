@@ -5,7 +5,7 @@ import java.util.Iterator;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SimpleIterator<T> implements LStream<T> {
+public class SimpleIterator<T> extends LStream<T> {
 
   private final Iterator<T> iterator;
 

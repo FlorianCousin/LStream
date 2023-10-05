@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SkipIterator<T> implements LStream<T> {
+public class SkipIterator<T> extends LStream<T> {
 
   private final LStream<T> baseIterator;
   private final long nbToSkip;

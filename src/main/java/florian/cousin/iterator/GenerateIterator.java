@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GenerateIterator<T> implements LStream<T> {
+public class GenerateIterator<T> extends LStream<T> {
 
   private final Supplier<? extends T> nextValueGenerator;
   private final Predicate<? super T> hasNext;

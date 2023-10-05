@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
-public class SortedIterator<T> implements LStream<T> {
+public class SortedIterator<T> extends LStream<T> {
 
   private final LStream<T> baseIterator;
   private final @Nullable Comparator<? super T> comparator;
