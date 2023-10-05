@@ -577,38 +577,57 @@ class LinearCollectorsTest {
   }
 
   @Test
-  void toUnmodifiableMapEmpty() {
+  void toMapMergeEmpty() {
 
     Map<Integer, Integer> actualMap =
         LinearStream.<Integer>empty()
-            .collect(LinearCollectors.toUnmodifiableMap(Function.identity(), Function.identity()));
+            .collect(
+                LinearCollectors.toMap(Function.identity(), Function.identity(), Integer::sum));
 
-    assertThat(actualMap).isUnmodifiable().isEmpty();
+    assertThat(actualMap).isEmpty();
   }
 
   @Test
-  void toUnmodifiableMapOneElement() {
+  void toMapMergeOneElement() {
 
     Map<Integer, String> actualMap =
         LinearStream.of("Long.MAX_VALUE")
-            .collect(LinearCollectors.toUnmodifiableMap(String::length, Function.identity()));
+            .collect(
+                LinearCollectors.toMap(
+                    String::length, Function.identity(), (s1, s2) -> String.join("-", s1, s2)));
 
     Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
 
-    assertThat(actualMap).isUnmodifiable().isEqualTo(expectedMap);
+    assertThat(actualMap).isEqualTo(expectedMap);
   }
 
   @Test
-  void toUnmodifiableMapElements() {
+  void toMapMergeElements() {
 
-    Map<Integer, Object> actualMap =
+    Map<Integer, String> actualMap =
         LinearStream.of("Long.MAX_VALUE", "Long", "2L")
-            .collect(LinearCollectors.toUnmodifiableMap(String::length, s -> s.substring(1)));
+            .collect(
+                LinearCollectors.toMap(
+                    String::length, s -> s.substring(1), (s1, s2) -> String.join("-", s1, s2)));
 
     Map<Integer, String> expectedMap =
         Map.ofEntries(Map.entry(14, "ong.MAX_VALUE"), Map.entry(4, "ong"), Map.entry(2, "L"));
 
-    assertThat(actualMap).isUnmodifiable().isEqualTo(expectedMap);
+    assertThat(actualMap).isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toMapMergeDuplicateKey() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("hi", "word", "mine")
+            .collect(
+                LinearCollectors.toMap(
+                    String::length, Function.identity(), (s1, s2) -> String.join("-", s1, s2)));
+
+    Map<Integer, String> expectedMap = Map.ofEntries(Map.entry(4, "word-mine"), Map.entry(2, "hi"));
+
+    assertThat(actualMap).isEqualTo(expectedMap);
   }
 
   @Test
@@ -650,6 +669,128 @@ class LinearCollectorsTest {
     assertThatThrownBy(buildActualMap)
         .isInstanceOf(UnsupportedOperationException.class)
         .hasMessage(null);
+  }
+
+  @Test
+  void toMapMergeFactoryEmpty() {
+
+    Map<Integer, Integer> actualMap =
+        LinearStream.<Integer>empty()
+            .collect(
+                LinearCollectors.toMap(
+                    Function.identity(), Function.identity(), Integer::sum, Collections::emptyMap));
+
+    assertThat(actualMap).isEmpty();
+  }
+
+  @Test
+  void toMapMergeFactoryOneElement() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE")
+            .collect(
+                LinearCollectors.toMap(
+                    String::length,
+                    Function.identity(),
+                    (s1, s2) -> String.join("-", s1, s2),
+                    ConcurrentSkipListMap::new));
+
+    Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
+
+    assertThat(actualMap).isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toMapMergeFactoryElements() {
+
+    ThrowableAssert.ThrowingCallable buildActualMap =
+        () ->
+            LinearStream.of("Long.MAX_VALUE", "Long", "2L")
+                .collect(
+                    LinearCollectors.toMap(
+                        String::length,
+                        Function.identity(),
+                        (s1, s2) -> String.join("-", s1, s2),
+                        Collections::emptyMap));
+
+    assertThatThrownBy(buildActualMap)
+        .isInstanceOf(UnsupportedOperationException.class)
+        .hasMessage(null);
+  }
+
+  @Test
+  void toUnmodifiableMapEmpty() {
+
+    Map<Integer, Integer> actualMap =
+        LinearStream.<Integer>empty()
+            .collect(LinearCollectors.toUnmodifiableMap(Function.identity(), Function.identity()));
+
+    assertThat(actualMap).isUnmodifiable().isEmpty();
+  }
+
+  @Test
+  void toUnmodifiableMapOneElement() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE")
+            .collect(LinearCollectors.toUnmodifiableMap(String::length, Function.identity()));
+
+    Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
+
+    assertThat(actualMap).isUnmodifiable().isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toUnmodifiableMapElements() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE", "Long", "2L")
+            .collect(LinearCollectors.toUnmodifiableMap(String::length, s -> s.substring(1)));
+
+    Map<Integer, String> expectedMap =
+        Map.ofEntries(Map.entry(14, "ong.MAX_VALUE"), Map.entry(4, "ong"), Map.entry(2, "L"));
+
+    assertThat(actualMap).isUnmodifiable().isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toUnmodifiableMapMergeEmpty() {
+
+    Map<Integer, Integer> actualMap =
+        LinearStream.<Integer>empty()
+            .collect(
+                LinearCollectors.toUnmodifiableMap(
+                    Function.identity(), Function.identity(), Integer::sum));
+
+    assertThat(actualMap).isUnmodifiable().isEmpty();
+  }
+
+  @Test
+  void toUnmodifiableMapMergeOneElement() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE")
+            .collect(
+                LinearCollectors.toUnmodifiableMap(
+                    String::length, Function.identity(), (s1, s2) -> String.join("-", s1, s2)));
+
+    Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
+
+    assertThat(actualMap).isUnmodifiable().isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toUnmodifiableMapMergeElements() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("hi", "word", "mine")
+            .collect(
+                LinearCollectors.toUnmodifiableMap(
+                    String::length, s -> s.substring(1), (s1, s2) -> String.join("-", s1, s2)));
+
+    Map<Integer, String> expectedMap = Map.ofEntries(Map.entry(4, "ord-ine"), Map.entry(2, "i"));
+
+    assertThat(actualMap).isUnmodifiable().isEqualTo(expectedMap);
   }
 
   @Test

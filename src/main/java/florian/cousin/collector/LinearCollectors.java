@@ -206,9 +206,11 @@ public final class LinearCollectors {
         });
   }
 
-  public static <T, K, U> LinearCollector<T, Map<K, U>, Map<K, U>> toUnmodifiableMap(
-      Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
-    return collectingAndThen(toMap(keyMapper, valueMapper), Collections::unmodifiableMap);
+  public static <T, K, U> LinearCollector<T, Map<K, U>, Map<K, U>> toMap(
+      Function<? super T, ? extends K> keyMapper,
+      Function<? super T, ? extends U> valueMapper,
+      BinaryOperator<U> mergeFunction) {
+    return toMap(keyMapper, valueMapper, mergeFunction, HashMap::new);
   }
 
   public static <T, K, U, M extends Map<K, U>> LinearCollector<T, M, M> toMap(
@@ -229,11 +231,40 @@ public final class LinearCollectors {
     return LinearCollector.of(mapFactory, accumulator);
   }
 
+  public static <T, K, U, M extends Map<K, U>> LinearCollector<T, M, M> toMap(
+      Function<? super T, ? extends K> keyMapper,
+      Function<? super T, ? extends U> valueMapper,
+      BinaryOperator<U> mergeFunction,
+      Supplier<M> mapFactory) {
+
+    BiConsumer<M, T> accumulator =
+        (currentMap, newValue) -> {
+          K key = keyMapper.apply(newValue);
+          U value = valueMapper.apply(newValue);
+          currentMap.merge(key, value, mergeFunction);
+        };
+
+    return LinearCollector.of(mapFactory, accumulator);
+  }
+
   private static <K, U> IllegalStateException duplicateKeyException(
       K key, U currentValue, U valueToAdd) {
     return new IllegalStateException(
         "Duplicate key %s (attempted to add value %s but %s already existed)"
             .formatted(key, valueToAdd, currentValue));
+  }
+
+  public static <T, K, U> LinearCollector<T, Map<K, U>, Map<K, U>> toUnmodifiableMap(
+      Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
+    return collectingAndThen(toMap(keyMapper, valueMapper), Collections::unmodifiableMap);
+  }
+
+  public static <T, K, U> LinearCollector<T, Map<K, U>, Map<K, U>> toUnmodifiableMap(
+      Function<? super T, ? extends K> keyMapper,
+      Function<? super T, ? extends U> valueMapper,
+      BinaryOperator<U> mergeFunction) {
+    return collectingAndThen(
+        toMap(keyMapper, valueMapper, mergeFunction), Collections::unmodifiableMap);
   }
 
   public static <T, K>
