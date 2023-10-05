@@ -4,6 +4,7 @@ import florian.cousin.LinearStream;
 import florian.cousin.utils.*;
 import java.util.*;
 import java.util.function.*;
+import org.jetbrains.annotations.Contract;
 
 public final class LinearCollectors {
 
@@ -355,5 +356,28 @@ public final class LinearCollectors {
     return LinearCollector.of(
         DoubleSummaryStatistics::new,
         (statistics, newValue) -> statistics.accept(mapper.applyAsDouble(newValue)));
+  }
+
+  public static <T, A1, R1, R2, R> LinearCollector<T, A1, R> teeing(
+      LinearCollector<? super T, A1, R1> downstream1,
+      LinearCollector<? super T, ?, R2> downstream2,
+      BiFunction<? super R1, ? super R2, R> merger) {
+
+    LinearStream.Builder<T> builderForLStream2 = LinearStream.builder();
+
+    UnaryOperator<T> acceptValueInBuilder = t -> acceptValueInBuilder(t, builderForLStream2);
+
+    return mapping(acceptValueInBuilder, downstream1)
+        .collectingAndThen(
+            r1 -> {
+              R2 r2 = builderForLStream2.build().collect(downstream2);
+              return merger.apply(r1, r2);
+            });
+  }
+
+  @Contract("_, _ -> param1")
+  private static <T> T acceptValueInBuilder(T t, LinearStream.Builder<T> builder) {
+    builder.accept(t);
+    return t;
   }
 }
