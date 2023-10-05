@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class LimitIterator<T> extends LStream<T> {
+public class LimitLStream<T> extends LStream<T> {
 
   private final LStream<T> baseIterator;
   private final long maxSize;

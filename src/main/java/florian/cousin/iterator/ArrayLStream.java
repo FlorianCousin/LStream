@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ArrayIterator<T> extends LStream<T> {
+public class ArrayLStream<T> extends LStream<T> {
 
   private final T[] iterationObjects;
   private int nextIndex = 0;

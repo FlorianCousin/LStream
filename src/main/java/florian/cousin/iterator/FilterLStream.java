@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class FilterIterator<T> extends LStream<T> {
+public class FilterLStream<T> extends LStream<T> {
 
   private final Iterator<T> iterator;
   private final Predicate<? super T> predicate;

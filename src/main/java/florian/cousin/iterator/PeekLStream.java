@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class PeekIterator<T> extends LStream<T> {
+public class PeekLStream<T> extends LStream<T> {
 
   private final LStream<T> baseIterator;
   private final Consumer<? super T> action;

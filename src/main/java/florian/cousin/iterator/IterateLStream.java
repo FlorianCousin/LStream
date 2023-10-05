@@ -2,17 +2,18 @@ package florian.cousin.iterator;
 
 import florian.cousin.LStream;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class GenerateIterator<T> extends LStream<T> {
+public class IterateLStream<T> extends LStream<T> {
 
-  private final Supplier<? extends T> nextValueGenerator;
+  private final T initialValue;
   private final Predicate<? super T> hasNext;
+  private final UnaryOperator<T> computeNextValue;
 
   private T previousValue;
-  private boolean started;
+  private boolean started = false;
 
   @Override
   public boolean hasNext() {
@@ -22,10 +23,11 @@ public class GenerateIterator<T> extends LStream<T> {
   @Override
   public T next() {
 
-    if (!started) {
+    if (started) {
+      return previousValue = computeNextValue.apply(previousValue);
+    } else {
       started = true;
+      return previousValue = initialValue;
     }
-
-    return previousValue = nextValueGenerator.get();
   }
 }

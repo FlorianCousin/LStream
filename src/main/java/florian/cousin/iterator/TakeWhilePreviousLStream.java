@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class TakeWhilePreviousIterator<T> extends LStream<T> {
+public class TakeWhilePreviousLStream<T> extends LStream<T> {
 
   private final Iterator<T> baseIterator;
   private final Predicate<? super T> previousPredicate;

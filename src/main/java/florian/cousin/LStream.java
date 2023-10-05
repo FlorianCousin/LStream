@@ -12,22 +12,22 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
   @Override
   public LStream<T> filter(Predicate<? super T> predicate) {
-    return new FilterIterator<>(this, predicate);
+    return new FilterLStream<>(this, predicate);
   }
 
   @Override
   public <R> LStream<R> map(Function<? super T, ? extends R> mapping) {
-    return new MappingIterator<>(this, mapping);
+    return new MappingLstream<>(this, mapping);
   }
 
   @Override
   public <R> LStream<R> flatMap(Function<? super T, ? extends LStreamApi<? extends R>> mapper) {
-    return new FlatMappingIterator<>(this, mapper);
+    return new FlatMappingLStream<>(this, mapper);
   }
 
   @Override
   public LStream<T> distinct() {
-    return new DistinctIterator<>(this);
+    return new DistinctLStream<>(this);
   }
 
   @Override
@@ -37,37 +37,37 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
   @Override
   public LStream<T> sorted(@Nullable Comparator<? super T> comparator) {
-    return new SortedIterator<>(this, comparator);
+    return new SortedLStream<>(this, comparator);
   }
 
   @Override
   public LStream<T> peek(Consumer<? super T> action) {
-    return new PeekIterator<>(this, action);
+    return new PeekLStream<>(this, action);
   }
 
   @Override
   public LStream<T> limit(long maxSize) {
-    return new LimitIterator<>(this, maxSize);
+    return new LimitLStream<>(this, maxSize);
   }
 
   @Override
   public LStream<T> skip(long nbToSkip) {
-    return new SkipIterator<>(this, nbToSkip);
+    return new SkipLStream<>(this, nbToSkip);
   }
 
   @Override
   public LStream<T> takeWhile(Predicate<? super T> predicate) {
-    return new takeWhileIterator<>(this, predicate);
+    return new takeWhileLStream<>(this, predicate);
   }
 
   @Override
   public LStream<T> takeWhilePrevious(Predicate<? super T> previousPredicate) {
-    return new TakeWhilePreviousIterator<>(this, previousPredicate);
+    return new TakeWhilePreviousLStream<>(this, previousPredicate);
   }
 
   @Override
   public LStream<T> dropWhile(Predicate<? super T> predicate) {
-    return new DropWhileIterator<>(this, predicate);
+    return new DropWhileLStream<>(this, predicate);
   }
 
   @Override
@@ -223,12 +223,12 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
   }
 
   public static <T> LStream<T> from(Iterable<T> iterable) {
-    return new SimpleIterator<>(iterable.iterator());
+    return new SimpleLStream<>(iterable.iterator());
   }
 
   @SafeVarargs
   public static <T> LStream<T> of(T... iterationObjects) {
-    return new ArrayIterator<>(iterationObjects);
+    return new ArrayLStream<>(iterationObjects);
   }
 
   public static <T> LStream<T> iterate(
@@ -238,7 +238,7 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
   public static <T> LStream<T> iterate(
       T initialValue, Predicate<? super T> hasNext, UnaryOperator<T> next) {
-    return new IterateIterator<>(initialValue, hasNext, next);
+    return new IterateLStream<>(initialValue, hasNext, next);
   }
 
   public static <T> LStream<T> generate(Supplier<? extends T> nextValueGenerator) {
@@ -247,7 +247,7 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
   public static <T> LStream<T> generate(
       Supplier<? extends T> nextValueGenerator, Predicate<? super T> hasNext) {
-    return new GenerateIterator<>(nextValueGenerator, hasNext);
+    return new GenerateLStream<>(nextValueGenerator, hasNext);
   }
 
   @SafeVarargs

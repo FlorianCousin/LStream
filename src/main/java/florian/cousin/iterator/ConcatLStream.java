@@ -4,7 +4,7 @@ import florian.cousin.LStream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ConcatIterator<T> extends LStream<T> {
+public class ConcatLStream<T> extends LStream<T> {
 
   private final LStream<? extends T> first;
   private final LStream<? extends T> second;

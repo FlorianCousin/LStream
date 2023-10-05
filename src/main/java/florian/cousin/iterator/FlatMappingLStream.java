@@ -8,7 +8,7 @@ import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class FlatMappingIterator<T, R> extends LStream<R> {
+public class FlatMappingLStream<T, R> extends LStream<R> {
 
   private final Iterator<T> baseIterator;
   private final Function<? super T, ? extends LStreamApi<? extends R>> mapper;
