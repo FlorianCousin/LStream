@@ -218,9 +218,8 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
     return new Builder<>();
   }
 
-  public static <T> LStream<T> empty() {
-    // TODO Have a specific LStream implementation ?
-    return new SimpleIterator<>(Collections.emptyIterator());
+  public static <T> EmptyLStream<T> empty() {
+    return new EmptyLStream<>();
   }
 
   public static <T> LStream<T> from(Iterable<T> iterable) {
@@ -229,8 +228,7 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
   @SafeVarargs
   public static <T> LStream<T> of(T... iterationObjects) {
-    // TODO Have a specific LStream implementation ?
-    return new SimpleIterator<>(Arrays.asList(iterationObjects).iterator());
+    return new ArrayIterator<>(iterationObjects);
   }
 
   public static <T> LStream<T> iterate(
