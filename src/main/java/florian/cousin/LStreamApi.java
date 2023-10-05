@@ -11,9 +11,27 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LStreamApi<T> {
 
+  /**
+   * Returns a lstream consisting of the elements of this lstream that match the given predicate.
+   *
+   * <p>This is an intermediate operation.
+   *
+   * @param predicate a predicate to apply to each element to determine if it should be included
+   * @return the new lstream
+   */
   LStreamApi<T> filter(Predicate<? super T> predicate);
 
-  <R> LStreamApi<R> map(Function<? super T, ? extends R> mapping);
+  /**
+   * Returns a lstream consisting of the results of applying the given function to the elements of
+   * this lstream.
+   *
+   * <p>This is an intermediate operation.
+   *
+   * @param <R> The element type of the new lstream
+   * @param mapper a function to apply to each element
+   * @return the new lstream
+   */
+  <R> LStreamApi<R> map(Function<? super T, ? extends R> mapper);
 
   <R> LStreamApi<R> flatMap(Function<? super T, ? extends LStreamApi<? extends R>> mapper);
 
