@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class MappingLstream<T, R> extends LStream<R> {
 
   private final Iterator<T> previousIterator;
-  private final Function<? super T, ? extends R> mapping;
+  private final Function<? super T, ? extends R> mapper;
 
   @Override
   public boolean hasNext() {
@@ -18,6 +18,6 @@ public class MappingLstream<T, R> extends LStream<R> {
 
   @Override
   public R next() {
-    return mapping.apply(previousIterator.next());
+    return mapper.apply(previousIterator.next());
   }
 }

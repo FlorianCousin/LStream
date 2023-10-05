@@ -16,8 +16,8 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
   }
 
   @Override
-  public <R> LStream<R> map(Function<? super T, ? extends R> mapping) {
-    return new MappingLstream<>(this, mapping);
+  public <R> LStream<R> map(Function<? super T, ? extends R> mapper) {
+    return new MappingLstream<>(this, mapper);
   }
 
   @Override
