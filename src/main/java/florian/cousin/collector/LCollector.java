@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 public class LCollector<T, A, R> {
 
   private final Supplier<A> supplier;
-  // TODO Use BiFunction<A, ? super T, A> ?
   private final BiConsumer<A, ? super T> accumulator;
   private final Function<A, R> finisher;
 
