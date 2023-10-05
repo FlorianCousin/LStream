@@ -13,6 +13,7 @@ import java.util.function.Function;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 
+// TODO Separate in several classes ?
 class LinearCollectorsTest {
 
   @Test
