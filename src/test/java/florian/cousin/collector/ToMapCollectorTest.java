@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import florian.cousin.LinearStream;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
 import org.assertj.core.api.ThrowableAssert;
@@ -276,5 +277,80 @@ class ToMapCollectorTest {
     Map<Integer, String> expectedMap = Map.ofEntries(Map.entry(4, "ord-ine"), Map.entry(2, "i"));
 
     assertThat(actualMap).isUnmodifiable().isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toConcurrentMapEmpty() {
+
+    Map<Integer, Integer> actualMap =
+        LinearStream.<Integer>empty()
+            .collect(LinearCollectors.toConcurrentMap(Function.identity(), Function.identity()));
+
+    assertThat(actualMap).isInstanceOf(ConcurrentMap.class).isEmpty();
+  }
+
+  @Test
+  void toConcurrentMapOneElement() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE")
+            .collect(LinearCollectors.toConcurrentMap(String::length, Function.identity()));
+
+    Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
+
+    assertThat(actualMap).isInstanceOf(ConcurrentMap.class).isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toConcurrentMapElements() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE", "Long", "2L")
+            .collect(LinearCollectors.toConcurrentMap(String::length, s -> s.substring(1)));
+
+    Map<Integer, String> expectedMap =
+        Map.ofEntries(Map.entry(14, "ong.MAX_VALUE"), Map.entry(4, "ong"), Map.entry(2, "L"));
+
+    assertThat(actualMap).isInstanceOf(ConcurrentMap.class).isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toConcurrentMapMergeEmpty() {
+
+    Map<Integer, Integer> actualMap =
+        LinearStream.<Integer>empty()
+            .collect(
+                LinearCollectors.toConcurrentMap(
+                    Function.identity(), Function.identity(), Integer::sum));
+
+    assertThat(actualMap).isInstanceOf(ConcurrentMap.class).isEmpty();
+  }
+
+  @Test
+  void toConcurrentMapMergeOneElement() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("Long.MAX_VALUE")
+            .collect(
+                LinearCollectors.toConcurrentMap(
+                    String::length, Function.identity(), (s1, s2) -> String.join("-", s1, s2)));
+
+    Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
+
+    assertThat(actualMap).isInstanceOf(ConcurrentMap.class).isEqualTo(expectedMap);
+  }
+
+  @Test
+  void toConcurrentMapMergeElements() {
+
+    Map<Integer, String> actualMap =
+        LinearStream.of("hi", "word", "mine")
+            .collect(
+                LinearCollectors.toConcurrentMap(
+                    String::length, s -> s.substring(1), (s1, s2) -> String.join("-", s1, s2)));
+
+    Map<Integer, String> expectedMap = Map.ofEntries(Map.entry(4, "ord-ine"), Map.entry(2, "i"));
+
+    assertThat(actualMap).isInstanceOf(ConcurrentMap.class).isEqualTo(expectedMap);
   }
 }

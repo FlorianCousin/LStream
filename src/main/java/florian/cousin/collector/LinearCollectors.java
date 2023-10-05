@@ -3,6 +3,8 @@ package florian.cousin.collector;
 import florian.cousin.LinearStream;
 import florian.cousin.utils.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.*;
 import org.jetbrains.annotations.Contract;
 
@@ -268,6 +270,21 @@ public final class LinearCollectors {
         toMap(keyMapper, valueMapper, mergeFunction), Collections::unmodifiableMap);
   }
 
+  public static <T, K, U>
+      LinearCollector<T, ConcurrentMap<K, U>, ConcurrentMap<K, U>> toConcurrentMap(
+          Function<? super T, ? extends K> keyMapper,
+          Function<? super T, ? extends U> valueMapper) {
+    return toMap(keyMapper, valueMapper, () -> new ConcurrentHashMap<>());
+  }
+
+  public static <T, K, U>
+      LinearCollector<T, ConcurrentMap<K, U>, ConcurrentMap<K, U>> toConcurrentMap(
+          Function<? super T, ? extends K> keyMapper,
+          Function<? super T, ? extends U> valueMapper,
+          BinaryOperator<U> mergeFunction) {
+    return toMap(keyMapper, valueMapper, mergeFunction, ConcurrentHashMap::new);
+  }
+
   public static <T, K>
       LinearCollector<T, Map<K, LinearStream.Builder<T>>, Map<K, List<T>>> groupingBy(
           Function<? super T, ? extends K> classifier) {
@@ -331,9 +348,6 @@ public final class LinearCollectors {
           Predicate<? super T> predicate, LinearCollector<? super T, A, D> downstream) {
     return groupingBy(predicate::test, downstream);
   }
-
-  // TODO toConcurrentMap ?
-  //  LStream is always sequential, and if we need a concurrentMap, we can give it as mapFactory
 
   public static <T> LinearCollector<T, IntSummaryStatistics, IntSummaryStatistics> summarizingInt(
       ToIntFunction<? super T> mapper) {
