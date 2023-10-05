@@ -1,15 +1,17 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
-import florian.cousin.collector.LinearCollectors;
-import java.util.*;
+import florian.cousin.LStream;
+import florian.cousin.collector.LCollectors;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
-public class SortedIterator<T> implements LinearStream<T> {
+public class SortedIterator<T> implements LStream<T> {
 
-  private final LinearStream<T> baseIterator;
+  private final LStream<T> baseIterator;
   private final @Nullable Comparator<? super T> comparator;
 
   private @Nullable Iterator<T> sortedValues;
@@ -30,7 +32,8 @@ public class SortedIterator<T> implements LinearStream<T> {
   }
 
   private Iterator<T> createSortedIterator() {
-    List<T> values = baseIterator.collect(LinearCollectors.toList());
+    // TODO Use LStream#toList ?
+    List<T> values = baseIterator.collect(LCollectors.toList());
     values.sort(comparator);
     return values.iterator();
   }

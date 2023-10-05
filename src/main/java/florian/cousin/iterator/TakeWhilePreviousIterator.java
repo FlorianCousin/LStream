@@ -1,12 +1,12 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.Iterator;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class TakeWhilePreviousIterator<T> implements LinearStream<T> {
+public class TakeWhilePreviousIterator<T> implements LStream<T> {
 
   private final Iterator<T> baseIterator;
   private final Predicate<? super T> previousPredicate;

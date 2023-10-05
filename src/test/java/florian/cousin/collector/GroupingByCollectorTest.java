@@ -4,7 +4,7 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.*;
 import java.util.function.Function;
 import org.assertj.core.api.ThrowableAssert;
@@ -16,7 +16,7 @@ class GroupingByCollectorTest {
   void groupingByEmpty() {
 
     Map<Integer, List<Integer>> actualGroups =
-        LinearStream.<Integer>empty().collect(LinearCollectors.groupingBy(Function.identity()));
+        LStream.<Integer>empty().collect(LCollectors.groupingBy(Function.identity()));
 
     assertThat(actualGroups).isEmpty();
   }
@@ -25,7 +25,7 @@ class GroupingByCollectorTest {
   void groupingByOneElement() {
 
     Map<Integer, List<String>> actualGroups =
-        LinearStream.of("Long.MAX_VALUE").collect(LinearCollectors.groupingBy(String::length));
+        LStream.of("Long.MAX_VALUE").collect(LCollectors.groupingBy(String::length));
 
     Map<Integer, List<String>> expectedGroups = Map.of(14, singletonList("Long.MAX_VALUE"));
 
@@ -36,7 +36,7 @@ class GroupingByCollectorTest {
   void groupingByElements() {
 
     Map<Integer, List<String>> actualGroups =
-        LinearStream.of("word", "Long", "2L").collect(LinearCollectors.groupingBy(String::length));
+        LStream.of("word", "Long", "2L").collect(LCollectors.groupingBy(String::length));
 
     Map<Integer, List<String>> expectedGroups =
         Map.ofEntries(Map.entry(4, List.of("word", "Long")), Map.entry(2, singletonList("2L")));
@@ -48,10 +48,8 @@ class GroupingByCollectorTest {
   void groupingByDownstreamEmpty() {
 
     Map<Integer, Set<Integer>> actualGroups =
-        LinearStream.<Integer>empty()
-            .collect(
-                LinearCollectors.groupingBy(
-                    Function.identity(), LinearCollectors.toUnmodifiableSet()));
+        LStream.<Integer>empty()
+            .collect(LCollectors.groupingBy(Function.identity(), LCollectors.toUnmodifiableSet()));
 
     assertThat(actualGroups).isEmpty();
   }
@@ -60,8 +58,8 @@ class GroupingByCollectorTest {
   void groupingByDownstreamOneElement() {
 
     Map<Integer, Long> actualGroups =
-        LinearStream.of("Long.MAX_VALUE")
-            .collect(LinearCollectors.groupingBy(String::length, LinearCollectors.counting()));
+        LStream.of("Long.MAX_VALUE")
+            .collect(LCollectors.groupingBy(String::length, LCollectors.counting()));
 
     Map<Integer, Long> expectedGroups = Map.of(14, 1L);
 
@@ -72,8 +70,8 @@ class GroupingByCollectorTest {
   void groupingByDownstreamElements() {
 
     Map<Integer, String> actualGroups =
-        LinearStream.of("word", "Long", "2L")
-            .collect(LinearCollectors.groupingBy(String::length, LinearCollectors.joining("-")));
+        LStream.of("word", "Long", "2L")
+            .collect(LCollectors.groupingBy(String::length, LCollectors.joining("-")));
 
     Map<Integer, String> expectedGroups =
         Map.ofEntries(Map.entry(4, "word-Long"), Map.entry(2, "2L"));
@@ -85,10 +83,9 @@ class GroupingByCollectorTest {
   void groupingByDownstreamFactoryElements() {
 
     Map<Integer, String> actualGroups =
-        LinearStream.of("word", "Long", "2L")
+        LStream.of("word", "Long", "2L")
             .collect(
-                LinearCollectors.groupingBy(
-                    String::length, TreeMap::new, LinearCollectors.joining("-")));
+                LCollectors.groupingBy(String::length, TreeMap::new, LCollectors.joining("-")));
 
     Map<Integer, String> expectedGroups =
         Map.ofEntries(Map.entry(4, "word-Long"), Map.entry(2, "2L"));
@@ -101,10 +98,10 @@ class GroupingByCollectorTest {
 
     ThrowableAssert.ThrowingCallable buildActualMap =
         () ->
-            LinearStream.of("word", "Long", "2L")
+            LStream.of("word", "Long", "2L")
                 .collect(
-                    LinearCollectors.groupingBy(
-                        String::length, Collections::emptyMap, LinearCollectors.joining("-")));
+                    LCollectors.groupingBy(
+                        String::length, Collections::emptyMap, LCollectors.joining("-")));
 
     assertThatThrownBy(buildActualMap)
         .isInstanceOf(UnsupportedOperationException.class)

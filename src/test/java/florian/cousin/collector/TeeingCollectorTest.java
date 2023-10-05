@@ -2,7 +2,7 @@ package florian.cousin.collector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -12,11 +12,11 @@ class TeeingCollectorTest {
   void teeingEmpty() {
 
     List<Integer> actualCollection =
-        LinearStream.<Integer>empty()
+        LStream.<Integer>empty()
             .collect(
-                LinearCollectors.teeing(
-                    LinearCollectors.toList(),
-                    LinearCollectors.toUnmodifiableSet(),
+                LCollectors.teeing(
+                    LCollectors.toList(),
+                    LCollectors.toUnmodifiableSet(),
                     (list, set) -> {
                       list.addAll(set);
                       return list;
@@ -29,11 +29,11 @@ class TeeingCollectorTest {
   void teeingElements() {
 
     List<Integer> actualCollection =
-        LinearStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
+        LStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
             .collect(
-                LinearCollectors.teeing(
-                    LinearCollectors.mapping(String::length, LinearCollectors.toList()),
-                    LinearCollectors.counting(),
+                LCollectors.teeing(
+                    LCollectors.mapping(String::length, LCollectors.toList()),
+                    LCollectors.counting(),
                     (list, nbElements) -> {
                       list.add(Math.toIntExact(nbElements));
                       return list;

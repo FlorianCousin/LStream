@@ -1,6 +1,6 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -8,7 +8,7 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DistinctIterator<T> implements LinearStream<T> {
+public class DistinctIterator<T> implements LStream<T> {
 
   private final Iterator<T> iterator;
   private final Set<T> iteratedElements = new HashSet<>();

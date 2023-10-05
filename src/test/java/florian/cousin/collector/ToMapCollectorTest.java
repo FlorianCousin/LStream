@@ -3,7 +3,7 @@ package florian.cousin.collector;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -18,8 +18,8 @@ class ToMapCollectorTest {
   void toMapEmpty() {
 
     Map<Integer, Integer> actualMap =
-        LinearStream.<Integer>empty()
-            .collect(LinearCollectors.toMap(Function.identity(), Function.identity()));
+        LStream.<Integer>empty()
+            .collect(LCollectors.toMap(Function.identity(), Function.identity()));
 
     assertThat(actualMap).isEmpty();
   }
@@ -28,8 +28,8 @@ class ToMapCollectorTest {
   void toMapOneElement() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE")
-            .collect(LinearCollectors.toMap(String::length, Function.identity()));
+        LStream.of("Long.MAX_VALUE")
+            .collect(LCollectors.toMap(String::length, Function.identity()));
 
     Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
 
@@ -40,8 +40,8 @@ class ToMapCollectorTest {
   void toMapElements() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE", "Long", "2L")
-            .collect(LinearCollectors.toMap(String::length, s -> s.substring(1)));
+        LStream.of("Long.MAX_VALUE", "Long", "2L")
+            .collect(LCollectors.toMap(String::length, s -> s.substring(1)));
 
     Map<Integer, String> expectedMap =
         Map.ofEntries(Map.entry(14, "ong.MAX_VALUE"), Map.entry(4, "ong"), Map.entry(2, "L"));
@@ -54,8 +54,8 @@ class ToMapCollectorTest {
 
     ThrowableAssert.ThrowingCallable buildActualMap =
         () ->
-            LinearStream.of("hi", "word", "mine")
-                .collect(LinearCollectors.toMap(String::length, Function.identity()));
+            LStream.of("hi", "word", "mine")
+                .collect(LCollectors.toMap(String::length, Function.identity()));
 
     assertThatThrownBy(buildActualMap)
         .isInstanceOf(IllegalStateException.class)
@@ -66,9 +66,8 @@ class ToMapCollectorTest {
   void toMapMergeEmpty() {
 
     Map<Integer, Integer> actualMap =
-        LinearStream.<Integer>empty()
-            .collect(
-                LinearCollectors.toMap(Function.identity(), Function.identity(), Integer::sum));
+        LStream.<Integer>empty()
+            .collect(LCollectors.toMap(Function.identity(), Function.identity(), Integer::sum));
 
     assertThat(actualMap).isEmpty();
   }
@@ -77,9 +76,9 @@ class ToMapCollectorTest {
   void toMapMergeOneElement() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE")
+        LStream.of("Long.MAX_VALUE")
             .collect(
-                LinearCollectors.toMap(
+                LCollectors.toMap(
                     String::length, Function.identity(), (s1, s2) -> String.join("-", s1, s2)));
 
     Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
@@ -91,9 +90,9 @@ class ToMapCollectorTest {
   void toMapMergeElements() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE", "Long", "2L")
+        LStream.of("Long.MAX_VALUE", "Long", "2L")
             .collect(
-                LinearCollectors.toMap(
+                LCollectors.toMap(
                     String::length, s -> s.substring(1), (s1, s2) -> String.join("-", s1, s2)));
 
     Map<Integer, String> expectedMap =
@@ -106,9 +105,9 @@ class ToMapCollectorTest {
   void toMapMergeDuplicateKey() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("hi", "word", "mine")
+        LStream.of("hi", "word", "mine")
             .collect(
-                LinearCollectors.toMap(
+                LCollectors.toMap(
                     String::length, Function.identity(), (s1, s2) -> String.join("-", s1, s2)));
 
     Map<Integer, String> expectedMap = Map.ofEntries(Map.entry(4, "word-mine"), Map.entry(2, "hi"));
@@ -120,10 +119,9 @@ class ToMapCollectorTest {
   void toMapFactoryEmpty() {
 
     Map<Integer, Integer> actualMap =
-        LinearStream.<Integer>empty()
+        LStream.<Integer>empty()
             .collect(
-                LinearCollectors.toMap(
-                    Function.identity(), Function.identity(), Collections::emptyMap));
+                LCollectors.toMap(Function.identity(), Function.identity(), Collections::emptyMap));
 
     assertThat(actualMap).isEmpty();
   }
@@ -132,10 +130,9 @@ class ToMapCollectorTest {
   void toMapFactoryOneElement() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE")
+        LStream.of("Long.MAX_VALUE")
             .collect(
-                LinearCollectors.toMap(
-                    String::length, Function.identity(), ConcurrentSkipListMap::new));
+                LCollectors.toMap(String::length, Function.identity(), ConcurrentSkipListMap::new));
 
     Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
 
@@ -147,10 +144,9 @@ class ToMapCollectorTest {
 
     ThrowableAssert.ThrowingCallable buildActualMap =
         () ->
-            LinearStream.of("Long.MAX_VALUE", "Long", "2L")
+            LStream.of("Long.MAX_VALUE", "Long", "2L")
                 .collect(
-                    LinearCollectors.toMap(
-                        String::length, Function.identity(), Collections::emptyMap));
+                    LCollectors.toMap(String::length, Function.identity(), Collections::emptyMap));
 
     assertThatThrownBy(buildActualMap)
         .isInstanceOf(UnsupportedOperationException.class)
@@ -161,9 +157,9 @@ class ToMapCollectorTest {
   void toMapMergeFactoryEmpty() {
 
     Map<Integer, Integer> actualMap =
-        LinearStream.<Integer>empty()
+        LStream.<Integer>empty()
             .collect(
-                LinearCollectors.toMap(
+                LCollectors.toMap(
                     Function.identity(), Function.identity(), Integer::sum, Collections::emptyMap));
 
     assertThat(actualMap).isEmpty();
@@ -173,9 +169,9 @@ class ToMapCollectorTest {
   void toMapMergeFactoryOneElement() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE")
+        LStream.of("Long.MAX_VALUE")
             .collect(
-                LinearCollectors.toMap(
+                LCollectors.toMap(
                     String::length,
                     Function.identity(),
                     (s1, s2) -> String.join("-", s1, s2),
@@ -191,9 +187,9 @@ class ToMapCollectorTest {
 
     ThrowableAssert.ThrowingCallable buildActualMap =
         () ->
-            LinearStream.of("Long.MAX_VALUE", "Long", "2L")
+            LStream.of("Long.MAX_VALUE", "Long", "2L")
                 .collect(
-                    LinearCollectors.toMap(
+                    LCollectors.toMap(
                         String::length,
                         Function.identity(),
                         (s1, s2) -> String.join("-", s1, s2),
@@ -208,8 +204,8 @@ class ToMapCollectorTest {
   void toUnmodifiableMapEmpty() {
 
     Map<Integer, Integer> actualMap =
-        LinearStream.<Integer>empty()
-            .collect(LinearCollectors.toUnmodifiableMap(Function.identity(), Function.identity()));
+        LStream.<Integer>empty()
+            .collect(LCollectors.toUnmodifiableMap(Function.identity(), Function.identity()));
 
     assertThat(actualMap).isUnmodifiable().isEmpty();
   }
@@ -218,8 +214,8 @@ class ToMapCollectorTest {
   void toUnmodifiableMapOneElement() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE")
-            .collect(LinearCollectors.toUnmodifiableMap(String::length, Function.identity()));
+        LStream.of("Long.MAX_VALUE")
+            .collect(LCollectors.toUnmodifiableMap(String::length, Function.identity()));
 
     Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
 
@@ -230,8 +226,8 @@ class ToMapCollectorTest {
   void toUnmodifiableMapElements() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE", "Long", "2L")
-            .collect(LinearCollectors.toUnmodifiableMap(String::length, s -> s.substring(1)));
+        LStream.of("Long.MAX_VALUE", "Long", "2L")
+            .collect(LCollectors.toUnmodifiableMap(String::length, s -> s.substring(1)));
 
     Map<Integer, String> expectedMap =
         Map.ofEntries(Map.entry(14, "ong.MAX_VALUE"), Map.entry(4, "ong"), Map.entry(2, "L"));
@@ -243,9 +239,9 @@ class ToMapCollectorTest {
   void toUnmodifiableMapMergeEmpty() {
 
     Map<Integer, Integer> actualMap =
-        LinearStream.<Integer>empty()
+        LStream.<Integer>empty()
             .collect(
-                LinearCollectors.toUnmodifiableMap(
+                LCollectors.toUnmodifiableMap(
                     Function.identity(), Function.identity(), Integer::sum));
 
     assertThat(actualMap).isUnmodifiable().isEmpty();
@@ -255,9 +251,9 @@ class ToMapCollectorTest {
   void toUnmodifiableMapMergeOneElement() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE")
+        LStream.of("Long.MAX_VALUE")
             .collect(
-                LinearCollectors.toUnmodifiableMap(
+                LCollectors.toUnmodifiableMap(
                     String::length, Function.identity(), (s1, s2) -> String.join("-", s1, s2)));
 
     Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
@@ -269,9 +265,9 @@ class ToMapCollectorTest {
   void toUnmodifiableMapMergeElements() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("hi", "word", "mine")
+        LStream.of("hi", "word", "mine")
             .collect(
-                LinearCollectors.toUnmodifiableMap(
+                LCollectors.toUnmodifiableMap(
                     String::length, s -> s.substring(1), (s1, s2) -> String.join("-", s1, s2)));
 
     Map<Integer, String> expectedMap = Map.ofEntries(Map.entry(4, "ord-ine"), Map.entry(2, "i"));
@@ -283,8 +279,8 @@ class ToMapCollectorTest {
   void toConcurrentMapEmpty() {
 
     Map<Integer, Integer> actualMap =
-        LinearStream.<Integer>empty()
-            .collect(LinearCollectors.toConcurrentMap(Function.identity(), Function.identity()));
+        LStream.<Integer>empty()
+            .collect(LCollectors.toConcurrentMap(Function.identity(), Function.identity()));
 
     assertThat(actualMap).isInstanceOf(ConcurrentMap.class).isEmpty();
   }
@@ -293,8 +289,8 @@ class ToMapCollectorTest {
   void toConcurrentMapOneElement() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE")
-            .collect(LinearCollectors.toConcurrentMap(String::length, Function.identity()));
+        LStream.of("Long.MAX_VALUE")
+            .collect(LCollectors.toConcurrentMap(String::length, Function.identity()));
 
     Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
 
@@ -305,8 +301,8 @@ class ToMapCollectorTest {
   void toConcurrentMapElements() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE", "Long", "2L")
-            .collect(LinearCollectors.toConcurrentMap(String::length, s -> s.substring(1)));
+        LStream.of("Long.MAX_VALUE", "Long", "2L")
+            .collect(LCollectors.toConcurrentMap(String::length, s -> s.substring(1)));
 
     Map<Integer, String> expectedMap =
         Map.ofEntries(Map.entry(14, "ong.MAX_VALUE"), Map.entry(4, "ong"), Map.entry(2, "L"));
@@ -318,9 +314,9 @@ class ToMapCollectorTest {
   void toConcurrentMapMergeEmpty() {
 
     Map<Integer, Integer> actualMap =
-        LinearStream.<Integer>empty()
+        LStream.<Integer>empty()
             .collect(
-                LinearCollectors.toConcurrentMap(
+                LCollectors.toConcurrentMap(
                     Function.identity(), Function.identity(), Integer::sum));
 
     assertThat(actualMap).isInstanceOf(ConcurrentMap.class).isEmpty();
@@ -330,9 +326,9 @@ class ToMapCollectorTest {
   void toConcurrentMapMergeOneElement() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("Long.MAX_VALUE")
+        LStream.of("Long.MAX_VALUE")
             .collect(
-                LinearCollectors.toConcurrentMap(
+                LCollectors.toConcurrentMap(
                     String::length, Function.identity(), (s1, s2) -> String.join("-", s1, s2)));
 
     Map<Integer, String> expectedMap = Map.of(14, "Long.MAX_VALUE");
@@ -344,9 +340,9 @@ class ToMapCollectorTest {
   void toConcurrentMapMergeElements() {
 
     Map<Integer, String> actualMap =
-        LinearStream.of("hi", "word", "mine")
+        LStream.of("hi", "word", "mine")
             .collect(
-                LinearCollectors.toConcurrentMap(
+                LCollectors.toConcurrentMap(
                     String::length, s -> s.substring(1), (s1, s2) -> String.join("-", s1, s2)));
 
     Map<Integer, String> expectedMap = Map.ofEntries(Map.entry(4, "ord-ine"), Map.entry(2, "i"));

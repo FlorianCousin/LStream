@@ -1,12 +1,12 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class IterateIterator<T> implements LinearStream<T> {
+public class IterateIterator<T> implements LStream<T> {
 
   private final T initialValue;
   private final Predicate<? super T> hasNext;

@@ -9,13 +9,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
-class LinearStreamModificationTest {
+class LStreamModificationTest {
 
   @Test
   void filter() {
 
     List<Float> actualFiltered =
-        LinearStream.of(4.5f, 7.8f, -4f, 0.0003f, -7.1f).filter(number -> number < 0).toList();
+        LStream.of(4.5f, 7.8f, -4f, 0.0003f, -7.1f).filter(number -> number < 0).toList();
 
     List<Float> expectedFiltered = List.of(-4f, -7.1f);
 
@@ -28,7 +28,7 @@ class LinearStreamModificationTest {
   void map() {
 
     List<Integer> actualLengths =
-        LinearStream.of("bonjour", "hi", "hello", "hola").map(String::length).toList();
+        LStream.of("bonjour", "hi", "hello", "hola").map(String::length).toList();
 
     List<Integer> expectedLengths = List.of(7, 2, 5, 4);
 
@@ -41,9 +41,9 @@ class LinearStreamModificationTest {
   void flatMap() {
 
     List<Character> actualFlatMap =
-        LinearStream.of("cola", "moli", "dude", "flatMap")
+        LStream.of("cola", "moli", "dude", "flatMap")
             .map(word -> word.chars().mapToObj(c -> (char) c).toList())
-            .flatMap(LinearStream::from)
+            .flatMap(LStream::from)
             .toList();
 
     List<Character> expectedFlatMap =
@@ -58,8 +58,8 @@ class LinearStreamModificationTest {
   void flatMapLastOneEmpty() {
 
     List<Integer> actualNumbers =
-        LinearStream.of(List.of(1, -7, 6), Collections.<Integer>emptyList())
-            .flatMap(LinearStream::from)
+        LStream.of(List.of(1, -7, 6), Collections.<Integer>emptyList())
+            .flatMap(LStream::from)
             .toList();
 
     List<Integer> expectedNumbers = List.of(1, -7, 6);
@@ -71,7 +71,7 @@ class LinearStreamModificationTest {
   void distinct() {
 
     List<String> actualDistinct =
-        LinearStream.of("me", "me", "you", "it", "him", "me", "it").distinct().toList();
+        LStream.of("me", "me", "you", "it", "him", "me", "it").distinct().toList();
 
     List<String> expectedDistinct = List.of("me", "you", "it", "him");
 
@@ -84,8 +84,7 @@ class LinearStreamModificationTest {
     List<Integer> descendingSortedIntegers =
         IntStream.range(0, 9).map(i -> 12 - i).boxed().toList();
 
-    List<Integer> actualSortedIntegers =
-        LinearStream.from(descendingSortedIntegers).sorted().toList();
+    List<Integer> actualSortedIntegers = LStream.from(descendingSortedIntegers).sorted().toList();
 
     List<Integer> expectedSortedIntegers = List.of(4, 5, 6, 7, 8, 9, 10, 11, 12);
 
@@ -96,7 +95,7 @@ class LinearStreamModificationTest {
   void sortedComparator() {
 
     List<String> actualSortedWords =
-        LinearStream.of("sort", "those", "words")
+        LStream.of("sort", "those", "words")
             .sorted(
                 Comparator.<String, Character>comparing(word -> word.charAt(1))
                     .thenComparing(word -> word.charAt(0)))
@@ -110,7 +109,7 @@ class LinearStreamModificationTest {
   @Test
   void sortedMustKeepDuplicate() {
 
-    List<Integer> actualValues = LinearStream.of(4, 9, 3, 4, 6, 3, 4, 4).sorted().toList();
+    List<Integer> actualValues = LStream.of(4, 9, 3, 4, 6, 3, 4, 4).sorted().toList();
 
     List<Integer> expectedValues = List.of(3, 3, 4, 4, 4, 4, 6, 9);
 
@@ -122,7 +121,7 @@ class LinearStreamModificationTest {
 
     AtomicInteger number = new AtomicInteger(0);
 
-    LinearStream.of(1, 6, 1).peek(i -> number.incrementAndGet()).toList();
+    LStream.of(1, 6, 1).peek(i -> number.incrementAndGet()).toList();
 
     assertThat(number).hasValue(3);
   }
@@ -130,7 +129,7 @@ class LinearStreamModificationTest {
   @Test
   void limitToNothing() {
 
-    List<String> actualValues = LinearStream.of("yes", "si", "oui", "da").limit(0).toList();
+    List<String> actualValues = LStream.of("yes", "si", "oui", "da").limit(0).toList();
 
     assertThat(actualValues).isEmpty();
   }
@@ -138,7 +137,7 @@ class LinearStreamModificationTest {
   @Test
   void limit() {
 
-    List<String> actualValues = LinearStream.of("yes", "si", "oui", "da").limit(2).toList();
+    List<String> actualValues = LStream.of("yes", "si", "oui", "da").limit(2).toList();
 
     List<String> expectedValues = List.of("yes", "si");
 
@@ -150,7 +149,7 @@ class LinearStreamModificationTest {
 
     List<String> baseValues = List.of("yes", "si", "oui", "da");
 
-    List<String> actualValues = LinearStream.from(baseValues).limit(20).toList();
+    List<String> actualValues = LStream.from(baseValues).limit(20).toList();
 
     assertThat(actualValues).isEqualTo(baseValues);
   }
@@ -160,7 +159,7 @@ class LinearStreamModificationTest {
 
     List<Long> baseValues = List.of(4L, -5L, 789L);
 
-    List<Long> actuelValues = LinearStream.from(baseValues).skip(-1).toList();
+    List<Long> actuelValues = LStream.from(baseValues).skip(-1).toList();
 
     assertThat(actuelValues).isEqualTo(baseValues);
   }
@@ -168,7 +167,7 @@ class LinearStreamModificationTest {
   @Test
   void skip() {
 
-    List<Long> actuelValues = LinearStream.of(4L, -5L, 789L).skip(2).toList();
+    List<Long> actuelValues = LStream.of(4L, -5L, 789L).skip(2).toList();
 
     assertThat(actuelValues).hasSize(1).containsExactly(789L);
   }
@@ -176,7 +175,7 @@ class LinearStreamModificationTest {
   @Test
   void skipAll() {
 
-    List<Long> actuelValues = LinearStream.of(4L, -5L, 789L).skip(4).toList();
+    List<Long> actuelValues = LStream.of(4L, -5L, 789L).skip(4).toList();
 
     assertThat(actuelValues).isEmpty();
   }
@@ -184,7 +183,7 @@ class LinearStreamModificationTest {
   @Test
   void takeWhileTakesNothing() {
 
-    List<Integer> actualValues = LinearStream.of(1, 4, 8, 3).takeWhile(i -> false).toList();
+    List<Integer> actualValues = LStream.of(1, 4, 8, 3).takeWhile(i -> false).toList();
 
     assertThat(actualValues).isEmpty();
   }
@@ -193,7 +192,7 @@ class LinearStreamModificationTest {
   void takeWhile() {
 
     List<Integer> actualValues =
-        LinearStream.of(-1, -5, 25, 7, -4, 1, 3).takeWhile(nb -> nb < 0).toList();
+        LStream.of(-1, -5, 25, 7, -4, 1, 3).takeWhile(nb -> nb < 0).toList();
 
     List<Integer> expectedValues = List.of(-1, -5);
 
@@ -205,7 +204,7 @@ class LinearStreamModificationTest {
 
     List<Integer> baseValues = List.of(4, 5, -9);
 
-    List<Integer> actualValues = LinearStream.from(baseValues).takeWhile(nb -> true).toList();
+    List<Integer> actualValues = LStream.from(baseValues).takeWhile(nb -> true).toList();
 
     assertThat(actualValues).isEqualTo(baseValues);
   }
@@ -213,8 +212,7 @@ class LinearStreamModificationTest {
   @Test
   void takeWhileEmpty() {
 
-    List<Integer> actualValues =
-        LinearStream.<Integer>empty().takeWhilePrevious(i -> i > 0).toList();
+    List<Integer> actualValues = LStream.<Integer>empty().takeWhilePrevious(i -> i > 0).toList();
 
     assertThat(actualValues).isEmpty();
   }
@@ -223,7 +221,7 @@ class LinearStreamModificationTest {
   void takeWhilePrevious() {
 
     List<String> actualValues =
-        LinearStream.of("linear", "lap", "crowd", "log")
+        LStream.of("linear", "lap", "crowd", "log")
             .takeWhilePrevious(s -> s.startsWith("l"))
             .toList();
 
@@ -235,7 +233,7 @@ class LinearStreamModificationTest {
   @Test
   void takeWhilePreviousUseless() {
 
-    List<Integer> actualValues = LinearStream.of(4, 8, 6, 3).takeWhilePrevious(i -> i > 0).toList();
+    List<Integer> actualValues = LStream.of(4, 8, 6, 3).takeWhilePrevious(i -> i > 0).toList();
 
     List<Integer> expectedValues = List.of(4, 8, 6, 3);
 
@@ -245,7 +243,7 @@ class LinearStreamModificationTest {
   @Test
   void dropWhileTakesNothing() {
 
-    List<Integer> actualValues = LinearStream.of(1, 6, 7).dropWhile(i -> true).toList();
+    List<Integer> actualValues = LStream.of(1, 6, 7).dropWhile(i -> true).toList();
 
     assertThat(actualValues).isEmpty();
   }
@@ -254,7 +252,7 @@ class LinearStreamModificationTest {
   void dropWhile() {
 
     List<Integer> actualValues =
-        LinearStream.of(1, 8, -1, -2, 75, 6, -3, 6).dropWhile(nb -> nb > 0).toList();
+        LStream.of(1, 8, -1, -2, 75, 6, -3, 6).dropWhile(nb -> nb > 0).toList();
 
     List<Integer> expectedValues = List.of(-1, -2, 75, 6, -3, 6);
 
@@ -264,7 +262,7 @@ class LinearStreamModificationTest {
   @Test
   void dropWhileTakesEverything() {
 
-    List<Integer> actualValues = LinearStream.of(5, 9, 6).dropWhile(i -> false).toList();
+    List<Integer> actualValues = LStream.of(5, 9, 6).dropWhile(i -> false).toList();
 
     List<Integer> expectedValues = List.of(5, 9, 6);
 

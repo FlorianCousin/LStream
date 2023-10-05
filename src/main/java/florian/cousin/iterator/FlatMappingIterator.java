@@ -1,11 +1,11 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.function.Function;
 
-public class FlatMappingIterator<T, R> implements LinearStream<R> {
+public class FlatMappingIterator<T, R> implements LStream<R> {
 
   private final Iterator<T> baseIterator;
   private final Function<? super T, ? extends Iterator<? extends R>> mapper;

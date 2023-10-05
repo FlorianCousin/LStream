@@ -1,13 +1,13 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class LimitIterator<T> implements LinearStream<T> {
+public class LimitIterator<T> implements LStream<T> {
 
-  private final LinearStream<T> baseIterator;
+  private final LStream<T> baseIterator;
   private final long maxSize;
   private long iteration;
 

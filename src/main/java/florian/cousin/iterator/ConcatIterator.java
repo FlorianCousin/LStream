@@ -1,13 +1,13 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ConcatIterator<T> implements LinearStream<T> {
+public class ConcatIterator<T> implements LStream<T> {
 
-  private final LinearStream<? extends T> first;
-  private final LinearStream<? extends T> second;
+  private final LStream<? extends T> first;
+  private final LStream<? extends T> second;
 
   @Override
   public boolean hasNext() {

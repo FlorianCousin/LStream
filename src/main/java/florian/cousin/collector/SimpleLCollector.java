@@ -4,9 +4,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class SimpleCollector<T, A> extends LinearCollector<T, A, A> {
+public class SimpleLCollector<T, A> extends LCollector<T, A, A> {
 
-  SimpleCollector(Supplier<A> supplier, BiConsumer<A, ? super T> accumulator) {
+  SimpleLCollector(Supplier<A> supplier, BiConsumer<A, ? super T> accumulator) {
     super(supplier, accumulator, Function.identity());
   }
 }

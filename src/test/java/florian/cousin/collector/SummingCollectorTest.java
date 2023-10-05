@@ -3,7 +3,7 @@ package florian.cousin.collector;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import org.junit.jupiter.api.Test;
 
 class SummingCollectorTest {
@@ -11,7 +11,7 @@ class SummingCollectorTest {
   @Test
   void summingIntEmpty() {
 
-    int actualSum = LinearStream.<Integer>empty().collect(LinearCollectors.summingInt(t -> t));
+    int actualSum = LStream.<Integer>empty().collect(LCollectors.summingInt(t -> t));
 
     assertThat(actualSum).isZero();
   }
@@ -19,7 +19,7 @@ class SummingCollectorTest {
   @Test
   void summingIntOneElement() {
 
-    int actualSum = LinearStream.of("hello !").collect(LinearCollectors.summingInt(String::length));
+    int actualSum = LStream.of("hello !").collect(LCollectors.summingInt(String::length));
 
     assertThat(actualSum).isEqualTo(7);
   }
@@ -28,8 +28,8 @@ class SummingCollectorTest {
   void summingIntElements() {
 
     int actualSum =
-        LinearStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
-            .collect(LinearCollectors.summingInt(String::length));
+        LStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
+            .collect(LCollectors.summingInt(String::length));
 
     assertThat(actualSum).isEqualTo(37);
   }
@@ -37,7 +37,7 @@ class SummingCollectorTest {
   @Test
   void summingLongEmpty() {
 
-    long actualSum = LinearStream.<Integer>empty().collect(LinearCollectors.summingLong(t -> t));
+    long actualSum = LStream.<Integer>empty().collect(LCollectors.summingLong(t -> t));
 
     assertThat(actualSum).isZero();
   }
@@ -46,10 +46,9 @@ class SummingCollectorTest {
   void summingLongOneElement() {
 
     long actualSum =
-        LinearStream.of("hello !")
+        LStream.of("hello !")
             .collect(
-                LinearCollectors.summingLong(
-                    string -> ((long) Integer.MAX_VALUE) + string.length()));
+                LCollectors.summingLong(string -> ((long) Integer.MAX_VALUE) + string.length()));
 
     assertThat(actualSum).isEqualTo(2_147_483_654L);
   }
@@ -58,8 +57,8 @@ class SummingCollectorTest {
   void summingLongElements() {
 
     long actualSum =
-        LinearStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
-            .collect(LinearCollectors.summingLong(String::length));
+        LStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
+            .collect(LCollectors.summingLong(String::length));
 
     assertThat(actualSum).isEqualTo(37);
   }
@@ -67,8 +66,7 @@ class SummingCollectorTest {
   @Test
   void summingDoubleEmpty() {
 
-    double actualSum =
-        LinearStream.<Integer>empty().collect(LinearCollectors.summingDouble(t -> t));
+    double actualSum = LStream.<Integer>empty().collect(LCollectors.summingDouble(t -> t));
 
     assertThat(actualSum).isZero();
   }
@@ -77,8 +75,8 @@ class SummingCollectorTest {
   void summingDoubleOneElement() {
 
     double actualSum =
-        LinearStream.of("hello !")
-            .collect(LinearCollectors.summingDouble(string -> (double) string.length() / 2));
+        LStream.of("hello !")
+            .collect(LCollectors.summingDouble(string -> (double) string.length() / 2));
 
     assertThat(actualSum).isEqualTo(3.5);
   }
@@ -87,8 +85,8 @@ class SummingCollectorTest {
   void summingDoubleElements() {
 
     double actualSum =
-        LinearStream.of(Math.sqrt(2), Math.sqrt(3), Math.sqrt(5))
-            .collect(LinearCollectors.summingDouble(t -> t));
+        LStream.of(Math.sqrt(2), Math.sqrt(3), Math.sqrt(5))
+            .collect(LCollectors.summingDouble(t -> t));
 
     assertThat(actualSum).isCloseTo(5.382332347441762, offset(1e-14));
   }
@@ -96,8 +94,7 @@ class SummingCollectorTest {
   @Test
   void summingDoubleWrongOrder() {
 
-    double actualSum =
-        LinearStream.of(1e300, 3.5, -1e300).collect(LinearCollectors.summingDouble(t -> t));
+    double actualSum = LStream.of(1e300, 3.5, -1e300).collect(LCollectors.summingDouble(t -> t));
 
     assertThat(actualSum).isZero();
   }
@@ -105,8 +102,7 @@ class SummingCollectorTest {
   @Test
   void summingDoubleRightOrder() {
 
-    double actualSum =
-        LinearStream.of(1e300, -1e300, 3.5).collect(LinearCollectors.summingDouble(t -> t));
+    double actualSum = LStream.of(1e300, -1e300, 3.5).collect(LCollectors.summingDouble(t -> t));
 
     assertThat(actualSum).isEqualTo(3.5);
   }

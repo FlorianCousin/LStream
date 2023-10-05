@@ -1,14 +1,14 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class takeWhileIterator<T> implements LinearStream<T> {
+public class takeWhileIterator<T> implements LStream<T> {
 
-  private final LinearStream<T> baseIterator;
+  private final LStream<T> baseIterator;
   private final Predicate<? super T> predicate;
 
   private T next;

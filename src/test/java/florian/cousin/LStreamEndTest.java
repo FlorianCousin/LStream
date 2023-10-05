@@ -3,7 +3,7 @@ package florian.cousin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import florian.cousin.collector.LinearCollector;
+import florian.cousin.collector.LCollector;
 import florian.cousin.exception.SeveralElementsException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,11 +11,11 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 
-class LinearStreamEndTest {
+class LStreamEndTest {
 
   @Test
   void nothingExecutedWithoutCollection() {
-    LinearStream.of(1, 2, 8, -4).map(number -> fail("mapping function should not be called"));
+    LStream.of(1, 2, 8, -4).map(number -> fail("mapping function should not be called"));
   }
 
   @Test
@@ -23,7 +23,7 @@ class LinearStreamEndTest {
 
     AtomicInteger nb = new AtomicInteger(0);
 
-    LinearStream.of(1, -2, 4).forEach(nb::addAndGet);
+    LStream.of(1, -2, 4).forEach(nb::addAndGet);
 
     assertThat(nb).hasValue(3);
   }
@@ -31,7 +31,7 @@ class LinearStreamEndTest {
   @Test
   void toArray() {
 
-    Object[] actualValues = LinearStream.of("a", "b", "c", "d").toArray();
+    Object[] actualValues = LStream.of("a", "b", "c", "d").toArray();
 
     Object[] expectedValues = new Object[] {"a", "b", "c", "d"};
 
@@ -41,7 +41,7 @@ class LinearStreamEndTest {
   @Test
   void toArrayGenerator() {
 
-    String[] actualValues = LinearStream.of("a", "b", "c", "d").toArray(String[]::new);
+    String[] actualValues = LStream.of("a", "b", "c", "d").toArray(String[]::new);
 
     String[] expectedValues = new String[] {"a", "b", "c", "d"};
 
@@ -51,7 +51,7 @@ class LinearStreamEndTest {
   @Test
   void maxWithReduce() {
 
-    int actualMaximum = LinearStream.of(1, 5, 9, 3, -14, 6, 753, 0).reduce(0, Math::max);
+    int actualMaximum = LStream.of(1, 5, 9, 3, -14, 6, 753, 0).reduce(0, Math::max);
 
     int expectedMaximum = 753;
 
@@ -61,7 +61,7 @@ class LinearStreamEndTest {
   @Test
   void reduceWithoutValue() {
 
-    Optional<Object> optional = LinearStream.empty().reduce((a, b) -> a);
+    Optional<Object> optional = LStream.empty().reduce((a, b) -> a);
 
     assertThat(optional).isEmpty();
   }
@@ -69,7 +69,7 @@ class LinearStreamEndTest {
   @Test
   void reduceOneValue() {
 
-    Optional<Integer> actualMin = LinearStream.of(5).reduce(Math::min);
+    Optional<Integer> actualMin = LStream.of(5).reduce(Math::min);
 
     assertThat(actualMin).hasValue(5);
   }
@@ -77,7 +77,7 @@ class LinearStreamEndTest {
   @Test
   void reduceSeveralValues() {
 
-    Optional<Integer> actualMax = LinearStream.of(4, 8, 9, -1, 3).reduce(Math::max);
+    Optional<Integer> actualMax = LStream.of(4, 8, 9, -1, 3).reduce(Math::max);
 
     assertThat(actualMax).hasValue(9);
   }
@@ -86,7 +86,7 @@ class LinearStreamEndTest {
   void reduceWithDifferentType() {
 
     String actualMaximum =
-        LinearStream.of(1, 5, 9, 3, -14, 6, 753, 0)
+        LStream.of(1, 5, 9, 3, -14, 6, 753, 0)
             .reduce(
                 "",
                 (String previousMax, Integer newNumber) -> {
@@ -102,7 +102,7 @@ class LinearStreamEndTest {
   @Test
   void collectWithAccumulator() {
 
-    Set<Integer> actualCollection = LinearStream.of(4, 5, 4, 3).collect(HashSet::new, Set::add);
+    Set<Integer> actualCollection = LStream.of(4, 5, 4, 3).collect(HashSet::new, Set::add);
 
     Set<Integer> expectedCollection = Set.of(3, 4, 5);
 
@@ -112,10 +112,10 @@ class LinearStreamEndTest {
   @Test
   void collectWithCollector() {
 
-    LinearCollector<Integer, List<Integer>, List<Integer>> integerListCollector =
-        LinearCollector.of(ArrayList::new, List::add, Collections::unmodifiableList);
+    LCollector<Integer, List<Integer>, List<Integer>> integerListCollector =
+        LCollector.of(ArrayList::new, List::add, Collections::unmodifiableList);
 
-    List<Integer> actualCollection = LinearStream.of(4, 5, 4, 3).collect(integerListCollector);
+    List<Integer> actualCollection = LStream.of(4, 5, 4, 3).collect(integerListCollector);
 
     List<Integer> expectedCollection = List.of(4, 5, 4, 3);
 
@@ -125,7 +125,7 @@ class LinearStreamEndTest {
   @Test
   void minWithoutValue() {
 
-    Optional<Integer> actualMinimum = LinearStream.<Integer>empty().min(Comparator.naturalOrder());
+    Optional<Integer> actualMinimum = LStream.<Integer>empty().min(Comparator.naturalOrder());
 
     assertThat(actualMinimum).isEmpty();
   }
@@ -133,7 +133,7 @@ class LinearStreamEndTest {
   @Test
   void minWithOneValue() {
 
-    Optional<String> actualMinimum = LinearStream.of("g").min(Comparator.naturalOrder());
+    Optional<String> actualMinimum = LStream.of("g").min(Comparator.naturalOrder());
 
     assertThat(actualMinimum).hasValue("g");
   }
@@ -142,7 +142,7 @@ class LinearStreamEndTest {
   void minWithSeveralValues() {
 
     Optional<Integer> actualMinPositive =
-        LinearStream.of(4, 9, -7, -2, 3)
+        LStream.of(4, 9, -7, -2, 3)
             .min(
                 Comparator.<Integer, Boolean>comparing(number -> number < 0)
                     .thenComparing(Comparator.naturalOrder()));
@@ -153,7 +153,7 @@ class LinearStreamEndTest {
   @Test
   void maxWithoutValue() {
 
-    Optional<Integer> actualMaximum = LinearStream.<Integer>empty().max(Comparator.naturalOrder());
+    Optional<Integer> actualMaximum = LStream.<Integer>empty().max(Comparator.naturalOrder());
 
     assertThat(actualMaximum).isEmpty();
   }
@@ -161,7 +161,7 @@ class LinearStreamEndTest {
   @Test
   void maxWithOneValue() {
 
-    Optional<String> actualMaximum = LinearStream.of("g").max(Comparator.naturalOrder());
+    Optional<String> actualMaximum = LStream.of("g").max(Comparator.naturalOrder());
 
     assertThat(actualMaximum).hasValue("g");
   }
@@ -170,7 +170,7 @@ class LinearStreamEndTest {
   void maxWithSeveralValues() {
 
     Optional<Integer> actualMaxNegative =
-        LinearStream.of(4, 9, -7, -2, 3)
+        LStream.of(4, 9, -7, -2, 3)
             .max(
                 Comparator.<Integer, Boolean>comparing(number -> number < 0)
                     .thenComparing(Comparator.naturalOrder()));
@@ -181,7 +181,7 @@ class LinearStreamEndTest {
   @Test
   void countNothing() {
 
-    long actualNbElements = LinearStream.empty().count();
+    long actualNbElements = LStream.empty().count();
 
     assertThat(actualNbElements).isZero();
   }
@@ -190,7 +190,7 @@ class LinearStreamEndTest {
   void count() {
 
     long actualNbStartsWithF =
-        LinearStream.of("756f", "f", "fdu3il", "54df", "fdo")
+        LStream.of("756f", "f", "fdu3il", "54df", "fdo")
             .filter(characters -> characters.startsWith("f"))
             .count();
 
@@ -200,7 +200,7 @@ class LinearStreamEndTest {
   @Test
   void anyMatchNoElements() {
 
-    boolean actualHasNull = LinearStream.empty().anyMatch(Objects::isNull);
+    boolean actualHasNull = LStream.empty().anyMatch(Objects::isNull);
 
     assertThat(actualHasNull).isFalse();
   }
@@ -208,7 +208,7 @@ class LinearStreamEndTest {
   @Test
   void anyMatchEarlyReturn() {
 
-    boolean actualHasNegative = LinearStream.of(4, -12, -753, 56).anyMatch(i -> i < 0);
+    boolean actualHasNegative = LStream.of(4, -12, -753, 56).anyMatch(i -> i < 0);
 
     assertThat(actualHasNegative).isTrue();
   }
@@ -217,7 +217,7 @@ class LinearStreamEndTest {
   void anyMatchUntilTheEnd() {
 
     boolean actualContainsBruno =
-        LinearStream.of("cold", "heart", "Elton", "John", "Remix").anyMatch("Bruno"::equals);
+        LStream.of("cold", "heart", "Elton", "John", "Remix").anyMatch("Bruno"::equals);
 
     assertThat(actualContainsBruno).isFalse();
   }
@@ -225,7 +225,7 @@ class LinearStreamEndTest {
   @Test
   void allMatchNoElements() {
 
-    boolean actualHasNull = LinearStream.empty().allMatch(Objects::isNull);
+    boolean actualHasNull = LStream.empty().allMatch(Objects::isNull);
 
     assertThat(actualHasNull).isTrue();
   }
@@ -233,7 +233,7 @@ class LinearStreamEndTest {
   @Test
   void allMatchUntilTheEnd() {
 
-    boolean actualHasNegative = LinearStream.of(-4, -12, -753, -56).allMatch(i -> i < 0);
+    boolean actualHasNegative = LStream.of(-4, -12, -753, -56).allMatch(i -> i < 0);
 
     assertThat(actualHasNegative).isTrue();
   }
@@ -242,7 +242,7 @@ class LinearStreamEndTest {
   void allMatchEarlyReturn() {
 
     boolean actualContainsBruno =
-        LinearStream.of("Bruno", "heart", "Elton", "John", "Remix").allMatch("Bruno"::equals);
+        LStream.of("Bruno", "heart", "Elton", "John", "Remix").allMatch("Bruno"::equals);
 
     assertThat(actualContainsBruno).isFalse();
   }
@@ -250,7 +250,7 @@ class LinearStreamEndTest {
   @Test
   void noneMatchNoElements() {
 
-    boolean actualHasNull = LinearStream.empty().noneMatch(Objects::isNull);
+    boolean actualHasNull = LStream.empty().noneMatch(Objects::isNull);
 
     assertThat(actualHasNull).isTrue();
   }
@@ -258,7 +258,7 @@ class LinearStreamEndTest {
   @Test
   void noneMatchEarlyReturn() {
 
-    boolean actualHasNegative = LinearStream.of(4, -12, -753, 56).noneMatch(i -> i < 0);
+    boolean actualHasNegative = LStream.of(4, -12, -753, 56).noneMatch(i -> i < 0);
 
     assertThat(actualHasNegative).isFalse();
   }
@@ -267,7 +267,7 @@ class LinearStreamEndTest {
   void noneMatchUntilTheEnd() {
 
     boolean actualContainsBruno =
-        LinearStream.of("cold", "heart", "Elton", "John", "Remix").noneMatch("Bruno"::equals);
+        LStream.of("cold", "heart", "Elton", "John", "Remix").noneMatch("Bruno"::equals);
 
     assertThat(actualContainsBruno).isTrue();
   }
@@ -275,7 +275,7 @@ class LinearStreamEndTest {
   @Test
   void findFirstNoElements() {
 
-    Optional<Object> actualFirst = LinearStream.empty().findFirst();
+    Optional<Object> actualFirst = LStream.empty().findFirst();
 
     assertThat(actualFirst).isEmpty();
   }
@@ -284,7 +284,7 @@ class LinearStreamEndTest {
   void findFirst() {
 
     Optional<String> actualFirst =
-        LinearStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
+        LStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
             .filter(s -> s.startsWith("S"))
             .findFirst();
 
@@ -294,7 +294,7 @@ class LinearStreamEndTest {
   @Test
   void findFirstIsNull() {
 
-    Optional<String> actualFirst = LinearStream.of(null, "5", "d").findFirst();
+    Optional<String> actualFirst = LStream.of(null, "5", "d").findFirst();
 
     assertThat(actualFirst).isEmpty();
   }
@@ -302,7 +302,7 @@ class LinearStreamEndTest {
   @Test
   void findOneNoElements() {
 
-    Optional<Object> actualOne = LinearStream.empty().findOne();
+    Optional<Object> actualOne = LStream.empty().findOne();
 
     assertThat(actualOne).isEmpty();
   }
@@ -311,7 +311,7 @@ class LinearStreamEndTest {
   void findOneElement() {
 
     Optional<String> actualOne =
-        LinearStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
+        LStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
             .filter(s -> s.startsWith("T"))
             .findOne();
 
@@ -323,7 +323,7 @@ class LinearStreamEndTest {
 
     ThrowableAssert.ThrowingCallable findOneSeveralElements =
         () ->
-            LinearStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
+            LStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
                 .filter(s -> s.startsWith("S"))
                 .findOne();
 
@@ -336,7 +336,7 @@ class LinearStreamEndTest {
   void findOneIsNull() {
 
     Optional<String> actualOne =
-        LinearStream.of(null, "5", "d").filter(s -> s == null || s.endsWith("a")).findOne();
+        LStream.of(null, "5", "d").filter(s -> s == null || s.endsWith("a")).findOne();
 
     assertThat(actualOne).isEmpty();
   }
@@ -344,7 +344,7 @@ class LinearStreamEndTest {
   @Test
   void findLastNoElements() {
 
-    Optional<Object> actualLast = LinearStream.empty().findLast();
+    Optional<Object> actualLast = LStream.empty().findLast();
 
     assertThat(actualLast).isEmpty();
   }
@@ -353,7 +353,7 @@ class LinearStreamEndTest {
   void findLast() {
 
     Optional<String> actualLast =
-        LinearStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
+        LStream.of("Bitter", "Sweet", "Symphony", "The", "Verve")
             .filter(s -> s.startsWith("S"))
             .findLast();
 
@@ -363,7 +363,7 @@ class LinearStreamEndTest {
   @Test
   void findLastIsNull() {
 
-    Optional<String> actualLast = LinearStream.of("null", "5", "d", null).findLast();
+    Optional<String> actualLast = LStream.of("null", "5", "d", null).findLast();
 
     assertThat(actualLast).isEmpty();
   }

@@ -2,7 +2,7 @@ package florian.cousin.collector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -11,8 +11,7 @@ class ToListCollectorTest {
   @Test
   void toListIsModifiable() {
 
-    List<Integer> actualCollection =
-        LinearStream.of(4, 8, 6, 4, 6).collect(LinearCollectors.toList());
+    List<Integer> actualCollection = LStream.of(4, 8, 6, 4, 6).collect(LCollectors.toList());
 
     actualCollection.add(7);
 
@@ -25,7 +24,7 @@ class ToListCollectorTest {
   void toUnmodifiableList() {
 
     List<Integer> actualCollection =
-            LinearStream.of(4, 8, 6, 4, 6).collect(LinearCollectors.toUnmodifiableList());
+        LStream.of(4, 8, 6, 4, 6).collect(LCollectors.toUnmodifiableList());
 
     List<Integer> expectedCollection = List.of(4, 8, 6, 4, 6);
 

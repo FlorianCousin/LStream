@@ -2,7 +2,7 @@ package florian.cousin.collector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import org.junit.jupiter.api.Test;
 
 class JoiningCollectorTest {
@@ -10,7 +10,7 @@ class JoiningCollectorTest {
   @Test
   void joiningSimple() {
 
-    String actualJoin = LinearStream.of("j", "o", "i", "n").collect(LinearCollectors.joining());
+    String actualJoin = LStream.of("j", "o", "i", "n").collect(LCollectors.joining());
 
     String expectedJoin = "join";
 
@@ -20,7 +20,7 @@ class JoiningCollectorTest {
   @Test
   void joiningEmpty() {
 
-    String actualJoin = LinearStream.<String>empty().collect(LinearCollectors.joining());
+    String actualJoin = LStream.<String>empty().collect(LCollectors.joining());
 
     String expectedJoin = "";
 
@@ -30,7 +30,7 @@ class JoiningCollectorTest {
   @Test
   void joiningOneValue() {
 
-    String actualJoin = LinearStream.of("j").collect(LinearCollectors.joining());
+    String actualJoin = LStream.of("j").collect(LCollectors.joining());
 
     String expectedJoin = "j";
 
@@ -40,7 +40,7 @@ class JoiningCollectorTest {
   @Test
   void joiningDelimiterSimple() {
 
-    String actualJoin = LinearStream.of("j", "o", "i", "n").collect(LinearCollectors.joining("d"));
+    String actualJoin = LStream.of("j", "o", "i", "n").collect(LCollectors.joining("d"));
 
     String expectedJoin = "jdodidn";
 
@@ -50,7 +50,7 @@ class JoiningCollectorTest {
   @Test
   void joiningDelimiterEmpty() {
 
-    String actualJoin = LinearStream.<String>empty().collect(LinearCollectors.joining("d"));
+    String actualJoin = LStream.<String>empty().collect(LCollectors.joining("d"));
 
     String expectedJoin = "";
 
@@ -60,7 +60,7 @@ class JoiningCollectorTest {
   @Test
   void joiningDelimiterOneValue() {
 
-    String actualJoin = LinearStream.of("j").collect(LinearCollectors.joining("d"));
+    String actualJoin = LStream.of("j").collect(LCollectors.joining("d"));
 
     String expectedJoin = "j";
 
@@ -71,8 +71,7 @@ class JoiningCollectorTest {
   void joiningDelimiterPrefixSuffixSimple() {
 
     String actualJoin =
-        LinearStream.of("j", "o", "i", "n")
-            .collect(LinearCollectors.joining("d", "prefix", "suffix"));
+        LStream.of("j", "o", "i", "n").collect(LCollectors.joining("d", "prefix", "suffix"));
 
     String expectedJoin = "prefixjdodidnsuffix";
 
@@ -82,8 +81,7 @@ class JoiningCollectorTest {
   @Test
   void joiningDelimiterPrefixSuffixEmpty() {
 
-    String actualJoin =
-        LinearStream.<String>empty().collect(LinearCollectors.joining("d", "p", "s"));
+    String actualJoin = LStream.<String>empty().collect(LCollectors.joining("d", "p", "s"));
 
     String expectedJoin = "ps";
 
@@ -93,8 +91,7 @@ class JoiningCollectorTest {
   @Test
   void joiningDelimiterPrefixSuffixOneValue() {
 
-    String actualJoin =
-        LinearStream.of("j").collect(LinearCollectors.joining("d", "pre : \"", "\", end"));
+    String actualJoin = LStream.of("j").collect(LCollectors.joining("d", "pre : \"", "\", end"));
 
     String expectedJoin = "pre : \"j\", end";
 

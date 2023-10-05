@@ -1,13 +1,13 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DropWhileIterator<T> implements LinearStream<T> {
+public class DropWhileIterator<T> implements LStream<T> {
 
-  private final LinearStream<T> baseIterator;
+  private final LStream<T> baseIterator;
   private final Predicate<? super T> predicate;
 
   private T firstNotDroppedValue;

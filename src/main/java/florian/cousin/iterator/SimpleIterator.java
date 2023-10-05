@@ -1,12 +1,11 @@
 package florian.cousin.iterator;
 
+import florian.cousin.LStream;
 import java.util.Iterator;
-
-import florian.cousin.LinearStream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class SimpleIterator<T> implements LinearStream<T> {
+public class SimpleIterator<T> implements LStream<T> {
 
   private final Iterator<T> iterator;
 

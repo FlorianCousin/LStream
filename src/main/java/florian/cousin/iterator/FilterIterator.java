@@ -1,13 +1,13 @@
 package florian.cousin.iterator;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class FilterIterator<T> implements LinearStream<T> {
+public class FilterIterator<T> implements LStream<T> {
 
   private final Iterator<T> iterator;
   private final Predicate<? super T> predicate;

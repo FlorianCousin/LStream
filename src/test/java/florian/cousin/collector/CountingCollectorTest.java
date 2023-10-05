@@ -2,7 +2,7 @@ package florian.cousin.collector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import org.junit.jupiter.api.Test;
 
 class CountingCollectorTest {
@@ -10,7 +10,7 @@ class CountingCollectorTest {
   @Test
   void countingNothing() {
 
-    long actualNbElements = LinearStream.empty().collect(LinearCollectors.counting());
+    long actualNbElements = LStream.empty().collect(LCollectors.counting());
 
     long expectedNbElements = 0;
 
@@ -20,7 +20,7 @@ class CountingCollectorTest {
   @Test
   void countingElements() {
 
-    long actualNbElements = LinearStream.of(1, 8, 0).collect(LinearCollectors.counting());
+    long actualNbElements = LStream.of(1, 8, 0).collect(LCollectors.counting());
 
     long expectedNbElements = 3;
 

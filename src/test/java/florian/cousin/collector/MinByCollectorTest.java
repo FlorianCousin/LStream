@@ -2,7 +2,7 @@ package florian.cousin.collector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.Comparator;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ class MinByCollectorTest {
   void minByEmpty() {
 
     Optional<Integer> actualMin =
-        LinearStream.<Integer>empty().collect(LinearCollectors.minBy(Comparator.naturalOrder()));
+        LStream.<Integer>empty().collect(LCollectors.minBy(Comparator.naturalOrder()));
 
     assertThat(actualMin).isEmpty();
   }
@@ -22,7 +22,7 @@ class MinByCollectorTest {
   void minByOneElement() {
 
     Optional<String> actualMin =
-        LinearStream.of("b").collect(LinearCollectors.minBy(Comparator.naturalOrder()));
+        LStream.of("b").collect(LCollectors.minBy(Comparator.naturalOrder()));
 
     assertThat(actualMin).hasValue("b");
   }
@@ -31,8 +31,8 @@ class MinByCollectorTest {
   void minByElements() {
 
     Optional<String> actualMin =
-        LinearStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
-            .collect(LinearCollectors.minBy(Comparator.comparing(s -> s.substring(3))));
+        LStream.of("Florian", "Clémentine", "Chantal", "Laurent", "Thomas")
+            .collect(LCollectors.minBy(Comparator.comparing(s -> s.substring(3))));
 
     assertThat(actualMin).hasValue("Thomas");
   }

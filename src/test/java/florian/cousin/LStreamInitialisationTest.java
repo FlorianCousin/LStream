@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class LinearStreamInitialisationTest {
+class LStreamInitialisationTest {
 
   @Test
   void builderEmpty() {
 
-    List<Object> actualValues = LinearStream.builder().build().toList();
+    List<Object> actualValues = LStream.builder().build().toList();
 
     assertThat(actualValues).isEmpty();
   }
@@ -19,7 +19,7 @@ class LinearStreamInitialisationTest {
   void builderWithAdd() {
 
     List<String> actualValues =
-        LinearStream.<String>builder()
+        LStream.<String>builder()
             .add("first")
             .add("second")
             .add("third")
@@ -35,7 +35,7 @@ class LinearStreamInitialisationTest {
   @Test
   void builderWithAccept() {
 
-    LinearStream.Builder<Long> builder = LinearStream.builder();
+    LStream.Builder<Long> builder = LStream.builder();
     builder.accept(5L);
     builder.accept(7L);
     builder.accept(3L);
@@ -50,7 +50,7 @@ class LinearStreamInitialisationTest {
   @Test
   void iterateInfinite() {
 
-    List<Integer> actualNumbers = LinearStream.iterate(2, i -> (i * 5) % 47).limit(5).toList();
+    List<Integer> actualNumbers = LStream.iterate(2, i -> (i * 5) % 47).limit(5).toList();
 
     List<Integer> expectedNumbers = List.of(2, 10, 3, 15, 28);
 
@@ -60,7 +60,7 @@ class LinearStreamInitialisationTest {
   @Test
   void iterateWithEndCondition() {
 
-    List<Integer> actualValues = LinearStream.iterate(1, i -> i < 40, i -> (i * 5) % 47).toList();
+    List<Integer> actualValues = LStream.iterate(1, i -> i < 40, i -> (i * 5) % 47).toList();
 
     List<Integer> expectedValues = List.of(1, 5, 25, 31, 14, 23, 21, 11, 8, 40);
 
@@ -70,10 +70,10 @@ class LinearStreamInitialisationTest {
   @Test
   void generateInfinite() {
 
-    LinearStream<Integer> allPositiveNumbers = LinearStream.iterate(0, i -> i + 1);
+    LStream<Integer> allPositiveNumbers = LStream.iterate(0, i -> i + 1);
 
     List<Integer> actualGeneratedNumbers =
-        LinearStream.generate(allPositiveNumbers::next).limit(5).toList();
+        LStream.generate(allPositiveNumbers::next).limit(5).toList();
 
     List<Integer> expectedGeneratedNumbers = List.of(0, 1, 2, 3, 4);
 
@@ -83,10 +83,10 @@ class LinearStreamInitialisationTest {
   @Test
   void generateWithCondition() {
 
-    LinearStream<Integer> numberSequence = LinearStream.iterate(3, i -> (i * 5) % 47);
+    LStream<Integer> numberSequence = LStream.iterate(3, i -> (i * 5) % 47);
 
     List<Integer> actualNumbers =
-        LinearStream.generate(numberSequence::next, number -> number < 30).toList();
+        LStream.generate(numberSequence::next, number -> number < 30).toList();
 
     List<Integer> expectedNumbers = List.of(3, 15, 28, 46);
 
@@ -96,8 +96,7 @@ class LinearStreamInitialisationTest {
   @Test
   void concatFirstEmpty() {
 
-    List<Integer> actualConcatenation =
-        LinearStream.concat(LinearStream.empty(), LinearStream.of(4, 5)).toList();
+    List<Integer> actualConcatenation = LStream.concat(LStream.empty(), LStream.of(4, 5)).toList();
 
     List<Integer> expectedConcatenation = List.of(4, 5);
 
@@ -108,9 +107,7 @@ class LinearStreamInitialisationTest {
   void concatSecondEmpty() {
 
     List<String> actualConcatenation =
-        LinearStream.concat(
-                LinearStream.of("Come", "and", "get", "your", "love"), LinearStream.empty())
-            .toList();
+        LStream.concat(LStream.of("Come", "and", "get", "your", "love"), LStream.empty()).toList();
 
     List<String> expectedConcatenation = List.of("Come", "and", "get", "your", "love");
 
@@ -120,8 +117,7 @@ class LinearStreamInitialisationTest {
   @Test
   void concatBothEmpty() {
 
-    List<Object> actualConcatenation =
-        LinearStream.concat(LinearStream.empty(), LinearStream.empty()).toList();
+    List<Object> actualConcatenation = LStream.concat(LStream.empty(), LStream.empty()).toList();
 
     assertThat(actualConcatenation).isEmpty();
   }

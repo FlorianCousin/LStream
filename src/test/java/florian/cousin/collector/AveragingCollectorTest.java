@@ -3,7 +3,7 @@ package florian.cousin.collector;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import org.junit.jupiter.api.Test;
 
 class AveragingCollectorTest {
@@ -11,8 +11,7 @@ class AveragingCollectorTest {
   @Test
   void averagingIntEmpty() {
 
-    double actualAverage =
-        LinearStream.<Integer>empty().collect(LinearCollectors.averagingInt(t -> t));
+    double actualAverage = LStream.<Integer>empty().collect(LCollectors.averagingInt(t -> t));
 
     assertThat(actualAverage).isZero();
   }
@@ -20,8 +19,7 @@ class AveragingCollectorTest {
   @Test
   void averagingIntOneElement() {
 
-    double actualAverage =
-        LinearStream.of("hello !").collect(LinearCollectors.averagingInt(String::length));
+    double actualAverage = LStream.of("hello !").collect(LCollectors.averagingInt(String::length));
 
     assertThat(actualAverage).isEqualTo(7);
   }
@@ -29,7 +27,7 @@ class AveragingCollectorTest {
   @Test
   void averagingIntElements() {
 
-    double actualAverage = LinearStream.of(2, 3, 5).collect(LinearCollectors.averagingInt(t -> t));
+    double actualAverage = LStream.of(2, 3, 5).collect(LCollectors.averagingInt(t -> t));
 
     assertThat(actualAverage).isCloseTo(3.333333333333333, offset(1e-14));
   }
@@ -37,8 +35,7 @@ class AveragingCollectorTest {
   @Test
   void averagingLongEmpty() {
 
-    double actualAverage =
-        LinearStream.<Integer>empty().collect(LinearCollectors.averagingLong(t -> t));
+    double actualAverage = LStream.<Integer>empty().collect(LCollectors.averagingLong(t -> t));
 
     assertThat(actualAverage).isZero();
   }
@@ -46,8 +43,7 @@ class AveragingCollectorTest {
   @Test
   void averagingLongOneElement() {
 
-    double actualAverage =
-        LinearStream.of(Long.MAX_VALUE).collect(LinearCollectors.averagingLong(t -> t));
+    double actualAverage = LStream.of(Long.MAX_VALUE).collect(LCollectors.averagingLong(t -> t));
 
     assertThat(actualAverage).isEqualTo(Long.MAX_VALUE);
   }
@@ -56,8 +52,7 @@ class AveragingCollectorTest {
   void averagingLongElements() {
 
     double actualAverage =
-        LinearStream.of(Long.MAX_VALUE, Long.MIN_VALUE, 2L)
-            .collect(LinearCollectors.averagingLong(t -> t));
+        LStream.of(Long.MAX_VALUE, Long.MIN_VALUE, 2L).collect(LCollectors.averagingLong(t -> t));
 
     assertThat(actualAverage).isCloseTo(0.333333333333333, offset(1e-14));
   }
@@ -65,8 +60,7 @@ class AveragingCollectorTest {
   @Test
   void averagingDoubleEmpty() {
 
-    double actualAverage =
-        LinearStream.<Integer>empty().collect(LinearCollectors.averagingDouble(t -> t));
+    double actualAverage = LStream.<Integer>empty().collect(LCollectors.averagingDouble(t -> t));
 
     assertThat(actualAverage).isZero();
   }
@@ -75,8 +69,8 @@ class AveragingCollectorTest {
   void averagingDoubleOneElement() {
 
     double actualAverage =
-        LinearStream.of("hello !")
-            .collect(LinearCollectors.averagingDouble(string -> (double) string.length() / 2));
+        LStream.of("hello !")
+            .collect(LCollectors.averagingDouble(string -> (double) string.length() / 2));
 
     assertThat(actualAverage).isEqualTo(3.5);
   }
@@ -85,8 +79,8 @@ class AveragingCollectorTest {
   void averagingDoubleElements() {
 
     double actualAverage =
-        LinearStream.of(Math.sqrt(2), Math.sqrt(3), Math.sqrt(5))
-            .collect(LinearCollectors.averagingDouble(t -> t));
+        LStream.of(Math.sqrt(2), Math.sqrt(3), Math.sqrt(5))
+            .collect(LCollectors.averagingDouble(t -> t));
 
     assertThat(actualAverage).isCloseTo(1.7941107824805875, offset(1e-14));
   }
@@ -95,7 +89,7 @@ class AveragingCollectorTest {
   void averagingDoubleWrongOrder() {
 
     double actualAverage =
-        LinearStream.of(1e300, 3.5, -1e300).collect(LinearCollectors.averagingDouble(t -> t));
+        LStream.of(1e300, 3.5, -1e300).collect(LCollectors.averagingDouble(t -> t));
 
     assertThat(actualAverage).isZero();
   }
@@ -103,8 +97,7 @@ class AveragingCollectorTest {
   @Test
   void averagingDoubleRightOrder() {
 
-    double actualSum =
-        LinearStream.of(1e300, -1e300, 3d).collect(LinearCollectors.averagingDouble(t -> t));
+    double actualSum = LStream.of(1e300, -1e300, 3d).collect(LCollectors.averagingDouble(t -> t));
 
     assertThat(actualSum).isCloseTo(1, offset(1e-14));
   }

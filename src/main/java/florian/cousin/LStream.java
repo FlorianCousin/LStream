@@ -1,61 +1,59 @@
 package florian.cousin;
 
-import florian.cousin.collector.LinearCollector;
+import florian.cousin.collector.LCollector;
 import florian.cousin.exception.SeveralElementsException;
 import florian.cousin.iterator.*;
 import java.util.*;
 import java.util.function.*;
 import org.jetbrains.annotations.Nullable;
 
-// TODO Call it LStream ? Have a LS logo ?
-public interface LinearStream<T> extends Iterator<T> {
+public interface LStream<T> extends Iterator<T> {
 
-  default LinearStream<T> filter(Predicate<? super T> predicate) {
+  default LStream<T> filter(Predicate<? super T> predicate) {
     return new FilterIterator<>(this, predicate);
   }
 
-  default <R> LinearStream<R> map(Function<? super T, ? extends R> mapping) {
+  default <R> LStream<R> map(Function<? super T, ? extends R> mapping) {
     return new MappingIterator<>(this, mapping);
   }
 
-  default <R> LinearStream<R> flatMap(
-      Function<? super T, ? extends LinearStream<? extends R>> mapper) {
+  default <R> LStream<R> flatMap(Function<? super T, ? extends LStream<? extends R>> mapper) {
     return new FlatMappingIterator<>(this, mapper);
   }
 
-  default LinearStream<T> distinct() {
+  default LStream<T> distinct() {
     return new DistinctIterator<>(this);
   }
 
-  default LinearStream<T> sorted() {
+  default LStream<T> sorted() {
     return sorted(null);
   }
 
-  default LinearStream<T> sorted(@Nullable Comparator<? super T> comparator) {
+  default LStream<T> sorted(@Nullable Comparator<? super T> comparator) {
     return new SortedIterator<>(this, comparator);
   }
 
-  default LinearStream<T> peek(Consumer<? super T> action) {
+  default LStream<T> peek(Consumer<? super T> action) {
     return new PeekIterator<>(this, action);
   }
 
-  default LinearStream<T> limit(long maxSize) {
+  default LStream<T> limit(long maxSize) {
     return new LimitIterator<>(this, maxSize);
   }
 
-  default LinearStream<T> skip(long nbToSkip) {
+  default LStream<T> skip(long nbToSkip) {
     return new SkipIterator<>(this, nbToSkip);
   }
 
-  default LinearStream<T> takeWhile(Predicate<? super T> predicate) {
+  default LStream<T> takeWhile(Predicate<? super T> predicate) {
     return new takeWhileIterator<>(this, predicate);
   }
 
-  default LinearStream<T> takeWhilePrevious(Predicate<? super T> previousPredicate) {
+  default LStream<T> takeWhilePrevious(Predicate<? super T> previousPredicate) {
     return new TakeWhilePreviousIterator<>(this, previousPredicate);
   }
 
-  default LinearStream<T> dropWhile(Predicate<? super T> predicate) {
+  default LStream<T> dropWhile(Predicate<? super T> predicate) {
     return new DropWhileIterator<>(this, predicate);
   }
 
@@ -100,16 +98,16 @@ public interface LinearStream<T> extends Iterator<T> {
   }
 
   default <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator) {
-    return collect(LinearCollector.of(supplier, accumulator));
+    return collect(LCollector.of(supplier, accumulator));
   }
 
-  default <R> R collect(LinearCollector<? super T, ?, R> collector) {
+  default <R> R collect(LCollector<? super T, ?, R> collector) {
     return collector.collect(this);
   }
 
   default List<T> toList() {
     return collect(
-        LinearCollector.<T, List<T>, List<T>>of(
+        LCollector.<T, List<T>, List<T>>of(
             ArrayList::new, List::add, Collections::unmodifiableList));
   }
 
@@ -182,45 +180,44 @@ public interface LinearStream<T> extends Iterator<T> {
     return reduce((first, second) -> second);
   }
 
-  static <T> LinearStream.Builder<T> builder() {
+  static <T> LStream.Builder<T> builder() {
     return new Builder<>();
   }
 
-  static <T> LinearStream<T> empty() {
+  static <T> LStream<T> empty() {
     return new SimpleIterator<>(Collections.emptyIterator());
   }
 
-  static <T> LinearStream<T> from(Iterable<T> iterable) {
+  static <T> LStream<T> from(Iterable<T> iterable) {
     return new SimpleIterator<>(iterable.iterator());
   }
 
   @SafeVarargs
-  static <T> LinearStream<T> of(T... iterationObjects) {
+  static <T> LStream<T> of(T... iterationObjects) {
     return new SimpleIterator<>(Arrays.asList(iterationObjects).iterator());
   }
 
-  static <T> LinearStream<T> iterate(
-      final T initialValue, final UnaryOperator<T> computeNextValue) {
+  static <T> LStream<T> iterate(final T initialValue, final UnaryOperator<T> computeNextValue) {
     return iterate(initialValue, value -> true, computeNextValue);
   }
 
-  static <T> LinearStream<T> iterate(
+  static <T> LStream<T> iterate(
       T initialValue, Predicate<? super T> hasNext, UnaryOperator<T> next) {
     return new IterateIterator<>(initialValue, hasNext, next);
   }
 
-  static <T> LinearStream<T> generate(Supplier<? extends T> nextValueGenerator) {
+  static <T> LStream<T> generate(Supplier<? extends T> nextValueGenerator) {
     return generate(nextValueGenerator, value -> true);
   }
 
-  static <T> LinearStream<T> generate(
+  static <T> LStream<T> generate(
       Supplier<? extends T> nextValueGenerator, Predicate<? super T> hasNext) {
     return new GenerateIterator<>(nextValueGenerator, hasNext);
   }
 
   @SafeVarargs
-  static <T> LinearStream<T> concat(LinearStream<? extends T>... linearStreams) {
-    return LinearStream.of(linearStreams).flatMap(Function.identity());
+  static <T> LStream<T> concat(LStream<? extends T>... lStreams) {
+    return LStream.of(lStreams).flatMap(Function.identity());
   }
 
   class Builder<T> implements Consumer<T> {
@@ -232,13 +229,13 @@ public interface LinearStream<T> extends Iterator<T> {
       values.add(t);
     }
 
-    public LinearStream.Builder<T> add(T t) {
+    public LStream.Builder<T> add(T t) {
       accept(t);
       return this;
     }
 
-    public LinearStream<T> build() {
-      return LinearStream.from(values);
+    public LStream<T> build() {
+      return LStream.from(values);
     }
   }
 }

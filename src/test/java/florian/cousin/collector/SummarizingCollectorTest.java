@@ -2,7 +2,7 @@ package florian.cousin.collector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import florian.cousin.LinearStream;
+import florian.cousin.LStream;
 import java.util.DoubleSummaryStatistics;
 import java.util.IntSummaryStatistics;
 import java.util.LongSummaryStatistics;
@@ -14,7 +14,7 @@ class SummarizingCollectorTest {
   void summarizingIntEmpty() {
 
     IntSummaryStatistics actualStatistics =
-        LinearStream.<Integer>empty().collect(LinearCollectors.summarizingInt(Integer::intValue));
+        LStream.<Integer>empty().collect(LCollectors.summarizingInt(Integer::intValue));
 
     assertThat(actualStatistics.getCount()).isZero();
     assertThat(actualStatistics.getMin()).isEqualTo(Integer.MAX_VALUE);
@@ -26,7 +26,7 @@ class SummarizingCollectorTest {
   void summarizingIntOneElement() {
 
     IntSummaryStatistics actualStatistics =
-        LinearStream.of("Long.MAX_VALUE").collect(LinearCollectors.summarizingInt(String::length));
+        LStream.of("Long.MAX_VALUE").collect(LCollectors.summarizingInt(String::length));
 
     assertThat(actualStatistics.getCount()).isEqualTo(1);
     assertThat(actualStatistics.getMin()).isEqualTo(14);
@@ -38,8 +38,7 @@ class SummarizingCollectorTest {
   void summarizingIntElements() {
 
     IntSummaryStatistics actualStatistics =
-        LinearStream.of("word", "Long", "2L")
-            .collect(LinearCollectors.summarizingInt(String::length));
+        LStream.of("word", "Long", "2L").collect(LCollectors.summarizingInt(String::length));
 
     assertThat(actualStatistics.getCount()).isEqualTo(3);
     assertThat(actualStatistics.getMin()).isEqualTo(2);
@@ -51,7 +50,7 @@ class SummarizingCollectorTest {
   void summarizingLongEmpty() {
 
     LongSummaryStatistics actualStatistics =
-        LinearStream.<Long>empty().collect(LinearCollectors.summarizingLong(Long::longValue));
+        LStream.<Long>empty().collect(LCollectors.summarizingLong(Long::longValue));
 
     assertThat(actualStatistics.getCount()).isZero();
     assertThat(actualStatistics.getMin()).isEqualTo(Long.MAX_VALUE);
@@ -63,8 +62,7 @@ class SummarizingCollectorTest {
   void summarizingLongOneElement() {
 
     LongSummaryStatistics actualStatistics =
-        LinearStream.of(Integer.MAX_VALUE + 1L)
-            .collect(LinearCollectors.summarizingLong(Long::longValue));
+        LStream.of(Integer.MAX_VALUE + 1L).collect(LCollectors.summarizingLong(Long::longValue));
 
     long expectedSingleValue = Integer.MAX_VALUE + 1L;
 
@@ -78,8 +76,8 @@ class SummarizingCollectorTest {
   void summarizingLongElements() {
 
     LongSummaryStatistics actualStatistics =
-        LinearStream.of("word", "Long", "2L")
-            .collect(LinearCollectors.summarizingLong(s -> (long) Integer.MAX_VALUE + s.length()));
+        LStream.of("word", "Long", "2L")
+            .collect(LCollectors.summarizingLong(s -> (long) Integer.MAX_VALUE + s.length()));
 
     assertThat(actualStatistics.getCount()).isEqualTo(3);
     assertThat(actualStatistics.getMin()).isEqualTo(Integer.MAX_VALUE + 2L);
@@ -91,8 +89,7 @@ class SummarizingCollectorTest {
   void summarizingDoubleEmpty() {
 
     DoubleSummaryStatistics actualStatistics =
-        LinearStream.<Double>empty()
-            .collect(LinearCollectors.summarizingDouble(Double::doubleValue));
+        LStream.<Double>empty().collect(LCollectors.summarizingDouble(Double::doubleValue));
 
     assertThat(actualStatistics.getCount()).isZero();
     assertThat(actualStatistics.getMin()).isEqualTo(Double.POSITIVE_INFINITY);
@@ -104,8 +101,8 @@ class SummarizingCollectorTest {
   void summarizingDoubleOneElement() {
 
     DoubleSummaryStatistics actualStatistics =
-        LinearStream.of(Integer.MAX_VALUE + 0.5)
-            .collect(LinearCollectors.summarizingDouble(Double::doubleValue));
+        LStream.of(Integer.MAX_VALUE + 0.5)
+            .collect(LCollectors.summarizingDouble(Double::doubleValue));
 
     double expectedSingleValue = Integer.MAX_VALUE + 0.5;
 
@@ -119,8 +116,8 @@ class SummarizingCollectorTest {
   void summarizingDoubleElements() {
 
     DoubleSummaryStatistics actualStatistics =
-        LinearStream.of("check", "computers", "timer")
-            .collect(LinearCollectors.summarizingDouble(s -> s.length() / 2.));
+        LStream.of("check", "computers", "timer")
+            .collect(LCollectors.summarizingDouble(s -> s.length() / 2.));
 
     assertThat(actualStatistics.getCount()).isEqualTo(3);
     assertThat(actualStatistics.getMin()).isEqualTo(2.5);
