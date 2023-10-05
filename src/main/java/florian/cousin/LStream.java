@@ -1,6 +1,7 @@
 package florian.cousin;
 
 import florian.cousin.collector.LCollector;
+import florian.cousin.collector.LCollectors;
 import florian.cousin.exception.SeveralElementsException;
 import florian.cousin.iterator.*;
 import java.util.*;
@@ -106,9 +107,7 @@ public interface LStream<T> extends Iterator<T> {
   }
 
   default List<T> toList() {
-    return collect(
-        LCollector.<T, List<T>, List<T>>of(
-            ArrayList::new, List::add, Collections::unmodifiableList));
+    return collect(LCollectors.toUnmodifiableList());
   }
 
   default Optional<T> min(Comparator<? super T> comparator) {

@@ -1,7 +1,6 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LStream;
-import florian.cousin.collector.LCollectors;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -32,8 +31,7 @@ public class SortedIterator<T> implements LStream<T> {
   }
 
   private Iterator<T> createSortedIterator() {
-    // TODO Use LStream#toList ?
-    List<T> values = baseIterator.collect(LCollectors.toList());
+    List<T> values = baseIterator.toList();
     values.sort(comparator);
     return values.iterator();
   }
