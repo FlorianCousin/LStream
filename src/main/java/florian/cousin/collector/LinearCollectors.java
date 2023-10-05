@@ -330,4 +330,7 @@ public final class LinearCollectors {
           Predicate<? super T> predicate, LinearCollector<? super T, A, D> downstream) {
     return groupingBy(predicate::test, downstream);
   }
+
+  // TODO toConcurrentMap ?
+  //  LStream is always sequential, and if we need a concurrentMap, we can give it as mapFactory
 }
