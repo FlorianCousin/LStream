@@ -553,7 +553,7 @@ class LinearCollectorsTest {
   @Test
   void toMapElements() {
 
-    Map<Integer, Object> actualMap =
+    Map<Integer, String> actualMap =
         LinearStream.of("Long.MAX_VALUE", "Long", "2L")
             .collect(LinearCollectors.toMap(String::length, s -> s.substring(1)));
 
