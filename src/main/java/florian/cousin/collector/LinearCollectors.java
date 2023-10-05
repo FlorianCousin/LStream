@@ -340,4 +340,12 @@ public final class LinearCollectors {
         IntSummaryStatistics::new,
         (statistics, newValue) -> statistics.accept(mapper.applyAsInt(newValue)));
   }
+
+  public static <T>
+      LinearCollector<T, LongSummaryStatistics, LongSummaryStatistics> summarizingLong(
+          ToLongFunction<? super T> mapper) {
+    return LinearCollector.of(
+        LongSummaryStatistics::new,
+        (statistics, newValue) -> statistics.accept(mapper.applyAsLong(newValue)));
+  }
 }
