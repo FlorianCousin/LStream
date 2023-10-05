@@ -967,4 +967,41 @@ class LinearCollectorsTest {
 
     assertThat(actualPartition).isEqualTo(expectedPartition);
   }
+
+  @Test
+  void summarizingIntEmpty() {
+
+    IntSummaryStatistics actualStatistics =
+        LinearStream.<Integer>empty().collect(LinearCollectors.summarizingInt(Integer::intValue));
+
+    assertThat(actualStatistics.getCount()).isZero();
+    assertThat(actualStatistics.getMin()).isEqualTo(Integer.MAX_VALUE);
+    assertThat(actualStatistics.getMax()).isEqualTo(Integer.MIN_VALUE);
+    assertThat(actualStatistics.getSum()).isZero();
+  }
+
+  @Test
+  void summarizingIntOneElement() {
+
+    IntSummaryStatistics actualStatistics =
+        LinearStream.of("Long.MAX_VALUE").collect(LinearCollectors.summarizingInt(String::length));
+
+    assertThat(actualStatistics.getCount()).isEqualTo(1);
+    assertThat(actualStatistics.getMin()).isEqualTo(14);
+    assertThat(actualStatistics.getMax()).isEqualTo(14);
+    assertThat(actualStatistics.getSum()).isEqualTo(14);
+  }
+
+  @Test
+  void summarizingIntElements() {
+
+    IntSummaryStatistics actualStatistics =
+        LinearStream.of("word", "Long", "2L")
+            .collect(LinearCollectors.summarizingInt(String::length));
+
+    assertThat(actualStatistics.getCount()).isEqualTo(3);
+    assertThat(actualStatistics.getMin()).isEqualTo(2);
+    assertThat(actualStatistics.getMax()).isEqualTo(4);
+    assertThat(actualStatistics.getSum()).isEqualTo(10);
+  }
 }

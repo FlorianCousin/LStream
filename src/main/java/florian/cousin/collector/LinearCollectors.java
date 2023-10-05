@@ -333,4 +333,11 @@ public final class LinearCollectors {
 
   // TODO toConcurrentMap ?
   //  LStream is always sequential, and if we need a concurrentMap, we can give it as mapFactory
+
+  public static <T> LinearCollector<T, IntSummaryStatistics, IntSummaryStatistics> summarizingInt(
+      ToIntFunction<? super T> mapper) {
+    return LinearCollector.of(
+        IntSummaryStatistics::new,
+        (statistics, newValue) -> statistics.accept(mapper.applyAsInt(newValue)));
+  }
 }
