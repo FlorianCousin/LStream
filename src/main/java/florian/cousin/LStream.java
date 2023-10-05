@@ -8,70 +8,86 @@ import java.util.*;
 import java.util.function.*;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class LStream<T> implements Iterator<T> {
+public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
+  @Override
   public LStream<T> filter(Predicate<? super T> predicate) {
     return new FilterIterator<>(this, predicate);
   }
 
+  @Override
   public <R> LStream<R> map(Function<? super T, ? extends R> mapping) {
     return new MappingIterator<>(this, mapping);
   }
 
-  public <R> LStream<R> flatMap(Function<? super T, ? extends LStream<? extends R>> mapper) {
+  @Override
+  public <R> LStream<R> flatMap(Function<? super T, ? extends LStreamApi<? extends R>> mapper) {
     return new FlatMappingIterator<>(this, mapper);
   }
 
+  @Override
   public LStream<T> distinct() {
     return new DistinctIterator<>(this);
   }
 
+  @Override
   public LStream<T> sorted() {
     return sorted(null);
   }
 
+  @Override
   public LStream<T> sorted(@Nullable Comparator<? super T> comparator) {
     return new SortedIterator<>(this, comparator);
   }
 
+  @Override
   public LStream<T> peek(Consumer<? super T> action) {
     return new PeekIterator<>(this, action);
   }
 
+  @Override
   public LStream<T> limit(long maxSize) {
     return new LimitIterator<>(this, maxSize);
   }
 
+  @Override
   public LStream<T> skip(long nbToSkip) {
     return new SkipIterator<>(this, nbToSkip);
   }
 
+  @Override
   public LStream<T> takeWhile(Predicate<? super T> predicate) {
     return new takeWhileIterator<>(this, predicate);
   }
 
+  @Override
   public LStream<T> takeWhilePrevious(Predicate<? super T> previousPredicate) {
     return new TakeWhilePreviousIterator<>(this, previousPredicate);
   }
 
+  @Override
   public LStream<T> dropWhile(Predicate<? super T> predicate) {
     return new DropWhileIterator<>(this, predicate);
   }
 
+  @Override
   public void forEach(Consumer<? super T> action) {
     while (hasNext()) {
       action.accept(next());
     }
   }
 
+  @Override
   public Object[] toArray() {
     return toList().toArray();
   }
 
+  @Override
   public <A> A[] toArray(IntFunction<A[]> generator) {
     return toList().toArray(generator);
   }
 
+  @Override
   public T reduce(T identity, BinaryOperator<T> accumulator) {
     T currentValue = identity;
     while (hasNext()) {
@@ -80,6 +96,7 @@ public abstract class LStream<T> implements Iterator<T> {
     return currentValue;
   }
 
+  @Override
   public <R> R reduce(R initialValue, BiFunction<R, T, R> aggregate) {
     R currentValue = initialValue;
     while (hasNext()) {
@@ -88,6 +105,7 @@ public abstract class LStream<T> implements Iterator<T> {
     return currentValue;
   }
 
+  @Override
   public Optional<T> reduce(BinaryOperator<T> accumulator) {
     Optional<T> reducedOptional = Optional.empty();
     while (hasNext()) {
@@ -98,18 +116,22 @@ public abstract class LStream<T> implements Iterator<T> {
     return reducedOptional;
   }
 
+  @Override
   public <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator) {
     return collect(LCollector.of(supplier, accumulator));
   }
 
+  @Override
   public <R> R collect(LCollector<? super T, ?, R> collector) {
     return collector.collect(this);
   }
 
+  @Override
   public List<T> toList() {
     return collect(LCollectors.toUnmodifiableList());
   }
 
+  @Override
   public Optional<T> min(Comparator<? super T> comparator) {
 
     BinaryOperator<T> keepMinimum =
@@ -119,6 +141,7 @@ public abstract class LStream<T> implements Iterator<T> {
     return reduce(keepMinimum);
   }
 
+  @Override
   public Optional<T> max(Comparator<? super T> comparator) {
 
     BinaryOperator<T> keepMaximum =
@@ -128,6 +151,7 @@ public abstract class LStream<T> implements Iterator<T> {
     return reduce(keepMaximum);
   }
 
+  @Override
   public long count() {
     long nbElementsIterated = 0;
     while (hasNext()) {
@@ -137,6 +161,7 @@ public abstract class LStream<T> implements Iterator<T> {
     return nbElementsIterated;
   }
 
+  @Override
   public boolean anyMatch(Predicate<? super T> predicate) {
     while (hasNext()) {
       if (predicate.test(next())) {
@@ -146,6 +171,7 @@ public abstract class LStream<T> implements Iterator<T> {
     return false;
   }
 
+  @Override
   public boolean allMatch(Predicate<? super T> predicate) {
     while (hasNext()) {
       if (!predicate.test(next())) {
@@ -155,10 +181,12 @@ public abstract class LStream<T> implements Iterator<T> {
     return true;
   }
 
+  @Override
   public boolean noneMatch(Predicate<? super T> predicate) {
     return !anyMatch(predicate);
   }
 
+  @Override
   public Optional<T> findFirst() {
     return hasNext() ? Optional.ofNullable(next()) : Optional.empty();
   }
@@ -166,6 +194,7 @@ public abstract class LStream<T> implements Iterator<T> {
   /**
    * @throws SeveralElementsException if there are several elements left in the stream
    */
+  @Override
   public Optional<T> findOne() throws SeveralElementsException {
     Optional<T> first = findFirst();
     if (hasNext()) {
@@ -175,8 +204,14 @@ public abstract class LStream<T> implements Iterator<T> {
     return first;
   }
 
+  @Override
   public Optional<T> findLast() {
     return reduce((first, second) -> second);
+  }
+
+  @Override
+  public LStream<T> iterator() {
+    return this;
   }
 
   public static <T> LStream.Builder<T> builder() {
@@ -184,6 +219,7 @@ public abstract class LStream<T> implements Iterator<T> {
   }
 
   public static <T> LStream<T> empty() {
+    // TODO Have a specific LStream implementation ?
     return new SimpleIterator<>(Collections.emptyIterator());
   }
 
@@ -193,15 +229,17 @@ public abstract class LStream<T> implements Iterator<T> {
 
   @SafeVarargs
   public static <T> LStream<T> of(T... iterationObjects) {
+    // TODO Have a specific LStream implementation ?
     return new SimpleIterator<>(Arrays.asList(iterationObjects).iterator());
   }
 
-  public static <T> LStream<T> iterate(final T initialValue, final UnaryOperator<T> computeNextValue) {
+  public static <T> LStream<T> iterate(
+      final T initialValue, final UnaryOperator<T> computeNextValue) {
     return iterate(initialValue, value -> true, computeNextValue);
   }
 
   public static <T> LStream<T> iterate(
-          T initialValue, Predicate<? super T> hasNext, UnaryOperator<T> next) {
+      T initialValue, Predicate<? super T> hasNext, UnaryOperator<T> next) {
     return new IterateIterator<>(initialValue, hasNext, next);
   }
 
@@ -210,7 +248,7 @@ public abstract class LStream<T> implements Iterator<T> {
   }
 
   public static <T> LStream<T> generate(
-          Supplier<? extends T> nextValueGenerator, Predicate<? super T> hasNext) {
+      Supplier<? extends T> nextValueGenerator, Predicate<? super T> hasNext) {
     return new GenerateIterator<>(nextValueGenerator, hasNext);
   }
 
