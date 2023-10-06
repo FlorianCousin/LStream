@@ -33,9 +33,36 @@ public interface LStreamApi<T> {
    */
   <R> LStreamApi<R> map(Function<? super T, ? extends R> mapper);
 
-  // TODO Add all the javadoc
+  // TODO IntStream mapToInt(ToIntFunction<? super T> mapper);
+  // TODO LongStream mapToLong(ToLongFunction<? super T> mapper);
+  // TODO DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper);
+
+  // TODO (If a mapped stream is {@code null} an empty stream is used, instead.)
+  /**
+   * Returns a lstream consisting of the results of replacing each element of this lstream with the
+   * contents of a mapped lstream produced by applying the provided mapping function to each
+   * element. (If a mapped lstream is {@code null} an empty lstream is used, instead.)
+   *
+   * <p>This is an intermediate operation.
+   *
+   * @apiNote The {@code flatMap()} operation has the effect of applying a one-to-many
+   *     transformation to the elements of the lstream, and then flattening the resulting elements
+   *     into a new lstream.
+   *     <p><b>Examples.</b>
+   *     <p>If {@code orders} is a lstream of purchase orders, and each purchase order contains a
+   *     collection of line items, then the following produces a lstream containing all the line
+   *     items in all the orders:
+   *     <pre>{@code
+   * orders.flatMap(order -> order.getLineItems().stream())...
+   * }</pre>
+   *
+   * @param <R> The element type of the new stream
+   * @param mapper a function to apply to each element which produces a stream of new values
+   * @return the new stream
+   */
   <R> LStreamApi<R> flatMap(Function<? super T, ? extends LStreamApi<? extends R>> mapper);
 
+  // TODO Add all the javadoc
   LStreamApi<T> distinct();
 
   LStreamApi<T> sorted();
