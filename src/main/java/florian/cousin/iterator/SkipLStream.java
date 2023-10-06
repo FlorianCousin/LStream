@@ -1,13 +1,14 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LStream;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class SkipLStream<T> extends LStream<T> {
 
-  private final LStream<T> baseIterator;
+  private final Iterator<T> baseIterator;
   private final long nbToSkip;
 
   private long nbSkipped = 0;

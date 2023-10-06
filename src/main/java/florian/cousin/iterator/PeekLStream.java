@@ -1,13 +1,14 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LStream;
+import java.util.Iterator;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PeekLStream<T> extends LStream<T> {
 
-  private final LStream<T> baseIterator;
+  private final Iterator<T> baseIterator;
   private final Consumer<? super T> action;
 
   @Override
