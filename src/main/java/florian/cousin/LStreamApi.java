@@ -78,17 +78,71 @@ public interface LStreamApi<T> {
    */
   LStreamApi<T> distinct();
 
-  // TODO Add all the javadoc
+  /**
+   * Returns a lstream consisting of the elements of this lstream, sorted according to natural
+   * order. If the elements of this stream are not {@code Comparable}, a {@code
+   * java.lang.ClassCastException} may be thrown when the terminal operation is executed.
+   *
+   * <p>This is a stateful intermediate operation.
+   *
+   * @return the new stream
+   */
   LStreamApi<T> sorted();
 
+  /**
+   * Returns a lstream consisting of the elements of this lstream, sorted according to the provided
+   * {@code Comparator}. If the input {@code Comparator} is {@code null}, the natural comparator is
+   * used.
+   *
+   * <p>This is a stateful intermediate operation.
+   *
+   * @param comparator a {@code Comparator} to be used to compare stream elements
+   * @return the new stream
+   */
   LStreamApi<T> sorted(@Nullable Comparator<? super T> comparator);
 
+  /**
+   * Returns a lstream consisting of the elements of this lstream, additionally performing the
+   * provided action on each element as elements are consumed from the resulting stream.
+   *
+   * <p>This is an intermediate operation.
+   *
+   * <p>In cases where the lstream implementation is able to optimize away the production of some or
+   * all the elements (such as with short-circuiting operations like {@code findFirst}), the action
+   * will not be invoked for those elements.
+   *
+   * @param action an action to perform on the elements as they are consumed from the stream
+   * @return the new stream
+   */
   LStreamApi<T> peek(Consumer<? super T> action);
 
+  /**
+   * Returns a lstream consisting of the elements of this lstream, truncated to be no longer than
+   * {@code maxSize} in length.
+   *
+   * <p>This is a short-circuiting stateful intermediate operation.
+   *
+   * @param maxSize the number of elements the stream should be limited to
+   * @return the new stream
+   */
   LStreamApi<T> limit(long maxSize);
 
+  /**
+   * Returns a lstream consisting of the remaining elements of this lstream
+   * after discarding the first {@code nbToSkip} elements of the lstream.
+   * If this lstream contains fewer than {@code nbToSkip} elements then an
+   * empty stream will be returned.
+   *
+   * <p>This is a stateful
+   * intermediate operation.
+   *
+   * @param nbToSkip the number of leading elements to skip
+   * @return the new lstream
+   * @throws IllegalArgumentException if {@code n} is negative
+   */
   LStreamApi<T> skip(long nbToSkip);
 
+  // TODO Add all the javadoc
   LStreamApi<T> takeWhile(Predicate<? super T> predicate);
 
   LStreamApi<T> takeWhilePrevious(Predicate<? super T> previousPredicate);
