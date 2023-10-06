@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+// TODO Add a LCollectorApi ?
 @Getter(PACKAGE)
 @RequiredArgsConstructor(access = PACKAGE)
 public class LCollector<T, A, R> {

@@ -33,6 +33,7 @@ public interface LStreamApi<T> {
    */
   <R> LStreamApi<R> map(Function<? super T, ? extends R> mapper);
 
+  // TODO Add all the javadoc
   <R> LStreamApi<R> flatMap(Function<? super T, ? extends LStreamApi<? extends R>> mapper);
 
   LStreamApi<T> distinct();
