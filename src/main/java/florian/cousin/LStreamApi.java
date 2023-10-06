@@ -61,9 +61,24 @@ public interface LStreamApi<T> {
    */
   <R> LStreamApi<R> flatMap(Function<? super T, ? extends LStreamApi<? extends R>> mapper);
 
-  // TODO Add all the javadoc
+  // TODO IntStream flatMapToInt(Function<? super T, ? extends IntStream> mapper);
+  // TODO LongStream flatMapToLong(Function<? super T, ? extends LongStream> mapper);
+  // TODO DoubleStream flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper);
+
+  /**
+   * Returns a lstream consisting of the distinct elements (according to {@link
+   * Object#equals(Object)}) of this lstream.
+   *
+   * <p>the selection of distinct elements is stable (for duplicated elements, the element appearing
+   * first in the encounter order is preserved.).
+   *
+   * <p>This is a stateful intermediate operation.
+   *
+   * @return the new stream
+   */
   LStreamApi<T> distinct();
 
+  // TODO Add all the javadoc
   LStreamApi<T> sorted();
 
   LStreamApi<T> sorted(@Nullable Comparator<? super T> comparator);
