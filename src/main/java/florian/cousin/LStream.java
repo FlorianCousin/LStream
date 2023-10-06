@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
+  // TODO Add sized LStream and use new ArrayList<>(size) in supplier for collector
+
   @Override
   public LStream<T> filter(Predicate<? super T> predicate) {
     return new FilterLStream<>(this, predicate);
