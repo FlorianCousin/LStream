@@ -9,7 +9,7 @@ public class LimitLStream<T> extends LStream<T> {
 
   private final LStream<T> baseIterator;
   private final long maxSize;
-  private long iteration;
+  private long iteration = 0;
 
   @Override
   public boolean hasNext() {
