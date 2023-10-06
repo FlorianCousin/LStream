@@ -36,6 +36,7 @@ public interface LStreamApi<T> {
   // TODO IntStream mapToInt(ToIntFunction<? super T> mapper);
   // TODO LongStream mapToLong(ToLongFunction<? super T> mapper);
   // TODO DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper);
+  // TODO BooleanStream mapToDouble(Predicate<? super T> mapper); ?
 
   /**
    * Returns a lstream consisting of the results of replacing each element of this lstream with the
