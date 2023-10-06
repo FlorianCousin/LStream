@@ -2,40 +2,46 @@ package florian.cousin.benchmarks;
 
 import florian.cousin.LStream;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
 /*
  * Benchmark                      Mode  Cnt    Score    Error  Units
- * BigFilterMap.lstream           avgt   20   22.173 ±  1.157  ms/op
- * BigFilterMap.parallelStream    avgt   20  193.539 ± 22.434  ms/op
- * BigFilterMap.sequentialStream  avgt   20   20.194 ±  3.177  ms/op
+ * BigFilterMap.lstream           avgt   10  205.150 ± 33.819  ms/op
+ * BigFilterMap.parallelStream    avgt   10   42.398 ±  2.257  ms/op
+ * BigFilterMap.sequentialStream  avgt   10  133.904 ± 33.752  ms/op
  */
 
 @State(Scope.Benchmark)
 @Fork(value = 2, warmups = 1)
-@Warmup(iterations = 10, time = 5)
-@Measurement(iterations = 5, time = 5)
+@Warmup(iterations = 10, time = 2)
+@Measurement(iterations = 5, time = 2)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class BigFilterMap {
 
-  private static final int NB_ELEMENTS = 1_000_000;
+  private static final int NB_ELEMENTS = 10_000_000;
   private static final Random RANDOM = new Random(Instant.now().getNano());
+
+  private static List<Integer> testData;
+
+  @Setup(Level.Iteration)
+  public void setUp() {
+    testData = new ArrayList<>(NB_ELEMENTS);
+    for (int i = 0; i < NB_ELEMENTS; i++) {
+      testData.add(RANDOM.nextInt(-50, 51));
+    }
+  }
 
   @Benchmark
   public void lstream(Blackhole blackhole) {
 
     List<Integer> generatedList =
-        LStream.generate(() -> RANDOM.nextInt(-50, 51))
-            .limit(NB_ELEMENTS)
-            .filter(i -> i > 0)
-            .map(i -> i - 1)
-            .toList();
+        LStream.from(testData).filter(i -> i > 0).map(i -> i - 1).toList();
 
     blackhole.consume(generatedList);
   }
@@ -43,12 +49,7 @@ public class BigFilterMap {
   @Benchmark
   public void sequentialStream(Blackhole blackhole) {
 
-    List<Integer> generatedList =
-        Stream.generate(() -> RANDOM.nextInt(-50, 51))
-            .limit(NB_ELEMENTS)
-            .filter(i -> i > 0)
-            .map(i -> i - 1)
-            .toList();
+    List<Integer> generatedList = testData.stream().filter(i -> i > 0).map(i -> i - 1).toList();
 
     blackhole.consume(generatedList);
   }
@@ -57,12 +58,7 @@ public class BigFilterMap {
   public void parallelStream(Blackhole blackhole) {
 
     List<Integer> generatedList =
-        Stream.generate(() -> RANDOM.nextInt(-50, 51))
-            .parallel()
-            .limit(NB_ELEMENTS)
-            .filter(i -> i > 0)
-            .map(i -> i - 1)
-            .toList();
+        testData.stream().parallel().filter(i -> i > 0).map(i -> i - 1).toList();
 
     blackhole.consume(generatedList);
   }
