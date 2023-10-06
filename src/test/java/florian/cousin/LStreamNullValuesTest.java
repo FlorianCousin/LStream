@@ -1,7 +1,6 @@
 package florian.cousin;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -42,11 +41,16 @@ class LStreamNullValuesTest {
   }
 
   @Test
-  void flatMapperShouldNotReturnNull() {
+  void flatMapperCanReturnNull() {
 
-    LStream<Object> mappedToNull = LStream.of(7).flatMap(value -> null);
+    List<Integer> actualValues =
+        LStream.of(7, 5)
+            .flatMap(value -> value == 7 ? null : LStream.iterate(value, i -> i + 1).limit(2))
+            .toList();
 
-    assertThatThrownBy(mappedToNull::toList).isExactlyInstanceOf(NullPointerException.class);
+    List<Integer> expectedValues = List.of(5, 6);
+
+    assertThat(actualValues).isEqualTo(expectedValues);
   }
 
   @Test

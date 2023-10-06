@@ -37,7 +37,6 @@ public interface LStreamApi<T> {
   // TODO LongStream mapToLong(ToLongFunction<? super T> mapper);
   // TODO DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper);
 
-  // TODO (If a mapped stream is {@code null} an empty stream is used, instead.)
   /**
    * Returns a lstream consisting of the results of replacing each element of this lstream with the
    * contents of a mapped lstream produced by applying the provided mapping function to each

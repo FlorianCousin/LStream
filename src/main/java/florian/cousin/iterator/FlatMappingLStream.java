@@ -4,6 +4,7 @@ import florian.cousin.LStream;
 import florian.cousin.LStreamApi;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +33,10 @@ public class FlatMappingLStream<T, R> extends LStream<R> {
 
   private void dropBaseIteratorUntilValue() {
     while (!currentMappingIterator.hasNext() && baseIterator.hasNext()) {
-      currentMappingIterator = mapper.apply(baseIterator.next()).iterator();
+      currentMappingIterator =
+          Optional.ofNullable(mapper.apply(baseIterator.next()))
+              .map(LStreamApi::iterator)
+              .orElse(Collections.emptyIterator());
     }
   }
 }
