@@ -1,9 +1,7 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LStream;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.NoSuchElementException;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,5 +37,10 @@ public class ArrayLStream<T> extends LStream<T> {
   public ArrayLStream<T> sorted(@Nullable Comparator<? super T> comparator) {
     Arrays.sort(iterationObjects, nextIndex, iterationObjects.length, comparator);
     return this;
+  }
+
+  @Override
+  public List<T> toList() {
+    return Collections.unmodifiableList(Arrays.asList(iterationObjects));
   }
 }
