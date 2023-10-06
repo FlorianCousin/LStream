@@ -16,6 +16,7 @@ class SummarizingCollectorTest {
     IntSummaryStatistics actualStatistics =
         LStream.<Integer>empty().collect(LCollectors.summarizingInt(Integer::intValue));
 
+    // TODO Add comparator of summarizing in assertJ ?
     assertThat(actualStatistics.getCount()).isZero();
     assertThat(actualStatistics.getMin()).isEqualTo(Integer.MAX_VALUE);
     assertThat(actualStatistics.getMax()).isEqualTo(Integer.MIN_VALUE);
