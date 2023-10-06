@@ -1,8 +1,11 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LStream;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 public class ArrayLStream<T> extends LStream<T> {
@@ -23,5 +26,17 @@ public class ArrayLStream<T> extends LStream<T> {
     }
 
     return iterationObjects[nextIndex++];
+  }
+
+  @Override
+  public ArrayLStream<T> skip(long nbToSkip) {
+    nextIndex = (int) Math.min(Integer.MAX_VALUE, nextIndex + nbToSkip);
+    return this;
+  }
+
+  @Override
+  public ArrayLStream<T> sorted(@Nullable Comparator<? super T> comparator) {
+    Arrays.sort(iterationObjects, nextIndex, iterationObjects.length, comparator);
+    return this;
   }
 }
