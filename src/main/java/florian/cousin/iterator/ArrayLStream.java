@@ -18,7 +18,6 @@ public class ArrayLStream<T> extends LStream<T> {
   @Override
   public T next() {
 
-    // TODO Check how it reduces performance
     if (!hasNext()) {
       throw new NoSuchElementException("No more elements in the array.");
     }
