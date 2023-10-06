@@ -223,7 +223,11 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
   }
 
   public static <T> LStream<T> from(Iterable<T> iterable) {
-    return new SimpleLStream<>(iterable.iterator());
+    return from(iterable.iterator());
+  }
+
+  public static <T> LStream<T> from(Iterator<T> iterator) {
+    return new SimpleLStream<>(iterator);
   }
 
   @SafeVarargs
