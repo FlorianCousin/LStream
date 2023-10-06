@@ -30,6 +30,7 @@ public class ArrayLStream<T> extends LStream<T> {
 
   @Override
   public ArrayLStream<T> skip(long nbToSkip) {
+    requirePositive(nbToSkip);
     nextIndex = (int) Math.min(Integer.MAX_VALUE, nextIndex + nbToSkip);
     return this;
   }

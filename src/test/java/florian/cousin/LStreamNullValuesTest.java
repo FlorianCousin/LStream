@@ -1,9 +1,11 @@
 package florian.cousin;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 
 class LStreamNullValuesTest {
@@ -100,6 +102,38 @@ class LStreamNullValuesTest {
     List<Integer> expectedValues = Arrays.asList(null, 6);
 
     assertThat(actualValues).isEqualTo(expectedValues);
+  }
+
+  @Test
+  void skipArrayLBigLong() {
+
+    List<Integer> actualValues = LStream.of(4, null, null, 6).skip(Integer.MAX_VALUE + 2L).toList();
+
+    assertThat(actualValues).isEmpty();
+  }
+
+  @Test
+  void skipNegative() {
+
+    ThrowableAssert.ThrowingCallable skipper = () -> LStream.generate(() -> 3).limit(5).skip(-1);
+
+    assertThatThrownBy(skipper).isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void skipNegativeArrayL() {
+
+    ThrowableAssert.ThrowingCallable skipper = () -> LStream.of(4, null, null, 6).skip(-1);
+
+    assertThatThrownBy(skipper).isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void skipNegativeEmptyL() {
+
+    ThrowableAssert.ThrowingCallable skipper = () -> LStream.<Integer>empty().skip(-1);
+
+    assertThatThrownBy(skipper).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test

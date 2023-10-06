@@ -50,6 +50,7 @@ public class EmptyLStream<T> extends LStream<T> {
 
   @Override
   public EmptyLStream<T> skip(long nbToSkip) {
+    requirePositive(nbToSkip);
     return this;
   }
 

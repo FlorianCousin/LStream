@@ -159,7 +159,7 @@ class LStreamModificationTest {
 
     List<Long> baseValues = List.of(4L, -5L, 789L);
 
-    List<Long> actuelValues = LStream.from(baseValues).skip(-1).toList();
+    List<Long> actuelValues = LStream.from(baseValues).skip(0).toList();
 
     assertThat(actuelValues).isEqualTo(baseValues);
   }

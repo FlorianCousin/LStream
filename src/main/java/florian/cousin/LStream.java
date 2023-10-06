@@ -55,7 +55,15 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
   @Override
   public LStream<T> skip(long nbToSkip) {
+    requirePositive(nbToSkip);
     return new SkipLStream<>(this, nbToSkip);
+  }
+
+  protected static void requirePositive(long nbToSkip) throws IllegalArgumentException {
+    if (nbToSkip < 0) {
+      throw new IllegalArgumentException(
+          "nbToSkip is %d but it should be positive".formatted(nbToSkip));
+    }
   }
 
   @Override
