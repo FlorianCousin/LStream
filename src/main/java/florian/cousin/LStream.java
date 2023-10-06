@@ -29,7 +29,8 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
   @Override
   public LStream<T> distinct() {
-    return new DistinctLStream<>(this);
+    Set<T> alreadyIteratedElements = new HashSet<>();
+    return filter(alreadyIteratedElements::add);
   }
 
   @Override
