@@ -11,9 +11,9 @@ import org.openjdk.jmh.infra.Blackhole;
 
 /*
  * Benchmark                      Mode  Cnt    Score    Error  Units
- * BigFilterMap.lstream           avgt   10  205.150 ± 33.819  ms/op
- * BigFilterMap.parallelStream    avgt   10   42.398 ±  2.257  ms/op
- * BigFilterMap.sequentialStream  avgt   10  133.904 ± 33.752  ms/op
+ * BigFilterMapBenchmark.lstream           avgt   10  205.150 ± 33.819  ms/op
+ * BigFilterMapBenchmark.parallelStream    avgt   10   42.398 ±  2.257  ms/op
+ * BigFilterMapBenchmark.sequentialStream  avgt   10  133.904 ± 33.752  ms/op
  */
 
 @State(Scope.Benchmark)
@@ -22,7 +22,7 @@ import org.openjdk.jmh.infra.Blackhole;
 @Measurement(iterations = 5, time = 2)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class BigFilterMap {
+public class BigFilterMapBenchmark {
 
   private static final int NB_ELEMENTS = 10_000_000;
   private static final Random RANDOM = new Random(Instant.now().getNano());
