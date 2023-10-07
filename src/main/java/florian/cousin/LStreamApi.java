@@ -254,11 +254,52 @@ public interface LStreamApi<T> {
    */
   T reduce(T initialValue, BinaryOperator<T> accumulator);
 
-  // TODO Add all the javadoc
-  <R> R reduce(R initialValue, BiFunction<R, T, R> aggregate);
+  /**
+   * Performs a reduction on the elements of this lstream, using the provided initial value and
+   * accumulation function. This is equivalent to:
+   *
+   * <pre>{@code
+   * U result = identity;
+   * for (T element : this lstream)
+   *     result = accumulator.apply(result, element)
+   * return result;
+   * }</pre>
+   *
+   * <p>This is a terminal operation.
+   *
+   * @param <R> The type of the result
+   * @param initialValue the initial value for the accumulation function
+   * @param accumulator a function for incorporating an additional element into a result
+   * @return the result of the reduction
+   */
+  <R> R reduce(R initialValue, BiFunction<R, T, R> accumulator);
 
+  /**
+   * Performs a reduction on the elements of this lstream, using an accumulation function, and
+   * returns an {@code Optional} describing the reduced value, if any. This is equivalent to:
+   *
+   * <pre>{@code
+   * boolean foundAny = false;
+   * T result = null;
+   * for (T element : this lstream) {
+   *     if (!foundAny) {
+   *         foundAny = true;
+   *         result = element;
+   *     }
+   *     else
+   *         result = accumulator.apply(result, element);
+   * }
+   * return foundAny ? Optional.of(result) : Optional.empty();
+   * }</pre>
+   *
+   * <p>This is a terminal operation.
+   *
+   * @param accumulator a function for combining two values
+   * @return an {@link Optional} describing the result of the reduction
+   */
   Optional<T> reduce(BinaryOperator<T> accumulator);
 
+  // TODO Add all the javadoc
   <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator);
 
   <R> R collect(LCollector<? super T, ?, R> collector);

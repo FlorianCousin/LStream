@@ -83,6 +83,25 @@ class LStreamEndTest {
   }
 
   @Test
+  void reduceSum() {
+
+    Optional<Integer> actualMax = LStream.of(4, 8, 9, -1, 3).reduce(Integer::sum);
+
+    assertThat(actualMax).hasValue(23);
+  }
+
+  @Test
+  void reduceWithNullAccumulatorResult() {
+
+    Optional<String> actualReduction =
+        LStream.of("4", "8", "9", "-1", "3")
+            .reduce(
+                (accumulation, newValue) -> "9".equals(newValue) ? null : accumulation + newValue);
+
+    assertThat(actualReduction).hasValue("null-13");
+  }
+
+  @Test
   void reduceWithDifferentType() {
 
     String actualMaximum =

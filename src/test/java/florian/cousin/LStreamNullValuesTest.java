@@ -244,6 +244,14 @@ class LStreamNullValuesTest {
   }
 
   @Test
+  void reduceOnlyOneNull() {
+
+    Optional<Integer> actualMaxString = LStream.of((Integer) null).reduce(Integer::sum);
+
+    assertThat(actualMaxString).isEmpty();
+  }
+
+  @Test
   void ofAndToList() {
 
     List<Integer> actualValues = LStream.of(null, 5, null).toList();

@@ -109,23 +109,28 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
   }
 
   @Override
-  public <R> R reduce(R initialValue, BiFunction<R, T, R> aggregate) {
+  public <R> R reduce(R initialValue, BiFunction<R, T, R> accumulator) {
     R currentValue = initialValue;
     while (hasNext()) {
-      currentValue = aggregate.apply(currentValue, next());
+      currentValue = accumulator.apply(currentValue, next());
     }
     return currentValue;
   }
 
   @Override
   public Optional<T> reduce(BinaryOperator<T> accumulator) {
-    Optional<T> reducedOptional = Optional.empty();
-    while (hasNext()) {
-      T next = next();
-      T reducedValue = reducedOptional.map(value -> accumulator.apply(value, next)).orElse(next);
-      reducedOptional = Optional.ofNullable(reducedValue);
+
+    if (!hasNext()) {
+      return Optional.empty();
     }
-    return reducedOptional;
+
+    T accumulation = next();
+
+    while (hasNext()) {
+      accumulation = accumulator.apply(accumulation, next());
+    }
+
+    return Optional.ofNullable(accumulation);
   }
 
   @Override

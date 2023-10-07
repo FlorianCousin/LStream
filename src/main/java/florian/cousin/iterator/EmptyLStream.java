@@ -90,7 +90,7 @@ public class EmptyLStream<T> extends LStream<T> {
   }
 
   @Override
-  public <R> R reduce(R initialValue, BiFunction<R, T, R> aggregate) {
+  public <R> R reduce(R initialValue, BiFunction<R, T, R> accumulator) {
     return initialValue;
   }
 
