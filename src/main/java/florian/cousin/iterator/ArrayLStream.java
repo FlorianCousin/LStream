@@ -41,6 +41,11 @@ public class ArrayLStream<T> extends LStream<T> {
 
   @Override
   public List<T> toList() {
+
+    if (nextIndex >= iterationObjects.length) {
+      return Collections.emptyList();
+    }
+
     List<T> allElements = Arrays.asList(iterationObjects);
     List<T> remainingElements = allElements.subList(nextIndex, iterationObjects.length);
     return Collections.unmodifiableList(remainingElements);
