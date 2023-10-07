@@ -1,8 +1,9 @@
 package florian.cousin.iterator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import florian.cousin.LStream;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class ArrayLStreamTest {
@@ -16,7 +17,7 @@ class ArrayLStreamTest {
 
     List<Integer> actualElementsLeft = arrayLStream.toList();
 
-    Assertions.assertThat(actualElementsLeft).isUnmodifiable().containsExactly(2, 3, 4);
+    assertThat(actualElementsLeft).isUnmodifiable().containsExactly(2, 3, 4);
   }
 
   @Test
@@ -24,7 +25,7 @@ class ArrayLStreamTest {
 
     List<Integer> actualValuesWithNull = LStream.of(1, null).toList();
 
-    Assertions.assertThat(actualValuesWithNull).isUnmodifiable().containsExactly(1, null);
+    assertThat(actualValuesWithNull).isUnmodifiable().containsExactly(1, null);
   }
 
   @Test
@@ -34,9 +35,15 @@ class ArrayLStreamTest {
 
     arrayLStream.next();
 
-    List<Integer> actualNotSkipped = arrayLStream.skip(2).toList();
+    LStream<Integer> arrayLStreamNotSkipped = arrayLStream.skip(2);
 
-    Assertions.assertThat(actualNotSkipped).containsExactly(4);
+    // ArrayLStream#skip is called
+    assertThat(arrayLStreamNotSkipped).isEqualTo(arrayLStream);
+
+    List<Integer> actualNotSkipped = arrayLStreamNotSkipped.toList();
+
+    // Only remaining values are skipped
+    assertThat(actualNotSkipped).containsExactly(4);
   }
 
   @Test
@@ -46,8 +53,14 @@ class ArrayLStreamTest {
 
     arrayLStream.next();
 
-    List<Integer> actualSortedValues = arrayLStream.sorted().toList();
+    LStream<Integer> arrayLStreamSorted = arrayLStream.sorted();
 
-    Assertions.assertThat(actualSortedValues).containsExactly(3, 6, 7, 8);
+    // ArrayLStream#sort is called
+    assertThat(arrayLStreamSorted).isEqualTo(arrayLStream);
+
+    List<Integer> actualSortedValues = arrayLStreamSorted.toList();
+
+    // Only remaining values are sorted
+    assertThat(actualSortedValues).containsExactly(3, 6, 7, 8);
   }
 }
