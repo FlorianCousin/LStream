@@ -10,7 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
 
-  // TODO Add sized LStream and use new ArrayList<>(size) in supplier for collector
+  // TODO Add sized LStream and use new ArrayList<>(size) in supplier for collector, and optimize
+  //  toArray
 
   @Override
   public LStream<T> filter(Predicate<? super T> predicate) {
@@ -99,8 +100,8 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
   }
 
   @Override
-  public T reduce(T identity, BinaryOperator<T> accumulator) {
-    T currentValue = identity;
+  public T reduce(T initialValue, BinaryOperator<T> accumulator) {
+    T currentValue = initialValue;
     while (hasNext()) {
       currentValue = accumulator.apply(currentValue, next());
     }

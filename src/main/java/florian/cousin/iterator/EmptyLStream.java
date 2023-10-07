@@ -85,8 +85,8 @@ public class EmptyLStream<T> extends LStream<T> {
   }
 
   @Override
-  public T reduce(T identity, BinaryOperator<T> accumulator) {
-    return identity;
+  public T reduce(T initialValue, BinaryOperator<T> accumulator) {
+    return initialValue;
   }
 
   @Override
