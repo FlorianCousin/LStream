@@ -140,7 +140,7 @@ public interface LStreamApi<T> {
    * @return the new lstream
    * @throws IllegalArgumentException if {@code n} is negative
    */
-  LStreamApi<T> skip(long nbToSkip);
+  LStreamApi<T> skip(long nbToSkip) throws IllegalArgumentException;
 
   /**
    * Returns a lstream consisting of the longest prefix of elements taken from this lstream that
@@ -224,7 +224,7 @@ public interface LStreamApi<T> {
    * @throws ArrayStoreException if the runtime type of any element of this stream is not assignable
    *     to the {@linkplain Class#getComponentType runtime component type} of the generated array
    */
-  <A> A[] toArray(IntFunction<A[]> generator);
+  <A> A[] toArray(IntFunction<A[]> generator) throws ArrayStoreException;
 
   /**
    * Performs a reduction on the elements of this lstream, using the provided initialValue value and
