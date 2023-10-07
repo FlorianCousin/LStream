@@ -242,6 +242,14 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
     return new SimpleLStream<>(iterator);
   }
 
+  public static <T> LStream<T> from(List<T> iterationObjects) {
+    if (iterationObjects instanceof RandomAccess) {
+      return new ListRandomAccessLStream<>(iterationObjects);
+    } else {
+      return from((Iterable<T>) iterationObjects);
+    }
+  }
+
   @SafeVarargs
   public static <T> LStream<T> of(T... iterationObjects) {
     return new ArrayLStream<>(iterationObjects);
