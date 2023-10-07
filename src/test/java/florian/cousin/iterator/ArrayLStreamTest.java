@@ -63,4 +63,30 @@ class ArrayLStreamTest {
     // Only remaining values are sorted
     assertThat(actualSortedValues).containsExactly(3, 6, 7, 8);
   }
+
+  @Test
+  void toArrayObject() {
+
+    LStream<Integer> lStream = LStream.of(1, 2, 3, 4);
+
+    lStream.next();
+
+    assertThat(lStream.toArray()).isEqualTo(new Object[] {2, 3, 4});
+  }
+
+  @Test
+  void countSkipOne() {
+
+    LStream<Integer> lStream = LStream.of(1, 2, 3, 4).skip(1);
+
+    assertThat(lStream.count()).isEqualTo(3);
+  }
+
+  @Test
+  void countSkipALot() {
+
+    LStream<Integer> lStream = LStream.of(1, 2, 3, 4).skip(10);
+
+    assertThat(lStream.count()).isZero();
+  }
 }

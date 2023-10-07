@@ -34,6 +34,20 @@ public class ArrayLStream<T> extends LStream<T> {
   }
 
   @Override
+  public Object[] toArray() {
+
+    if (nextIndex >= iterationObjects.length) {
+      return new Object[0];
+    }
+
+    if (nextIndex == 0) {
+      return iterationObjects;
+    }
+
+    return Arrays.copyOfRange(iterationObjects, nextIndex, iterationObjects.length);
+  }
+
+  @Override
   public ArrayLStream<T> sorted(@Nullable Comparator<? super T> comparator) {
     Arrays.sort(iterationObjects, nextIndex, iterationObjects.length, comparator);
     return this;
@@ -49,5 +63,10 @@ public class ArrayLStream<T> extends LStream<T> {
     List<T> allElements = Arrays.asList(iterationObjects);
     List<T> remainingElements = allElements.subList(nextIndex, iterationObjects.length);
     return Collections.unmodifiableList(remainingElements);
+  }
+
+  @Override
+  public long count() {
+    return Math.max(0, iterationObjects.length - nextIndex);
   }
 }
