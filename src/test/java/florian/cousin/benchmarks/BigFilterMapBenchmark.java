@@ -12,8 +12,13 @@ import org.openjdk.jmh.infra.Blackhole;
 /*
  * Benchmark                      Mode  Cnt    Score    Error  Units
  * BigFilterMapBenchmark.lstream           avgt   10  205.150 ± 33.819  ms/op
- * BigFilterMapBenchmark.parallelStream    avgt   10   42.398 ±  2.257  ms/op
  * BigFilterMapBenchmark.sequentialStream  avgt   10  133.904 ± 33.752  ms/op
+ * BigFilterMapBenchmark.parallelStream    avgt   10   42.398 ±  2.257  ms/op
+ *
+ * Benchmark                               Mode  Cnt    Score    Error  Units
+ * BigFilterMapBenchmark.lstream           avgt   10  184.276 ± 21.508  ms/op
+ * BigFilterMapBenchmark.sequentialStream  avgt   10  142.129 ± 38.148  ms/op
+ * BigFilterMapBenchmark.parallelStream    avgt   10   39.669 ±  7.183  ms/op
  */
 
 @State(Scope.Benchmark)
