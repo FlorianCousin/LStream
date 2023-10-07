@@ -1,5 +1,4 @@
 [//]: # (TODO Fill the README)
-[//]: # (TODO Add a licence)
 [//]: # (TODO Add a contribuntion rules file)
 
 This library provides both
