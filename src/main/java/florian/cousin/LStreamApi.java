@@ -1,6 +1,7 @@
 package florian.cousin;
 
 import florian.cousin.collector.LCollector;
+import florian.cousin.collector.LCollectors;
 import florian.cousin.exception.SeveralElementsException;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -299,19 +300,125 @@ public interface LStreamApi<T> {
    */
   Optional<T> reduce(BinaryOperator<T> accumulator);
 
-  // TODO Add all the javadoc
+  /**
+   * Performs a mutable reduction operation on the elements of this lstream. A mutable reduction is
+   * one in which the reduced value is a mutable result container, such as an {@code ArrayList}, and
+   * elements are incorporated by updating the state of the result rather than by replacing the
+   * result. This produces a result equivalent to:
+   *
+   * <pre>{@code
+   * R result = supplier.get();
+   * for (T element : this stream)
+   *     accumulator.accept(result, element);
+   * return result;
+   * }</pre>
+   *
+   * <p>This is a terminal operation.
+   *
+   * @apiNote There are many existing classes in the JDK whose signatures are well-suited for use
+   *     with method references as arguments to {@code collect()}. For example, the following will
+   *     accumulate strings into an {@code ArrayList}:
+   *     <pre>{@code
+   * List<String> asList = stringStream.collect(ArrayList::new, ArrayList::add);
+   * }</pre>
+   *     <p>The following will take a stream of strings and concatenates them into a single string:
+   *     <pre>{@code
+   * String concat = stringStream.collect(StringBuilder::new, StringBuilder::append)
+   *                             .toString();
+   * }</pre>
+   *
+   * @param <R> the type of the mutable result container
+   * @param supplier a function that creates a new mutable result container.
+   * @param accumulator a function that must fold an element into a result container.
+   * @return the result of the reduction
+   */
   <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator);
 
+  /**
+   * Performs a mutable reduction operation on the elements of this lstream using a {@code
+   * Collector}. A {@code Collector} encapsulates the functions used as arguments to {@link
+   * #collect(Supplier, BiConsumer)}, allowing for reuse of collection strategies and composition of
+   * collect operations such as multiple-level grouping or partitioning.
+   *
+   * <p>This is a terminal operation.
+   *
+   * @apiNote The following will accumulate strings into a mutable List:
+   *     <pre>{@code
+   * List<String> asList = stringStream.collect(Collectors.toList());
+   * }</pre>
+   *     <p>The following will classify {@code Person} objects by city:
+   *     <pre>{@code
+   * Map<String, List<Person>> peopleByCity
+   *     = personStream.collect(Collectors.groupingBy(Person::getCity));
+   * }</pre>
+   *     <p>The following will classify {@code Person} objects by state and city, cascading two
+   *     {@code Collector}s together:
+   *     <pre>{@code
+   * Map<String, Map<String, List<Person>>> peopleByStateAndCity
+   *     = personStream.collect(Collectors.groupingBy(Person::getState,
+   *                                                  Collectors.groupingBy(Person::getCity)));
+   * }</pre>
+   *
+   * @param <R> the type of the result
+   * @param collector the {@code Collector} describing the reduction
+   * @return the result of the reduction
+   * @see #collect(Supplier, BiConsumer)
+   * @see LCollectors
+   */
   <R> R collect(LCollector<? super T, ?, R> collector);
 
+  /**
+   * Accumulates the elements of this lstream into an {@code List}. The elements in the list will be
+   * in this lstream's encounter order. The returned List is unmodifiable; calls to any mutator
+   * method will always cause {@code UnsupportedOperationException} to be thrown. There are no
+   * guarantees on the implementation type or serializability of the returned List.
+   *
+   * <p>This is a terminal operation.
+   *
+   * @return a List containing the lstream elements
+   */
   List<T> toList();
 
+  /**
+   * Returns the minimum element of this lstream according to the provided {@code Comparator}. This
+   * is a special case of a reduction.
+   *
+   * <p>This is a terminal operation.
+   *
+   * @param comparator a {@code Comparator} to compare elements of this lstream
+   * @return an {@code Optional} describing the minimum element of this lstream, or an empty {@code
+   *     Optional} if the lstream is empty or if the minimum is {@code null}
+   */
   Optional<T> min(Comparator<? super T> comparator);
 
+  /**
+   * Returns the maximum element of this lstream according to the provided {@code Comparator}. This
+   * is a special case of a reduction.
+   *
+   * <p>This is a terminal operation.
+   *
+   * @param comparator a {@code Comparator} to compare elements of this lstream
+   * @return an {@code Optional} describing the maximum element of this lstream, or an empty {@code
+   *     Optional} if the stream is empty or if the maximum is {@code null}
+   */
   Optional<T> max(Comparator<? super T> comparator);
 
+  // TODO Add examples of peek that is not executed when sized LStream is implemented
+  /**
+   * Returns the count of elements in this lstream. This is a special case of a reduction.
+   *
+   * <p>This is a terminal operation.
+   *
+   * @apiNote An implementation may choose to not execute the stream pipeline if it is capable of
+   *     computing the count directly from the stream source. In such cases no source elements will
+   *     be traversed and no intermediate operations will be evaluated. Behavioral parameters with
+   *     side effects, which are strongly discouraged except for harmless cases such as debugging,
+   *     may be affected.
+   * @return the count of elements in this stream
+   */
   long count();
 
+  // TODO Add all the javadoc
   boolean anyMatch(Predicate<? super T> predicate);
 
   boolean allMatch(Predicate<? super T> predicate);
