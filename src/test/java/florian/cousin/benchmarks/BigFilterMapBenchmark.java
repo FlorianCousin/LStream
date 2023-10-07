@@ -24,7 +24,7 @@ import org.openjdk.jmh.infra.Blackhole;
 @State(Scope.Benchmark)
 @Fork(value = 2, warmups = 1)
 @Warmup(iterations = 10, time = 2)
-@Measurement(iterations = 5, time = 2)
+@Measurement(iterations = 10, time = 2)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class BigFilterMapBenchmark {
