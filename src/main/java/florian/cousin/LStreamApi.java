@@ -418,21 +418,91 @@ public interface LStreamApi<T> {
    */
   long count();
 
-  // TODO Add all the javadoc
+  /**
+   * Returns whether any elements of this lstream match the provided predicate. May not evaluate the
+   * predicate on all elements if not necessary for determining the result. If the lstream is empty
+   * then {@code false} is returned and the predicate is not evaluated.
+   *
+   * <p>This is a short-circuiting terminal operation.
+   *
+   * @param predicate a predicate to apply to elements of this lstream
+   * @return {@code true} if any elements of the lstream match the provided predicate, otherwise
+   *     {@code false}
+   */
   boolean anyMatch(Predicate<? super T> predicate);
 
+  /**
+   * Returns whether all elements of this lstream match the provided predicate. May not evaluate the
+   * predicate on all elements if not necessary for determining the result. If the lstream is empty
+   * then {@code true} is returned and the predicate is not evaluated.
+   *
+   * <p>This is a short-circuiting terminal operation.
+   *
+   * @param predicate a predicate to apply to elements of this lstream
+   * @return {@code true} if either all elements of the lstream match the provided predicate or the
+   *     lstream is empty, otherwise {@code false}
+   */
   boolean allMatch(Predicate<? super T> predicate);
 
+  /**
+   * Returns whether no elements of this lstream match the provided predicate. May not evaluate the
+   * predicate on all elements if not necessary for determining the result. If the lstream is empty
+   * then {@code true} is returned and the predicate is not evaluated.
+   *
+   * <p>This is a short-circuiting terminal operation.
+   *
+   * @param predicate a predicate to apply to elements of this stream
+   * @return {@code true} if either no elements of the lstream match the provided predicate or the
+   *     lstream is empty, otherwise {@code false}
+   */
   boolean noneMatch(Predicate<? super T> predicate);
 
+  /**
+   * Returns an {@link Optional} describing the first element of this lstream, or an empty {@code
+   * Optional} if the lstream is empty.
+   *
+   * <p>This is a short-circuiting terminal operation.
+   *
+   * @return an {@code Optional} describing the first element of this lstream, or an empty {@code
+   *     Optional} if the lstream is empty or if the first element is {@code null}
+   */
   Optional<T> findFirst();
 
   /**
+   * Returns an {@link Optional} describing the only one element of this lstream, or an empty {@code
+   * Optional} if the lstream is empty. If the lstream contains several elements, then an exception
+   * is thrown.
+   *
+   * <p>This is equivalent to {@link LStreamApi#findFirst()} and then an assertion that there is no
+   * more element.
+   *
+   * <p>This is a terminal operation.
+   *
+   * @return an {@code Optional} describing the only one element of this lstream, or an empty {@code
+   *     Optional} if the lstream is empty or if the only one element is {@code null}
    * @throws SeveralElementsException if there are several elements left in the stream
    */
   Optional<T> findOne() throws SeveralElementsException;
 
+  // TODO Is the API note true ?
+  //  Then we do not execute everything but how do we do if we juste want to execute everything ?
+  //  foreach ?
+  /**
+   * Returns an {@link Optional} describing the last element of this lstream, or an empty {@code
+   * Optional} if the lstream is empty.
+   *
+   * <p>This is a terminal operation.
+   *
+   * @apiNote An implementation may choose to not execute the lstream pipeline if it is capable of
+   *     computing the last element directly from the lstream source. In such cases no source
+   *     elements will be traversed and no intermediate operations will be evaluated. Behavioral
+   *     parameters with side effects, which are strongly discouraged except for harmless cases such
+   *     as debugging, may be affected.
+   * @return an {@code Optional} describing the last element of this lstream, or an empty {@code
+   *     Optional} if the lstream is empty or if the last element is {@code null}
+   */
   Optional<T> findLast();
 
+  // TODO Add all the javadoc
   Iterator<T> iterator();
 }
