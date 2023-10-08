@@ -36,4 +36,6 @@ public class SortedLStream<T> extends LStream<T> {
     values.sort(comparator);
     return values.iterator();
   }
+
+  // TODO Implement things like findOne or count
 }
