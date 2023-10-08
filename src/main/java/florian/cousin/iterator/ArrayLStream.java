@@ -48,7 +48,12 @@ public class ArrayLStream<T> extends LStream<T> {
   }
 
   @Override
-  public ArrayLStream<T> sorted(@Nullable Comparator<? super T> comparator) {
+  public LStream<T> sorted(@Nullable Comparator<? super T> comparator) {
+
+    if (!hasNext()) {
+      return LStream.empty();
+    }
+
     Arrays.sort(iterationObjects, nextIndex, iterationObjects.length, comparator);
     return this;
   }

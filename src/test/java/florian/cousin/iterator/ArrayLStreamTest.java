@@ -65,6 +65,14 @@ class ArrayLStreamTest {
   }
 
   @Test
+  void sortedSkipAll() {
+
+    List<Integer> actualSortedValues = LStream.of(5, 7, 6, 3, 8).skip(10).sorted().toList();
+
+    assertThat(actualSortedValues).isEmpty();
+  }
+
+  @Test
   void toArrayObject() {
 
     LStream<Integer> lStream = LStream.of(1, 2, 3, 4);
