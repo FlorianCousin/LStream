@@ -27,6 +27,7 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
     return iterationObjects.get(nextIndex++);
   }
 
+  // TODO Test
   @Override
   public LStream<T> sorted(@Nullable Comparator<? super T> comparator) {
 
@@ -42,7 +43,6 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
     return new ListRandomAccessLStream<>(List.of(array));
   }
 
-  // TODO Test
   @Override
   public LStream<T> limit(long maxSize) {
 

@@ -120,4 +120,34 @@ class ListRandomAccessLStreamTest {
 
     assertThat(lStream.findLast()).isEmpty();
   }
+
+  @Test
+  void limitSome() {
+
+    LStream<Integer> lStream = LStream.from(List.of(1, 2, 3, 4));
+
+    lStream.next();
+
+    List<Integer> limitedList = lStream.limit(2).toList();
+
+    assertThat(limitedList).isEqualTo(List.of(2, 3));
+  }
+
+  @Test
+  void limitALot() {
+
+    LStream<Integer> lStream = LStream.from(List.of(1, 2, 3, 4));
+
+    lStream.next();
+
+    assertThat(lStream.limit(7)).isEqualTo(lStream);
+  }
+
+  @Test
+  void limitSize() {
+
+    LStream<Integer> lStream = LStream.from(List.of(1, 2, 3, 4));
+
+    assertThat(lStream.limit(4)).isEqualTo(lStream);
+  }
 }
