@@ -36,7 +36,7 @@ public class ArrayLStream<T> extends LStream<T> {
   @Override
   public Object[] toArray() {
 
-    if (nextIndex >= iterationObjects.length) {
+    if (!hasNext()) {
       return new Object[0];
     }
 
@@ -61,7 +61,7 @@ public class ArrayLStream<T> extends LStream<T> {
   @Override
   public List<T> toList() {
 
-    if (nextIndex >= iterationObjects.length) {
+    if (!hasNext()) {
       return Collections.emptyList();
     }
 

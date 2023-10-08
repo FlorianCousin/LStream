@@ -52,7 +52,7 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
   @Override
   public Object[] toArray() {
 
-    if (nextIndex >= iterationObjects.size()) {
+    if (!hasNext()) {
       return new Object[0];
     }
 
@@ -62,7 +62,7 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
   @Override
   public <A> A[] toArray(IntFunction<A[]> generator) {
 
-    if (nextIndex >= iterationObjects.size()) {
+    if (!hasNext()) {
       return generator.apply(0);
     }
 
@@ -72,7 +72,7 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
   @Override
   public List<T> toList() {
 
-    if (nextIndex >= iterationObjects.size()) {
+    if (!hasNext()) {
       return Collections.emptyList();
     }
 
