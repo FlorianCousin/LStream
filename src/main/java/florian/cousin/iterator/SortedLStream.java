@@ -11,6 +11,9 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor
 public class SortedLStream<T> extends LStream<T> {
 
+  // TODO extend ListRandomAccess ?
+  //  given a list is created anyway
+
   private final LStream<T> baseIterator;
   private final @Nullable Comparator<? super T> comparator;
 

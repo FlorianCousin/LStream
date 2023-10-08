@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor
 public class ArrayLStream<T> extends LStream<T> {
 
+  // TODO Delete this class and use only ListRandomAccess ?
+
   private final T[] iterationObjects;
   private int nextIndex = 0;
 
