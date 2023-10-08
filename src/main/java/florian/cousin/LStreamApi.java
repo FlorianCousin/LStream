@@ -192,7 +192,7 @@ public interface LStreamApi<T> {
   LStreamApi<T> dropWhile(Predicate<? super T> predicate);
 
   /**
-   * Performs an action for each element of this lstream.
+   * Performs an action for each remaining element of this lstream.
    *
    * <p>This is a terminal operation.
    *

@@ -2,7 +2,7 @@ package florian.cousin.collector;
 
 import static lombok.AccessLevel.PACKAGE;
 
-import florian.cousin.LStream;
+import florian.cousin.LStreamApi;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -19,9 +19,9 @@ public class LCollector<T, A, R> {
   private final BiConsumer<A, ? super T> accumulator;
   private final Function<A, R> finisher;
 
-  public R collect(LStream<? extends T> lStream) {
+  public R collect(LStreamApi<? extends T> lStream) {
     A currentValue = supplier.get();
-    lStream.forEachRemaining(iteratedValue -> accumulator.accept(currentValue, iteratedValue));
+    lStream.forEach(iteratedValue -> accumulator.accept(currentValue, iteratedValue));
     return finisher.apply(currentValue);
   }
 
