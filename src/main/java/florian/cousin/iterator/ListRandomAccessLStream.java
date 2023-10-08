@@ -68,4 +68,16 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
   public long count() {
     return Math.max(0, iterationObjects.size() - nextIndex);
   }
+
+  @Override
+  public Optional<T> findLast() {
+
+    if (hasNext()) {
+      int lastElementIndex = iterationObjects.size() - 1;
+      T lastElement = iterationObjects.get(lastElementIndex);
+      return Optional.ofNullable(lastElement);
+    }
+
+    return Optional.empty();
+  }
 }

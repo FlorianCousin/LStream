@@ -484,9 +484,6 @@ public interface LStreamApi<T> {
    */
   Optional<T> findOne() throws SeveralElementsException;
 
-  // TODO Is the API note true ?
-  //  Then we do not execute everything but how do we do if we juste want to execute everything ?
-  //  foreach ?
   /**
    * Returns an {@link Optional} describing the last element of this lstream, or an empty {@code
    * Optional} if the lstream is empty.

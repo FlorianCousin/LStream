@@ -69,4 +69,16 @@ public class ArrayLStream<T> extends LStream<T> {
   public long count() {
     return Math.max(0, iterationObjects.length - nextIndex);
   }
+
+  @Override
+  public Optional<T> findLast() {
+
+    if (hasNext()) {
+      int lastElementIndex = iterationObjects.length - 1;
+      T lastElement = iterationObjects[lastElementIndex];
+      return Optional.ofNullable(lastElement);
+    }
+
+    return Optional.empty();
+  }
 }

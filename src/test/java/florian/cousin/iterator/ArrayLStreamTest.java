@@ -89,4 +89,20 @@ class ArrayLStreamTest {
 
     assertThat(lStream.count()).isZero();
   }
+
+  @Test
+  void findLastSkipOne() {
+
+    LStream<Integer> lStream = LStream.of(1, 2, 3, 4).skip(1);
+
+    assertThat(lStream.findLast()).hasValue(4);
+  }
+
+  @Test
+  void findLastSkipALot() {
+
+    LStream<Integer> lStream = LStream.of(1, 2, 3, 4).skip(10);
+
+    assertThat(lStream.findLast()).isEmpty();
+  }
 }
