@@ -42,6 +42,20 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
     return new ListRandomAccessLStream<>(List.of(array));
   }
 
+  // TODO Test
+  @Override
+  public LStream<T> limit(long maxSize) {
+
+    if (nextIndex + maxSize >= iterationObjects.size()) {
+      return this;
+    }
+
+    int lastIndexExclusive = Math.toIntExact(nextIndex + maxSize);
+    List<T> newIterationObjects = iterationObjects.subList(nextIndex, lastIndexExclusive);
+
+    return LStream.from(newIterationObjects);
+  }
+
   @Override
   public ListRandomAccessLStream<T> skip(long nbToSkip) {
     requirePositive(nbToSkip);
@@ -96,6 +110,4 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
 
     return Optional.empty();
   }
-
-  // TODO Add limit override
 }
