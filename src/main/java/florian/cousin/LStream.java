@@ -92,11 +92,14 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
   @Override
   public Object[] toArray() {
     // TODO Implement so that there is no 1 copy to create the list and one copy to create the array
+    //  when sized lstream
     return toList().toArray();
   }
 
   @Override
   public <A> A[] toArray(IntFunction<A[]> generator) {
+    // TODO Implement so that there is no 1 copy to create the list and one copy to create the array
+    //  when sized lstream
     return toList().toArray(generator);
   }
 
