@@ -4,6 +4,7 @@ import florian.cousin.LStream;
 import java.util.*;
 import java.util.function.IntFunction;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 public class ListRandomAccessLStream<T> extends LStream<T> {
@@ -24,6 +25,21 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
     }
 
     return iterationObjects.get(nextIndex++);
+  }
+
+  @Override
+  public LStream<T> sorted(@Nullable Comparator<? super T> comparator) {
+
+    if (!hasNext()) {
+      return LStream.empty();
+    }
+
+    @SuppressWarnings("unchecked")
+    T[] array = (T[]) iterationObjects.subList(nextIndex, iterationObjects.size()).toArray();
+
+    Arrays.sort(array, comparator);
+
+    return new ListRandomAccessLStream<>(List.of(array));
   }
 
   @Override

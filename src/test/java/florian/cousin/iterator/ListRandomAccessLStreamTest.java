@@ -30,6 +30,28 @@ class ListRandomAccessLStreamTest {
   }
 
   @Test
+  void sorted() {
+
+    LStream<Integer> lStream = LStream.from(List.of(5, 7, 6, 3, 8));
+
+    lStream.next();
+
+    List<Integer> actualSortedValues = lStream.sorted().toList();
+
+    // Only remaining values are sorted
+    assertThat(actualSortedValues).containsExactly(3, 6, 7, 8);
+  }
+
+  @Test
+  void sortedSkipAll() {
+
+    List<Integer> actualSortedValues =
+        LStream.from(List.of(5, 7, 6, 3, 8)).skip(10).sorted().toList();
+
+    assertThat(actualSortedValues).isEmpty();
+  }
+
+  @Test
   void skip() {
 
     LStream<Integer> lStream = LStream.from(List.of(1, 2, 3, 4));
@@ -38,7 +60,7 @@ class ListRandomAccessLStreamTest {
 
     LStream<Integer> arrayLStreamAfterSkip = lStream.skip(2);
 
-    // ArrayLStream#skip is called
+    // ListRandomAccessLStream#skip is called
     assertThat(arrayLStreamAfterSkip).isEqualTo(lStream);
 
     List<Integer> actualNotSkipped = arrayLStreamAfterSkip.toList();
