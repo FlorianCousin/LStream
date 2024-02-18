@@ -37,6 +37,7 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
     @SuppressWarnings("unchecked")
     T[] array = (T[]) iterationObjects.subList(nextIndex, iterationObjects.size()).toArray();
 
+    // TODO Do not sort without consumption
     Arrays.sort(array, comparator);
 
     return new ListRandomAccessLStream<>(List.of(array));
