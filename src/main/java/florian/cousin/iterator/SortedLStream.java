@@ -2,36 +2,19 @@ package florian.cousin.iterator;
 
 import florian.cousin.LStream;
 import florian.cousin.collector.LCollectors;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import florian.cousin.exception.SeveralElementsException;
+import java.util.*;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
-@RequiredArgsConstructor
-public class SortedLStream<T> extends LStream<T> {
-
-  // TODO extend ListRandomAccess ?
-  //  given a list is created anyway
+public class SortedLStream<T> extends ListRandomAccessLStream<T> {
 
   private final LStream<T> baseIterator;
-  private final @Nullable Comparator<? super T> comparator;
 
-  private @Nullable Iterator<T> sortedValues;
-
-  @Override
-  public boolean hasNext() {
-    return baseIterator.hasNext() || (sortedValues != null && sortedValues.hasNext());
-  }
-
-  @Override
-  public T next() {
-
-    if (sortedValues == null) {
-      sortedValues = createSortedIterator();
-    }
-
-    return sortedValues.next();
+  public SortedLStream(LStream<T> baseIterator, @Nullable Comparator<? super T> comparator) {
+    super(new SortedList<>(baseIterator, comparator));
+    this.baseIterator = baseIterator;
   }
 
   @Override
@@ -44,11 +27,54 @@ public class SortedLStream<T> extends LStream<T> {
     return baseIterator.findOne();
   }
 
-  private Iterator<T> createSortedIterator() {
-    List<T> values = baseIterator.collect(LCollectors.toList());
-    values.sort(comparator);
-    return values.iterator();
+  @RequiredArgsConstructor
+  private static class CachedSupplier<Element> implements Supplier<Element> {
+
+    private boolean cacheIsInitialised = false;
+    private Element cachedValue;
+    private final Supplier<Element> supplierWithoutCache;
+
+    @Override
+    public Element get() {
+
+      if (cacheIsInitialised) {
+        return cachedValue;
+      }
+
+      cachedValue = supplierWithoutCache.get();
+      cacheIsInitialised = true;
+      return cachedValue;
+    }
   }
 
-  // TODO Implement things like findOne or count
+  @RequiredArgsConstructor
+  @SuppressWarnings("java:S2160") // Only values are important in comparison of two lists
+  private static class SortedList<Element> extends AbstractList<Element> implements RandomAccess {
+
+    private final CachedSupplier<List<Element>> elementsSupplier;
+
+    public SortedList(
+        LStream<Element> baseIterator, @Nullable Comparator<? super Element> comparator) {
+
+      this.elementsSupplier =
+          new CachedSupplier<>(() -> supplySortedList(baseIterator, comparator));
+    }
+
+    @Override
+    public Element get(int index) {
+      return elementsSupplier.get().get(index);
+    }
+
+    @Override
+    public int size() {
+      return elementsSupplier.get().size();
+    }
+
+    private List<Element> supplySortedList(
+        LStream<Element> baseIterator, @Nullable Comparator<? super Element> comparator) {
+      List<Element> values = baseIterator.collect(LCollectors.toList());
+      values.sort(comparator);
+      return values;
+    }
+  }
 }
