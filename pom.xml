@@ -48,6 +48,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- TODO Is this really useful ? Not mentioned in https://www.baeldung.com/java-microbenchmark-harness -->
         <dependency>
             <groupId>com.carrotsearch</groupId>
             <artifactId>junit-benchmarks</artifactId>
