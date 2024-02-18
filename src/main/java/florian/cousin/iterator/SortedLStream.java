@@ -34,6 +34,16 @@ public class SortedLStream<T> extends LStream<T> {
     return sortedValues.next();
   }
 
+  @Override
+  public long count() {
+    return baseIterator.count();
+  }
+
+  @Override
+  public Optional<T> findOne() throws SeveralElementsException {
+    return baseIterator.findOne();
+  }
+
   private Iterator<T> createSortedIterator() {
     List<T> values = baseIterator.collect(LCollectors.toList());
     values.sort(comparator);
