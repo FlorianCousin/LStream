@@ -225,6 +225,9 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
     return first;
   }
 
+  // TODO findAny has sense if order is modified : it enables squashing order modification (for
+  //  example sorting)
+
   @Override
   public Optional<T> findLast() {
     return reduce((first, second) -> second);
