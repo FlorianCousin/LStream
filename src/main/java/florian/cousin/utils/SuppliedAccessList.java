@@ -9,10 +9,16 @@ import java.util.function.Supplier;
 public class SuppliedAccessList<Element> extends AbstractList<Element> implements RandomAccess {
 
   private final CachedSupplier<List<Element>> elementsSupplier;
+  private final int knownSize;
 
   public SuppliedAccessList(Supplier<List<Element>> listSupplier) {
-
     this.elementsSupplier = new CachedSupplier<>(listSupplier);
+    this.knownSize = -1;
+  }
+
+  public SuppliedAccessList(Supplier<List<Element>> elementsSupplier, int knownSize) {
+    this.elementsSupplier = new CachedSupplier<>(elementsSupplier);
+    this.knownSize = knownSize;
   }
 
   @Override
@@ -22,6 +28,6 @@ public class SuppliedAccessList<Element> extends AbstractList<Element> implement
 
   @Override
   public int size() {
-    return elementsSupplier.get().size();
+    return knownSize < 0 ? elementsSupplier.get().size() : knownSize;
   }
 }

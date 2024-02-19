@@ -37,7 +37,8 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
       return LStream.empty();
     }
 
-    SuppliedAccessList<T> sortedList = new SuppliedAccessList<>(() -> supplySortedList(comparator));
+    SuppliedAccessList<T> sortedList =
+        new SuppliedAccessList<>(() -> supplySortedList(comparator), (int) count());
 
     return new ListRandomAccessLStream<>(sortedList);
   }
