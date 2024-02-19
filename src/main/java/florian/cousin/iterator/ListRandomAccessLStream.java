@@ -1,6 +1,7 @@
 package florian.cousin.iterator;
 
 import florian.cousin.LStream;
+import florian.cousin.utils.SuppliedAccessList;
 import java.util.*;
 import java.util.function.IntFunction;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +37,22 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
       return LStream.empty();
     }
 
+    SuppliedAccessList<T> sortedList = new SuppliedAccessList<>(() -> supplySortedList(comparator));
+
+    return new ListRandomAccessLStream<>(sortedList);
+  }
+
+  private List<T> supplySortedList(@Nullable Comparator<? super T> comparator) {
+    /*
+    Implementation of `iterationObject` is not known and it could be immutable so an array transform is used
+     */
+
     @SuppressWarnings("unchecked")
     T[] array = (T[]) iterationObjects.subList(nextIndex, iterationObjects.size()).toArray();
 
-    // TODO Do not sort without consumption
     Arrays.sort(array, comparator);
 
-    return new ListRandomAccessLStream<>(List.of(array));
+    return List.of(array);
   }
 
   @Override
