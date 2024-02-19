@@ -48,13 +48,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- TODO Is this really useful ? Not mentioned in https://www.baeldung.com/java-microbenchmark-harness -->
-        <dependency>
-            <groupId>com.carrotsearch</groupId>
-            <artifactId>junit-benchmarks</artifactId>
-            <version>0.7.2</version>
-        </dependency>
-
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
