@@ -10,6 +10,12 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor
 public class ListRandomAccessLStream<T> extends LStream<T> {
 
+  // TODO Use characteristics instead of classes implementation to be aware of characteristics of an
+  //  LStream ?
+  //  Then it will be easier to mix characteristics and remove code duplication.
+  //  However, it might decrease performance because it will need an if on characteristics on each
+  //  LStream function.
+
   // TODO map can stay in random access
 
   private final List<T> iterationObjects;
