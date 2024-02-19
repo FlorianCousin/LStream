@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor
 public class ListRandomAccessLStream<T> extends LStream<T> {
 
+  // TODO map can stay in random access
+
   private final List<T> iterationObjects;
   private int nextIndex = 0;
 
