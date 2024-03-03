@@ -30,6 +30,22 @@ class ListRandomAccessLStreamTest {
   }
 
   @Test
+  void mapSkipOne() {
+
+    List<Integer> mappedList = LStream.from(List.of(1, 2, 3, 4)).skip(1).map(i -> i + 7).toList();
+
+    assertThat(mappedList).isEqualTo(List.of(9, 10, 11));
+  }
+
+  @Test
+  void mapSkipALot() {
+
+    List<Integer> mappedList = LStream.from(List.of(1, 2, 3, 4)).skip(10).map(i -> i + 7).toList();
+
+    assertThat(mappedList).isEmpty();
+  }
+
+  @Test
   void sorted() {
 
     LStream<Integer> lStream = LStream.from(List.of(5, 7, 6, 3, 8));

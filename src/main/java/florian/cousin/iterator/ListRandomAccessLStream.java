@@ -3,6 +3,7 @@ package florian.cousin.iterator;
 import florian.cousin.LStream;
 import florian.cousin.utils.SuppliedAccessList;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.IntFunction;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
@@ -15,8 +16,6 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
   //  Then it will be easier to mix characteristics and remove code duplication.
   //  However, it might decrease performance because it will need an if on characteristics on each
   //  LStream function.
-
-  // TODO map can stay in random access
 
   private final List<T> iterationObjects;
   private int nextIndex = 0;
@@ -34,6 +33,25 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
     }
 
     return iterationObjects.get(nextIndex++);
+  }
+
+  @Override
+  public <R> LStream<R> map(Function<? super T, ? extends R> mapper) {
+
+    List<R> iterationMappedObjects =
+        new AbstractList<>() {
+          @Override
+          public R get(int index) {
+            return mapper.apply(iterationObjects.get(index + nextIndex));
+          }
+
+          @Override
+          public int size() {
+            return (int) count();
+          }
+        };
+
+    return new ListRandomAccessLStream<>(iterationMappedObjects);
   }
 
   @Override
