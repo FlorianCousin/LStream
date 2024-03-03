@@ -13,6 +13,10 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
   // TODO Add sized LStream and use new ArrayList<>(size) in supplier for collector, and optimize
   //  toArray
 
+  // TODO Add a function to use indexes
+  //  We could do list.stream.withIndexes().filter(object -> filter(object)).indexes() and it would
+  //  make an IntStream of the indexes filtered
+
   @Override
   public LStream<T> filter(Predicate<? super T> predicate) {
     return new FilterLStream<>(this, predicate);
