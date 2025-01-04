@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public class ArrayLStream<T> extends LStream<T> {
 
   // TODO Delete this class and use only ListRandomAccess ?
-  //  Yes but sorted and skip have one less traversal in ArrayL than ListRandomAccess
+  //  Yes but sorted have one less traversal in ArrayL than ListRandomAccess
 
   private final T[] iterationObjects;
   private int nextIndex = 0;
