@@ -1,7 +1,6 @@
 package cousin.florian.iterator;
 
 import cousin.florian.LStream;
-import cousin.florian.collector.LCollectors;
 import cousin.florian.exception.SeveralElementsException;
 import cousin.florian.utils.SuppliedAccessList;
 import java.util.*;
@@ -28,7 +27,7 @@ public class SortedLStream<T> extends ListRandomAccessLStream<T> {
 
   private static <Element> List<Element> supplySortedList(
       LStream<Element> baseIterator, @Nullable Comparator<? super Element> comparator) {
-    List<Element> values = baseIterator.collect(LCollectors.toList());
+    List<Element> values = new ArrayList<>(baseIterator.toList());
     values.sort(comparator);
     return values;
   }

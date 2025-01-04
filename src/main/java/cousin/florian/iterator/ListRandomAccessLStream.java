@@ -1,7 +1,6 @@
 package cousin.florian.iterator;
 
 import cousin.florian.LStream;
-import cousin.florian.utils.SuppliedAccessList;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -61,23 +60,7 @@ public class ListRandomAccessLStream<T> extends LStream<T> {
       return LStream.empty();
     }
 
-    SuppliedAccessList<T> sortedList =
-        new SuppliedAccessList<>(() -> supplySortedList(comparator), (int) count());
-
-    return new ListRandomAccessLStream<>(sortedList);
-  }
-
-  private List<T> supplySortedList(@Nullable Comparator<? super T> comparator) {
-    /*
-    Implementation of `iterationObject` is not known and it could be immutable so an array transform is used
-     */
-
-    @SuppressWarnings("unchecked")
-    T[] array = (T[]) iterationObjects.subList(nextIndex, iterationObjects.size()).toArray();
-
-    Arrays.sort(array, comparator);
-
-    return List.of(array);
+    return new SortedLStream<>(this, comparator);
   }
 
   @Override
