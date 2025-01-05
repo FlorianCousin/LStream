@@ -8,6 +8,30 @@
     <artifactId>lstream</artifactId>
     <version>0.0.1</version>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A library with sequential stream API and functional iterator</description>
+    <url>https://github.com/FlorianCousin/LStream</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Florian Cousin</name>
+            <email>florianc812@gmail.com</email>
+            <url>https://github.com/FlorianCousin</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/FlorianCousin/LStream</url>
+    </scm>
+
+
     <properties>
 
         <maven.compiler.source>21</maven.compiler.source>
