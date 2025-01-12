@@ -43,6 +43,7 @@
 
         <fmt.check.skip>false</fmt.check.skip>
 
+        <maven-javadoc-plugin.includes>**\/*Api.java</maven-javadoc-plugin.includes>
     </properties>
 
     <dependencies>
@@ -130,6 +131,8 @@
                 <version>3.8.0</version>
                 <configuration>
                     <fixTags>since, param, return, throws, link</fixTags>
+                    <includes>${maven-javadoc-plugin.includes}</includes>
+                    <sourceFileIncludes>${maven-javadoc-plugin.includes}</sourceFileIncludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -137,6 +140,16 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <failOnWarnings>true</failOnWarnings>
+                            <tags>
+                                <tag>
+                                    <name>apiNote</name>
+                                    <placement>a</placement>
+                                    <head>API Note:</head>
+                                </tag>
+                            </tags>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -153,8 +166,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
 
             <plugin>
                 <groupId>com.spotify.fmt</groupId>
