@@ -245,6 +245,11 @@ public abstract class LStream<T> implements Iterator<T>, LStreamApi<T> {
     return this;
   }
 
+  @Override
+  public Spliterator<T> spliterator() {
+    return Spliterators.spliteratorUnknownSize(this, 0);
+  }
+
   public static <T> LStream.Builder<T> builder() {
     return new Builder<>();
   }

@@ -1,7 +1,7 @@
 package cousin.florian;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 import cousin.florian.collector.LCollector;
 import cousin.florian.exception.SeveralElementsException;
@@ -385,5 +385,26 @@ class LStreamEndTest {
     Optional<String> actualLast = LStream.of("null", "5", "d", null).findLast();
 
     assertThat(actualLast).isEmpty();
+  }
+
+  @Test
+  void iterator() {
+
+    LStream<String> baseLStream = LStream.of("null", "5", "d", null);
+    LStream<String> actualIterator = baseLStream.iterator();
+
+    assertThat(actualIterator).isSameAs(baseLStream);
+  }
+
+  @Test
+  void spliterator() {
+
+    List<String> baseElements = Arrays.asList("null", "5", "d", null);
+    Spliterator<String> actualSpliterator = LStream.from(baseElements).spliterator();
+
+    Iterator<String> expectedElements = baseElements.iterator();
+    actualSpliterator.forEachRemaining(
+        actualElement -> assertThat(actualElement).isEqualTo(expectedElements.next()));
+    assertFalse(expectedElements.hasNext());
   }
 }

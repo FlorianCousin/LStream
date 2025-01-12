@@ -525,9 +525,16 @@ public interface LStreamApi<T> {
   Optional<T> findLast();
 
   /**
-   * Returns an iterator for the elements of this stream.
+   * Returns an iterator for the elements of this lstream.
    *
    * @return the element iterator for this stream
    */
   Iterator<T> iterator();
+
+  /**
+   * Returns a spliterator for the elements of this lstream.
+   *
+   * @return the element spliterator for this stream
+   */
+  Spliterator<T> spliterator();
 }
