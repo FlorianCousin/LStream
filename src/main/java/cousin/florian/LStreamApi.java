@@ -3,13 +3,35 @@ package cousin.florian;
 import cousin.florian.collector.LCollector;
 import cousin.florian.collector.LCollectors;
 import cousin.florian.exception.SeveralElementsException;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.*;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A sequence of elements supporting sequential operations.
+ *
+ * <p>LStreams are lazy : computation on the source data is only performed when the terminal
+ * operation is initiated, and source elements are consumed only as needed.
+ *
+ * <p>Most lstream operations accept parameters that describe user-specified behavior, such as the
+ * lambda expression {@code w -> w.getWeight()} passed to {@code mapToInt}. To preserve correct
+ * behavior, these <em>behavioral parameters</em>:
+ *
+ * <ul>
+ *   <li>must be <a href="package-summary.html#NonInterference">non-interfering</a> (they do not
+ *       modify the lstream source); and
+ *   <li>in most cases must be <a href="package-summary.html#Statelessness">stateless</a> (their
+ *       result should not depend on any state that might change during execution of the stream
+ *       pipeline).
+ * </ul>
+ *
+ * <p>Such parameters are always instances of a <a
+ * href="../function/package-summary.html">functional interface</a> such as {@link
+ * java.util.function.Function}, and are often lambda expressions or method references. Unless
+ * otherwise specified these parameters must be <em>non-null</em>.
+ *
+ * @param <T> the type of the lstream elements
+ */
 public interface LStreamApi<T> {
 
   /**
@@ -138,7 +160,7 @@ public interface LStreamApi<T> {
    *
    * @param nbToSkip the number of leading elements to skip
    * @return the new lstream
-   * @throws IllegalArgumentException if {@code n} is negative
+   * @throws java.lang.IllegalArgumentException if {@code n} is negative
    */
   LStreamApi<T> skip(long nbToSkip) throws IllegalArgumentException;
 
@@ -221,8 +243,9 @@ public interface LStreamApi<T> {
    * @param generator a function which produces a new array of the desired type and the provided
    *     length
    * @return an array containing the elements in this lstream
-   * @throws ArrayStoreException if the runtime type of any element of this stream is not assignable
-   *     to the {@linkplain Class#getComponentType runtime component type} of the generated array
+   * @throws java.lang.ArrayStoreException if the runtime type of any element of this stream is not
+   *     assignable to the {@linkplain Class#getComponentType runtime component type} of the
+   *     generated array
    */
   <A> A[] toArray(IntFunction<A[]> generator) throws ArrayStoreException;
 
@@ -296,7 +319,7 @@ public interface LStreamApi<T> {
    * <p>This is a terminal operation.
    *
    * @param accumulator a function for combining two values
-   * @return an {@link Optional} describing the result of the reduction
+   * @return an {@link java.util.Optional} describing the result of the reduction
    */
   Optional<T> reduce(BinaryOperator<T> accumulator);
 
@@ -458,8 +481,8 @@ public interface LStreamApi<T> {
   boolean noneMatch(Predicate<? super T> predicate);
 
   /**
-   * Returns an {@link Optional} describing the first element of this lstream, or an empty {@code
-   * Optional} if the lstream is empty.
+   * Returns an {@link java.util.Optional} describing the first element of this lstream, or an empty
+   * {@code Optional} if the lstream is empty.
    *
    * <p>This is a short-circuiting terminal operation.
    *
@@ -469,24 +492,25 @@ public interface LStreamApi<T> {
   Optional<T> findFirst();
 
   /**
-   * Returns an {@link Optional} describing the only one element of this lstream, or an empty {@code
-   * Optional} if the lstream is empty. If the lstream contains several elements, then an exception
-   * is thrown.
+   * Returns an {@link java.util.Optional} describing the only one element of this lstream, or an
+   * empty {@code Optional} if the lstream is empty. If the lstream contains several elements, then
+   * an exception is thrown.
    *
-   * <p>This is equivalent to {@link LStreamApi#findFirst()} and then an assertion that there is no
-   * more element.
+   * <p>This is equivalent to {@link cousin.florian.LStreamApi#findFirst()} and then an assertion
+   * that there is no more element.
    *
    * <p>This is a terminal operation.
    *
    * @return an {@code Optional} describing the only one element of this lstream, or an empty {@code
    *     Optional} if the lstream is empty or if the only one element is {@code null}
-   * @throws SeveralElementsException if there are several elements left in the stream
+   * @throws cousin.florian.exception.SeveralElementsException if there are several elements left in
+   *     the stream
    */
   Optional<T> findOne() throws SeveralElementsException;
 
   /**
-   * Returns an {@link Optional} describing the last element of this lstream, or an empty {@code
-   * Optional} if the lstream is empty.
+   * Returns an {@link java.util.Optional} describing the last element of this lstream, or an empty
+   * {@code Optional} if the lstream is empty.
    *
    * <p>This is a terminal operation.
    *
@@ -500,6 +524,10 @@ public interface LStreamApi<T> {
    */
   Optional<T> findLast();
 
-  // TODO Add all the javadoc
+  /**
+   * Returns an iterator for the elements of this stream.
+   *
+   * @return the element iterator for this stream
+   */
   Iterator<T> iterator();
 }
