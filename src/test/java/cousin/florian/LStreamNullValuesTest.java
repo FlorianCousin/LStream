@@ -77,10 +77,16 @@ class LStreamNullValuesTest {
   @Test
   void peek() {
 
-    List<Integer> actualValues = LStream.of(8, null).peek(System.out::println).toList();
+    AtomicBoolean peekHasComputedNull = new AtomicBoolean(false);
+
+    List<Integer> actualValues =
+        LStream.of(8, null)
+            .peek(value -> peekHasComputedNull.set(peekHasComputedNull.get() || value == null))
+            .toList();
 
     List<Integer> expectedValues = Arrays.asList(8, null);
 
+    assertThat(peekHasComputedNull).isTrue();
     assertThat(actualValues).isEqualTo(expectedValues);
   }
 
