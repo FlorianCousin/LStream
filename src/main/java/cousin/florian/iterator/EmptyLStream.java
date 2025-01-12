@@ -154,6 +154,7 @@ public class EmptyLStream<T> extends LStream<T> {
     return Optional.empty();
   }
 
+  // TODO Same implementation as parent. Is it really useful ?
   @Override
   public EmptyLStream<T> iterator() {
     return this;
